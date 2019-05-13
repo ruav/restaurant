@@ -1,0 +1,46 @@
+<style type="text/css">
+    TABLE {
+        width: 227px; /* Ширина таблицы */
+        background: #ccc; /* Цвет фона нечетных строк */
+        border: 1px solid #000; /* Рамка вокруг таблицы */
+    }
+    TD, TH {
+        padding: 3px; /* Поля вокруг содержимого */
+        text-align: left; /* Выравнивание по левому краю */
+    }
+    TR.even {
+        background: #e0e0e0; /* Цвет фона четных строк*/
+    }
+    .even TD {
+        border-top: 2px solid #666; /* Темная линия сверху ячейки */
+        border-bottom: 1px solid #fff; /* Светлая линия снизу ячейки */
+    }
+</style>
+
+<div>
+        <!--th:switch="${users}">-->
+    <!--<h2 th:case="null">No users yet!</h2>-->
+    <!--<div th:case="*">-->
+        <h2>Halls</h2>
+        <table style="border: 1px;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th hidden>Restaurant</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="hall : ${list}">
+                    <!--<td th:text="${user.name}"></td>-->
+                    <td th:text="${hall.name}"></td>
+                    <td th:text="${hall.restaurantId}" hidden></td>
+                    <td><a th:href="@{/halls/edit/{id}(id=${hall.id})}">Edit</a></td>
+                    <td><a th:href="@{/halls/delete/{id}(id=${hall.id})}">Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+    <!--</div>-->
+    <p><a href="/halls/signup">Add a new hall</a></p>
+</div>

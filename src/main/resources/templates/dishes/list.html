@@ -1,0 +1,50 @@
+<style type="text/css">
+    TABLE {
+        width: 227px; /* Ширина таблицы */
+        background: #ccc; /* Цвет фона нечетных строк */
+        border: 1px solid #000; /* Рамка вокруг таблицы */
+    }
+    TD, TH {
+        padding: 3px; /* Поля вокруг содержимого */
+        text-align: left; /* Выравнивание по левому краю */
+    }
+    TR.even {
+        background: #e0e0e0; /* Цвет фона четных строк*/
+    }
+    .even TD {
+        border-top: 2px solid #666; /* Темная линия сверху ячейки */
+        border-bottom: 1px solid #fff; /* Светлая линия снизу ячейки */
+    }
+</style>
+
+<div>
+        <!--th:switch="${users}">-->
+    <!--<h2 th:case="null">No users yet!</h2>-->
+    <!--<div th:case="*">-->
+        <h2>Restaurants</h2>
+        <table style="border: 1px;">
+            <thead>
+                <tr>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>AvgPrice</th>
+                    <th>Coordinate</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="restaurant : ${restaurants}">
+                    <!--<td th:text="${user.name}"></td>-->
+                    <td th:text="${restaurant.address}"></td>
+                    <td th:text="${restaurant.city}"></td>
+                    <td th:text="${restaurant.avgprice}"></td>
+                    <td th:text="${restaurant.restaurants}"></td>
+                    <td><a th:href="@{/users/edit/{id}(id=${user.id})}">Edit</a></td>
+                    <td><a th:href="@{/users/delete/{id}(id=${user.id})}">Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+    <!--</div>-->
+    <p><a href="/signup">Add a new user</a></p>
+</div>

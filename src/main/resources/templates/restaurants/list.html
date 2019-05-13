@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta content="text/html; charset=UTF-8; X-Content-Type-Options=nosniff" http-equiv="Content-Type" />
+
+    <title></title>
+
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+
+</head>
+
+<body>
+
+<h1 class="site-heading text-center text-white d-none d-lg-block">
+    <!--<span class="site-heading-upper text-primary mb-3">Список ресторанов</span>-->
+    <span class="site-heading-lower"></span>
+</h1>
+
+<div class="mr-3 float-lg-right">
+    <span sec:authentication="name"></span>
+</div>
+<br/>
+<ul class="nav nav-tabs">
+    <li class="nav-item px-lg-1"><a class="nav-link active" th:href="@{/restaurants/list}">Рестораны</a></li>
+    <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('Root')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a></li>
+    <li class="nav-item px-lg-1 ml-auto"><a class="nav-link" th:href="@{/logout}">Выйти</a>
+
+</ul>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Список ресторанов</div>
+    <div class="panel-body">
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Город</th>
+            <th>Адрес</th>
+            <th>Средний чек</th>
+            <th>Координаты</th>
+            <th sec:authorize="${hasAuthority('Root')}">Владелец</th>
+            <th>Редактировать</th>
+            <th>Удалить</th>
+        </tr>
+        </thead>
+        <tbody class="table-striped">
+        <tr  th:each="restaurant : ${list}" >
+            <td><a th:text="${restaurant.name}" th:href="@{/restaurants/info/{id}(id=${restaurant.id})}"></a></td>
+            <td th:text="${towns.get(restaurant.city).name}"></td>
+            <td th:text="${restaurant.address}"></td>
+            <td th:text="${restaurant.avgPrice}"></td>
+            <td th:text="${restaurant.latitude} + ',' + ${restaurant.longtitude}"></td>
+            <td sec:authorize="${hasAuthority('Root')}" th:text="${owners.get(restaurant.id)}"></td>
+            <td><a class="btn btn-secondary" th:href="@{/restaurants/edit/{id}(id=${restaurant.id})}">Редактировать</a></td>
+            <td><a class="btn btn-secondary" th:href="@{/restaurants/delete/{id}(id=${restaurant.id})}">Удалить</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <ul class="nav nav-pills">
+        <li class="active"><a  th:href="@{/restaurants/add}">Добавить ресторан</a></li>
+    </ul>
+</div>
+
+<footer class="footer text-faded text-center py-5">
+    <div class="container">
+        <p class="m-0 small">Copyright &copy; Your Website 2019</p>
+    </div>
+</footer>
+
+<script src="@{../../static/js/jquery.min.js}" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" src="@{../../static/js/bootstrap.bundle.min.js}" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+
+</html>
