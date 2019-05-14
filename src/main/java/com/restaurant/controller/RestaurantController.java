@@ -175,7 +175,14 @@ public class RestaurantController {
     public String delete(@PathVariable("id") long id, Model model) {
         Restaurant restaurant = restaurantService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant Id:" + id));
-        userService.findRestaurant(userService.findByEmail(getUser().getUsername()).getId()).remove(restaurant);
+        for (User u : userService.findAll()) {
+            for (Restaurant r : u.getRestaurants()) {
+                if (r.getId() == restaurant.getId()) {
+                    u.getRestaurants().remove(r);
+                    break;
+                }
+            }
+        }
         restaurantService.delete(restaurant);
         return "redirect:" + PREFIX + "/list";
     }
