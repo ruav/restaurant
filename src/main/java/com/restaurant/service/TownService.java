@@ -5,6 +5,9 @@ import com.restaurant.repository.TownRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class TownService extends AbstractService<TownRepository, Town> {
 
@@ -14,6 +17,14 @@ public class TownService extends AbstractService<TownRepository, Town> {
     @Override
     TownRepository repository() {
         return repository;
+    }
+
+    public Map<Long, Town> findMapAll() {
+        Map<Long, Town> map = new HashMap<>();
+        for(Town town : repository().findAll()) {
+            map.put(town.getId(), town);
+        }
+        return map;
     }
 
 }

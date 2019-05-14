@@ -18,8 +18,7 @@ import javax.persistence.UniqueConstraint;
 public class Desk implements Data{
 
     @Id
-    @SequenceGenerator(name="pk_sequence",sequenceName="desk_id_seq", allocationSize=1)
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="pk_sequence")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
 

@@ -11,8 +11,7 @@ import java.util.Set;
 public class User implements Data{
 
     @Id
-    @SequenceGenerator(name="pk_sequence",sequenceName="users_id_seq", allocationSize=4)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_sequence")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column
     private long id;
 

@@ -8,8 +8,7 @@ import java.util.Set;
 public class Town implements Data{
 
     @Id
-    @SequenceGenerator(name="pk_sequence",sequenceName="town_id_seq", allocationSize=1)
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="pk_sequence")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column
     private long id;
 

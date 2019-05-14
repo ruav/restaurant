@@ -97,7 +97,7 @@ public class RestaurantController {
             List<Restaurant> list = new ArrayList<>(userService.findByEmail(getUser().getUsername()).getRestaurants());
             model.addAttribute("list", list);
         }
-        model.addAttribute("towns", townService.findAll());
+        model.addAttribute("towns", townService.findMapAll());
 
         httpSession.removeAttribute("back");
         httpSession.removeAttribute("restaurant");
@@ -145,7 +145,7 @@ public class RestaurantController {
         }
 
         model.addAttribute("halls", hallMap);
-        model.addAttribute("towns", townService.findAll());
+        model.addAttribute("towns", townService.findMapAll());
         httpSession.setAttribute("back", "/restaurants/info/" + id);
         httpSession.setAttribute("restaurant", id);
         httpSession.setAttribute("restaurantName", restaurant.getName());

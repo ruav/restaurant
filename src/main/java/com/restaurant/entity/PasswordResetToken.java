@@ -17,8 +17,7 @@ import java.util.Date;
 public class PasswordResetToken implements Data{
 
     @Id
-    @SequenceGenerator(name="pk_sequence",sequenceName="token_id_seq", allocationSize=4)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_sequence")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)

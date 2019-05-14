@@ -8,8 +8,7 @@ import java.util.Set;
 public class Restaurant implements Data{
 
     @Id
-    @SequenceGenerator(name="pk_sequence",sequenceName="restaurant_id_seq", allocationSize=1)
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="pk_sequence")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
