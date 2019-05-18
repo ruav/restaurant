@@ -72,7 +72,7 @@
     </div>
     <div class="form-group col-md-4">
         <label for="ingredients">Ингредиенты</label>
-        <select class="form-control" id="ingredients" multiple="multiple" required th:field="*{ingredients}">
+        <select class="form-control" data-live-search="true" id="ingredients" multiple="multiple" required th:field="*{ingredients}">
             <option th:each="ingredient : ${ingredients}" th:text="${ingredient.name}" th:value="${ingredient.id}">
                 Ингредиент
             </option>

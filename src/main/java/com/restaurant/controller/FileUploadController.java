@@ -2,10 +2,12 @@ package com.restaurant.controller;
 
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
+import com.restaurant.entity.Icon;
 import com.restaurant.entity.Photo;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
+import com.restaurant.service.IconService;
 import com.restaurant.service.PhotoService;
 import com.restaurant.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +39,9 @@ public class FileUploadController {
 
     @Autowired
     PhotoService photoService;
+
+    @Autowired
+    IconService iconService;
 
     @Autowired
     DishService dishService;
@@ -117,6 +123,25 @@ public class FileUploadController {
         return "redirect:/categories/edit/" + id;
     }
 
+    @PostMapping(value = "/ingredients/upload/{id}")
+    public String uploadIngredientIconHandler(@RequestParam("file") MultipartFile file,
+                                     @PathVariable("id") long id,
+                                     Model model) throws IOException {
+        if (file.isEmpty()) {
+            model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
+        } else {
+
+            Icon icon = new Icon();
+            icon.setUrl(UUID.randomUUID().toString());
+            icon.setImage(file.getBytes());
+            iconService.save(icon);
+
+
+        }
+
+        return "redirect:/ingredients/edit/" + id;
+    }
+
 
     @RequestMapping(value = "/restaurants/deleteImage/{restaurantId}/{imageId}", method = RequestMethod.GET)
     public String deleteRestaurantHandler(@PathVariable("restaurantId") long restaurantId,
@@ -174,7 +199,24 @@ public class FileUploadController {
         if(photo == null) {
             return new HttpEntity<>(null, new HttpHeaders());
         }
-        byte[] array = photoService.getPhotoByUrl(url).getImage();
+        byte[] array = photo.getImage();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentLength(array.length);
+
+        return new HttpEntity<>(array, headers);
+    }
+
+    @RequestMapping(value = "/icon/{url}")
+    @ResponseBody
+    public HttpEntity<byte[]> getIcon(@PathVariable(value = "url") String url) {
+
+        Icon icon = iconService.getPhotoByUrl(url);
+        if(icon == null) {
+            return new HttpEntity<>(null, new HttpHeaders());
+        }
+        byte[] array = icon.getImage();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_JPEG);

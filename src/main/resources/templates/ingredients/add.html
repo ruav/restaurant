@@ -57,21 +57,36 @@
                         <span th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></span>
                     </div>
                 </div>
+
+                <div class="form-row" >
+                    <div class="col-auto">
+                        <div th:each="icon : ${icons}" class="custom-control-inline">
+                            <input type="radio"  th:field="*{icon}" th:value="${icon.id}" class="custom-control-input"/>
+                            <label th:for="${#ids.prev('icon')}"  class="custom-control-label">
+                                <img th:src="@{'/icon/' + ${icon.url}}" alt="" > </label>
+                        </div>
+                    </div>
+                </div>
+
                 <input type="submit" value="Добавить ингредиент">
             </form>
         </div>
         <div class="col">
             <label>Уже имеющиеся ингредиенты:</label>
             <div class="row">
-                <div class="col-auto border" th:each="ingredient : ${ingredients}">
-                    <div th:if="${#authorization.expression('hasAuthority(''Root'')')}">
-                        <a class="btn btn-primary-outline btn-sm col-auto "
-                           role="button" th:href="@{/ingredients/edit/{id}(id=${ingredient.id})}"
-                           th:text="${ingredient.name}">
+                <div th:each="ingredient : ${ingredients}"   class="col-auto border">
+                    <div th:if="${#authorization.expression('hasAuthority(''Root'')')}" class="media">
+                        <div class="media-left media-top">
+                            <img th:if="${ingredient.icon == null}" th:src="@{'/icon/0'}" class="media-object" style="width:60px">
+                            <img th:unless="${ingredient.icon == null}" th:src="@{'/icon/' + ${ingredient.icon.url}}" class="media-object" style="width:60px">
+                        </div>
+                        <a  class="btn btn-primary-outline btn-sm col-auto "
+                            th:href="@{/ingredients/edit/{id}(id=${ingredient.id})}" th:text="${ingredient.name}"
+                            role="button">
                         </a>
                     </div>
-                    <div class=" col-auto " th:text="${ingredient.name}"
-                         th:unless="${#authorization.expression('hasAuthority(''Root'')')}">
+                    <div th:unless="${#authorization.expression('hasAuthority(''Root'')')}" class=" col-auto "
+                         th:text="${ingredient.name}">
                     </div>
                 </div>
             </div>

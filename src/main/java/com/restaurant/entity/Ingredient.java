@@ -14,14 +14,14 @@ public class Ingredient implements Data {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinTable(
             name="ingredientlogo",
             joinColumns = @JoinColumn(name = "ingredient_id"),
-            inverseJoinColumns = @JoinColumn(name = "photo_id")
+            inverseJoinColumns = @JoinColumn(name = "icon_id")
 
     )
-    private Photo icon;
+    private Icon icon;
 
     public long getId() {
         return id;
@@ -39,11 +39,11 @@ public class Ingredient implements Data {
         this.name = name;
     }
 
-    public Photo getIcon() {
+    public Icon getIcon() {
         return icon;
     }
 
-    public void setIcon(Photo icon) {
+    public void setIcon(Icon icon) {
         this.icon = icon;
     }
 

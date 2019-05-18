@@ -12,43 +12,37 @@ import com.restaurant.entity.Dish;
 import com.restaurant.entity.Ingredient;
 import com.restaurant.entity.Protein;
 import com.restaurant.entity.SubCategory;
-import com.restaurant.service.DishService;
-import com.restaurant.service.SubCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
 public class Converter {
 
-    @Autowired
-    DishService dishService;
-
-    public  CategoryDto getCategoryDto(Category category, List<SubCategory> subCategories, String url) {
+    public static CategoryDto getCategoryDto(Category category, List<SubCategory> subCategories, Map<Long, List<Dish>> map, String url) {
         CategoryDto categoryDto = new CategoryDto();
 
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
 
-        subCategories.forEach(s -> categoryDto.getSubCategories().add(getSubCategoryDto(s, url)));
+        subCategories.forEach(s -> categoryDto.getSubCategories().add(getSubCategoryDto(s, map.get(s.getId()), url)));
         return categoryDto;
     }
 
-    public  SubCategoryDto getSubCategoryDto(SubCategory s, String url) {
+    public static SubCategoryDto getSubCategoryDto(SubCategory s, List<Dish> dishCollection, String url) {
         SubCategoryDto dto = new SubCategoryDto();
         dto.setId(s.getId());
         dto.setName(s.getName());
         dto.setPhoto(s.getPhotos().isEmpty() ? null : url + s.getPhotos().stream().findFirst().get().getUrl());
-        List<DishDto> dishes = dishService.findBySubCategoryId(s.getCategoryId()).stream().map(d -> getDishDto(d, url)).collect(Collectors.toList());
+        List<DishDto> dishes = dishCollection.stream().map(dish -> getDishDto(dish, url)).collect(Collectors.toList());
         dto.setDishes(dishes);
         return dto;
     }
 
 
-    public  DishDto getDishDto(Dish dish, String url) {
+    public static DishDto getDishDto(Dish dish, String url) {
         DishDto dto = new DishDto();
 
         dto.setId(dish.getId());
@@ -63,7 +57,7 @@ public class Converter {
 
     }
 
-    public IngredientDto ingredientDto(Ingredient ingredient, String url) {
+    public static IngredientDto ingredientDto(Ingredient ingredient, String url) {
         IngredientDto dto = new IngredientDto();
         dto.setId(ingredient.getId());
         dto.setName(ingredient.getName());
@@ -71,7 +65,7 @@ public class Converter {
         return dto;
     }
 
-    public ProteinDto proteinDto(Protein protein) {
+    public static ProteinDto proteinDto(Protein protein) {
         ProteinDto dto = new ProteinDto();
         dto.setId(protein.getId());
         dto.setName(protein.getName());
@@ -79,7 +73,7 @@ public class Converter {
         return dto;
     }
 
-    public AllergenDto allergenDto(Allergen allergen) {
+    public static AllergenDto allergenDto(Allergen allergen) {
         AllergenDto dto = new AllergenDto();
         dto.setId(allergen.getId());
         dto.setName(allergen.getName());

@@ -1,6 +1,7 @@
 package com.restaurant.controller;
 
 import com.restaurant.entity.Ingredient;
+import com.restaurant.service.IconService;
 import com.restaurant.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,9 @@ public class IngredientController extends AbstractController<IngredientService, 
     @Autowired
     IngredientService ingredientService;
 
+    @Autowired
+    IconService iconService;
+
     @Override
     String prefix() {
         return "/ingredients";
@@ -37,6 +41,9 @@ public class IngredientController extends AbstractController<IngredientService, 
     public String showSignUpForm(Ingredient entity, @PathParam(value ="id") long id, Model model) {
         model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
         model.addAttribute("ingredients", ingredientService.findAll());
+        model.addAttribute("icons", iconService.findAll());
+        model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
+
         return prefix() + "/add";
     }
 
@@ -68,9 +75,36 @@ public class IngredientController extends AbstractController<IngredientService, 
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
         model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
         model.addAttribute("ingredients", ingredientService.findAll());
+        model.addAttribute("icons", iconService.findAll());
         model.addAttribute("ingredient", entity);
         return  prefix() + "/update";
     }
+
+    @Override
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable("id") long id, @Valid Ingredient entity,
+                         BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            entity.setId(id);
+            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+            model.addAttribute("entity", entity);
+            return prefix() + "/update";
+        }
+        try {
+            repository().save(entity);
+        } catch (Exception e) {
+            entity.setId(id);
+            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+            model.addAttribute("entity", entity);
+            result.addError(new ObjectError("error", "Ошибка сохранения. Такой элемент уже существует"));
+            return prefix() + "/update";
+        }
+        if(getHttpSession().getAttribute("back") == null) {
+            model.addAttribute("list", repository().findAll());
+        }
+        return getHttpSession().getAttribute("back") != null ? "redirect:" +getHttpSession().getAttribute("back") : "redirect:/";
+    }
+
 
 
 }
