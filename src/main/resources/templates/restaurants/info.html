@@ -14,9 +14,6 @@
 
     <link href="../../static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">
     <style type="text/css">
         .carousel-inner img {
             display: block;
@@ -30,7 +27,6 @@
 <body>
 
 <h1 class="site-heading text-center text-white d-none d-lg-block">
-    <!--<span class="site-heading-upper text-primary mb-3" th:text="${restaurant.name}"></span>-->
     <span class="site-heading-lower"></span>
 </h1>
 <div class="mr-3 float-lg-right">
@@ -97,16 +93,23 @@
         <label>Меню по категориям</label>
     </div>
 
-    <div th:each="element : ${dishes}">
-        <table class="table-sm">
+
+    <div th:each="element : ${categories}">
+        <table class="table table-hover ">
             <tr>
                 <td>
-                    <a aria-expanded="true" class="btn btn-primary" data-toggle="collapse"
-                       role="button" th:attr="aria-controls='#category' + ${element.key.id}"
-                       th:href="'#category' + ${element.key.id}"
-                       th:text="${element.key.name}">
-                        <div th:text="${element.key.name}">Category</div>
-                    </a>
+                    <a class="btn btn-link ml-auto"
+                       role="button"
+                       th:href="@{/subcategories/list/{id}(id=${element.key.id})}"
+                       th:text="${element.key.name}">Категория</a>
+                </td>
+                <td>
+                    <div class="row no-gutters">
+                        <img alt=""
+
+                             class="img-thumbnail img-fluid" style="width:180px;height: 102px;"
+                             th:if="${element.key.photos.size() > 0}" th:src="@{'/image/' + ${element.key.photos.stream().findFirst().get().url}}"/>
+                    </div>
                 </td>
                 <td><a class="btn btn-link ml-auto" role="button"
                        th:href="@{/categories/edit/{id}(id=${element.key.id})}">Редактировать</a></td>
@@ -114,31 +117,10 @@
                        th:href="@{/categories/delete/{id}(id=${element.key.id})}">Удалить</a></td>
             </tr>
         </table>
-        <div class="collapse" th:id="'category' + ${element.key.id}">
-            <div class="panel panel-default ">
-                <div class="panel-heading"></div>
-                <div class="panel-body"></div>
-                <table class="table table-striped table-hover table-sm">
-                    <thead></thead>
-                    <tr th:each="dish : ${element.value}">
-                        <td></td>
-                        <td th:text="${dish.name}">Dish name</td>
-                        <td hidden="hidden">
-                            <table>
-                                <tr th:each="ingredient : ${dish.ingredients}">
-                                    <td th:text="${ingredient.name}"></td>
-                            </table>
-                        </td>
-                        <td><a th:href="@{/dishes/edit/{id}(id=${dish.id})}">Редактировать</a></td>
-                        <td><a th:href="@{/dishes/delete/{id}(id=${dish.id})}">Удалить</a></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
 
     </div>
+
     <p><a th:href="@{/categories/add?id={id}(id=${restaurant.id})}">Добавить новую категорию</a></p>
-    <p><a th:href="@{/dishes/add?id={id}(id=${restaurant.id})}">Добавить новое блюдо</a></p>
 
 
     <div>

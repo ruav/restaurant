@@ -1,12 +1,6 @@
 package com.restaurant.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="ingredient")
@@ -19,6 +13,15 @@ public class Ingredient implements Data {
 
     @Column(unique = true, nullable = false)
     private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name="ingredientlogo",
+            joinColumns = @JoinColumn(name = "ingredient_id"),
+            inverseJoinColumns = @JoinColumn(name = "photo_id")
+
+    )
+    private Photo icon;
 
     public long getId() {
         return id;
@@ -36,10 +39,20 @@ public class Ingredient implements Data {
         this.name = name;
     }
 
+    public Photo getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Photo icon) {
+        this.icon = icon;
+    }
+
     @Override
     public String toString() {
         return "Ingredient{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", icon=" + icon +
                 '}';
     }
 }

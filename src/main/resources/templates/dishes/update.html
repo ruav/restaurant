@@ -48,54 +48,65 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <form action="#"  class="ml-0 pt-2" method="post" th:action="@{/dishes/update/{id}(id=${entity.id})}" th:object="${entity}">
+            <form action="#" class="ml-0 pt-2" method="post" th:action="@{/dishes/update/{id}(id=${entity.id})}"
+                  th:object="${entity}">
 
                 <div class="form-row">
                     <div class="col-auto">
-                    <label for="name">Название блюда</label>
-                    <input class="form-control is-valid" id="name" placeholder="Название блюда" required
-                           th:field="*{name}"
-                           type="text">
-                    <span th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></span>
-                </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-auto">
-                    <label for="name">Вес</label>
-                    <input class="form-control is-valid" id="weight" placeholder="Вес" required th:field="*{weight}"
-                           type="number" min="0">
-                    <span th:errors="*{weight}" th:if="${#fields.hasErrors('weight')}"></span>
-                </div>
+                        <label for="name">Название блюда</label>
+                        <input class="form-control is-valid" id="name" placeholder="Название блюда" required
+                               th:field="*{name}"
+                               type="text">
+                        <span th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></span>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="col-auto">
-                    <label for="name">Цена</label>
-                    <input class="form-control is-valid" id="price" placeholder="Цена" required th:field="*{price}"
-                           type="number" min="0">
-                    <span th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></span>
-                </div>
+                        <label for="name">Вес</label>
+                        <input class="form-control is-valid" id="weight" min="0" placeholder="Вес" required
+                               th:field="*{weight}" type="number">
+                        <span th:errors="*{weight}" th:if="${#fields.hasErrors('weight')}"></span>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="col-auto">
-                    <label for="categoryId">Категория</label>
-                    <select class="form-control" id="categoryId" required th:field="*{categoryId}">
-                        <option th:each="category : ${categories}" th:text="${category.name}" th:value="${category.id}">
-                            Категория
+                        <label for="name">Цена</label>
+                        <input class="form-control is-valid" id="price" min="0" placeholder="Цена" required
+                               th:field="*{price}" type="number">
+                        <span th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="subCategoryId">Подкатегория</label>
+                    <select class="form-control" id="subCategoryId" required th:field="*{subCategoryId}">
+                        <option th:each="subCategory : ${subcategories}" th:text="${subCategory.name}"
+                                th:value="${subCategory.id}">Категория
                         </option>
                     </select>
                 </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-auto">
-                        <label for="categoryId">Ингредиенты</label>
-                        <select class="form-control" id="ingredients" multiple="multiple" required
-                            th:field="*{ingredients}">
-                        <option th:each="ingredient : ${ingredients}" th:text="${ingredient.name}"
-                                th:value="${ingredient.id}">
+                <div class="form-group col-md-4">
+                    <label for="ingredients">Ингредиенты</label>
+                    <select class="form-control" id="ingredients" multiple="multiple" required th:field="*{ingredients}">
+                        <option th:each="ingredient : ${ingredients}" th:text="${ingredient.name}" th:value="${ingredient.id}">
                             Ингредиент
                         </option>
                     </select>
                 </div>
+                <div class="form-group col-md-4">
+                    <label for="proteins">Протеины</label>
+                    <select class="form-control" id="proteins" multiple="multiple"  th:field="*{proteins}">
+                        <option th:each="protein : ${proteins}" th:text="${protein.name}" th:value="${protein.id}">
+                            Протеин
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="allergens">Аллергены</label>
+                    <select class="form-control" id="allergens" multiple="multiple"  th:field="*{allergens}">
+                        <option th:each="allergen : ${allergens}" th:text="${allergen.name}" th:value="${allergen.id}">
+                            Аллерген
+                        </option>
+                    </select>
                 </div>
                 <br/>
                 <input class="btn btn-success" type="submit" value="Изменить блюдо">

@@ -1,8 +1,10 @@
 package com.restaurant.controller;
 
+import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
 import com.restaurant.entity.Photo;
 import com.restaurant.entity.Restaurant;
+import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
 import com.restaurant.service.PhotoService;
 import com.restaurant.service.RestaurantService;
@@ -38,6 +40,9 @@ public class FileUploadController {
     @Autowired
     DishService dishService;
 
+    @Autowired
+    CategoryService categoryService;
+
     @RequestMapping(value = "/restaurants/upload/{id}", method = RequestMethod.POST)
     public String uploadRestaurantHandler(@RequestParam("file") MultipartFile file,
                                           @PathVariable("id") long id,
@@ -50,6 +55,24 @@ public class FileUploadController {
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());
             restaurant.getPhotos().add(photo);
+            restaurantService.save(restaurant);
+        }
+
+        return "redirect:/restaurants/edit/" + id;
+    }
+
+    @RequestMapping(value = "/restaurants/upload/{id}/logo", method = RequestMethod.POST)
+    public String uploadRestaurantLogoHandler(@RequestParam("file") MultipartFile file,
+                                          @PathVariable("id") long id,
+                                          Model model) throws IOException {
+        if (file.isEmpty()) {
+            model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
+        } else {
+            Restaurant restaurant = restaurantService.findById(id).get();
+            Photo photo = new Photo();
+            photo.setUrl(UUID.randomUUID().toString());
+            photo.setImage(file.getBytes());
+            restaurant.setLogo(photo);
             restaurantService.save(restaurant);
         }
 
@@ -75,6 +98,25 @@ public class FileUploadController {
         return "redirect:/dishes/edit/" + id;
     }
 
+    @RequestMapping(value = "/categories/upload/{id}", method = RequestMethod.POST)
+    public String uploadCategoryHandler(@RequestParam("file") MultipartFile file,
+                                     @PathVariable("id") long id,
+                                     Model model) throws IOException {
+        if (file.isEmpty()) {
+            model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
+        } else {
+            Category category = categoryService.findById(id).get();
+
+            Photo photo = new Photo();
+            photo.setUrl(UUID.randomUUID().toString());
+            photo.setImage(file.getBytes());
+            category.getPhotos().add(photo);
+            categoryService.save(category);
+        }
+
+        return "redirect:/categories/edit/" + id;
+    }
+
 
     @RequestMapping(value = "/restaurants/deleteImage/{restaurantId}/{imageId}", method = RequestMethod.GET)
     public String deleteRestaurantHandler(@PathVariable("restaurantId") long restaurantId,
@@ -83,7 +125,11 @@ public class FileUploadController {
             Restaurant restaurant = restaurantService.findById(restaurantId).get();
 
             Photo photo = photoService.findById(imageId).get();
-            restaurant.getPhotos().remove(photo);
+            if (restaurant.getLogo() == photo) {
+                 restaurant.setLogo(null);
+            } else {
+                restaurant.getPhotos().remove(photo);
+            }
             restaurantService.save(restaurant);
             photoService.delete(photo);
 
@@ -92,6 +138,21 @@ public class FileUploadController {
 
     @RequestMapping(value = "/dishes/deleteImage/{dishId}/{imageId}", method = RequestMethod.GET)
     public String deleteDishHandler(@PathVariable("dishId") long dishId,
+                                          @PathVariable("imageId") long imageId,
+                                          Model model) {
+
+            Dish dish = dishService.findById(dishId).get();
+
+            Photo photo = photoService.findById(imageId).get();
+            dish.getPhotos().remove(photo);
+            dishService.save(dish);
+            photoService.delete(photo);
+
+        return "redirect:/dishes/edit/" + dishId;
+    }
+
+    @RequestMapping(value = "/categories/deleteImage/{categoryId}/{imageId}", method = RequestMethod.GET)
+    public String deleteCategoryHandler(@PathVariable("categoryId") long dishId,
                                           @PathVariable("imageId") long imageId,
                                           Model model) {
 

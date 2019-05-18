@@ -18,7 +18,7 @@ public class DishService extends AbstractService<DishRepository, Dish> {
         return repository;
     }
 
-    public List<Dish> findByCategoryId(long categoryId) {
-        return repository.findByCategoryId(categoryId);
+    public List<Dish> findBySubCategoryId(long subCategoryId) {
+        return repository.findBySubCategoryId(subCategoryId);
     }
 }

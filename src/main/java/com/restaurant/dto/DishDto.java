@@ -1,48 +1,80 @@
 package com.restaurant.dto;
 
-public class DishDto {
+import java.io.Serializable;
+import java.util.List;
 
-    private long id;
-    private String name;
-    private float price;
-    private String photo;
+public class DishDto implements Serializable {
 
-//    public DishPojo(long id, String name, long price, String photo) {
-//        this.id = id;
-//        this.name = name;
-//        this.price = price;
-//        this.photo = photo;
-//    }
+   private long id;
+   private String name;
+   private String photo;
+   private float price;
+   private int weight;
+   private List<ProteinDto> proteins;
+   private List<AllergenDto> allergens;
+   private List<IngredientDto> ingredients;
 
-    public long getId() {
-        return id;
-    }
+   public long getId() {
+      return id;
+   }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+   public void setId(long id) {
+      this.id = id;
+   }
 
-    public String getName() {
-        return name;
-    }
+   public String getName() {
+      return name;
+   }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+   public void setName(String name) {
+      this.name = name;
+   }
 
-    public float getPrice() {
-        return price;
-    }
+   public String getPhoto() {
+      return photo;
+   }
 
-    public void setPrice(float price) {
-        this.price = price;
-    }
+   public void setPhoto(String photo) {
+      this.photo = photo;
+   }
 
-    public String getPhoto() {
-        return photo;
-    }
+   public float getPrice() {
+      return price;
+   }
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
+   public void setPrice(float price) {
+      this.price = price;
+   }
+
+   public int getWeight() {
+      return weight;
+   }
+
+   public void setWeight(int weight) {
+      this.weight = weight;
+   }
+
+   public List<ProteinDto> getProteins() {
+      return proteins;
+   }
+
+   public void setProteins(List<ProteinDto> proteins) {
+      this.proteins = proteins;
+   }
+
+   public List<AllergenDto> getAllergens() {
+      return allergens;
+   }
+
+   public void setAllergens(List<AllergenDto> allergens) {
+      this.allergens = allergens;
+   }
+
+   public List<IngredientDto> getIngredients() {
+      return ingredients;
+   }
+
+   public void setIngredients(List<IngredientDto> ingredients) {
+      this.ingredients = ingredients;
+   }
 }

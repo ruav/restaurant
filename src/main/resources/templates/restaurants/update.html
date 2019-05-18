@@ -103,18 +103,46 @@
         </div>
         <div class="col">
             <label>Изображения сохраняются сразу же для текущего ресторана</label>
-            <div th:each="photo : ${restaurant.photos}">
-                <div class="row" style="width:180px;">
-                    <img  th:src="@{'/image/' + ${photo.url}}" class="img-thumbnail "/>
-                    <a class="btn btn-primary btn-sm col-xs-4 h-25" href="#"
-                       th:href="@{'/restaurants/deleteImage/' +${restaurant.id} + '/' + ${photo.id}}"
-                       role="button"><i class="fa fa-trash" aria-hidden="true"></i>
-                    </a>
+            <div class="row">
+                <div>
+                    <div th:if="${restaurant.logo} != null"  class="col- col-xs-4" style="width:180px;">
+                        <div class="row no-gutters">
+                        <img   th:src="@{'/image/' + ${restaurant.logo.url}}" class="img-thumbnail col-auto img-fluid"/>
+                        <a class="btn btn-primary-outline btn-sm col-xs-4 h-25" href="#"
+                           th:href="@{'/restaurants/deleteImage/' +${restaurant.id} + '/' + ${restaurant.logo.id}}"
+                           role="button"><i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                        </div>
+                        <br/>
+                        <br/>
+                    </div>
+                </div>
+                <form  th:if="${restaurant.logo} == null" class="col-mr-3" enctype="multipart/form-data" method="POST"
+                      th:action="@{/restaurants/upload/{id}/logo(id=${restaurant.id})}" >
+                    Выберите лого: <input name="file" type="file" >
                     <br/>
                     <br/>
+                    <input type="submit" value="Добавить лого">
+                </form>
+            </div>
+            <br/>
+            <div class="row">
+                <div th:each="photo : ${restaurant.photos}">
+                    <div class="col-xs-4" style="width:180px;">
+                    <div class="row no-gutters">
+                        <img  th:src="@{'/image/' + ${photo.url}}" class="img-thumbnail col-auto"/>
+                        <a class="btn btn-primary-outline btn-sm col-auto h-25" href="#"
+                           th:href="@{'/restaurants/deleteImage/' +${restaurant.id} + '/' + ${photo.id}}"
+                           role="button"><i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                        <br/>
+                        <br/>
+                    </div>
                 </div>
             </div>
 
+            <div class="row">
             <form class="col-mr-3" enctype="multipart/form-data" method="POST"
                   th:action="@{/restaurants/upload/{id}(id=${restaurant.id})}" th:if="${restaurant.photos.size()} <10" >
                 Выберите изображение: <input name="file" type="file" >
@@ -122,6 +150,7 @@
                 <br/>
                 <input type="submit" value="Добавить изображение">
             </form>
+            </div>
         </div>
     </div>
 </div>

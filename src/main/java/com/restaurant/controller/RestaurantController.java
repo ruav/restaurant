@@ -5,12 +5,14 @@ import com.restaurant.entity.Desk;
 import com.restaurant.entity.Dish;
 import com.restaurant.entity.Hall;
 import com.restaurant.entity.Restaurant;
+import com.restaurant.entity.SubCategory;
 import com.restaurant.entity.User;
 import com.restaurant.service.CategoryService;
 import com.restaurant.service.DeskService;
 import com.restaurant.service.DishService;
 import com.restaurant.service.HallService;
 import com.restaurant.service.RestaurantService;
+import com.restaurant.service.SubCategoryService;
 import com.restaurant.service.TownService;
 import com.restaurant.service.UserService;
 import com.restaurant.vo.Role;
@@ -42,6 +44,9 @@ public class RestaurantController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    SubCategoryService subCategoryService;
 
     @Autowired
     DishService dishService;
@@ -132,12 +137,18 @@ public class RestaurantController {
 
         model.addAttribute("restaurant", restaurant);
 
-        Map<Category, List<Dish>> dishMap = new HashMap<>();
+        Map<Category, List<SubCategory>> categoriesMap = new HashMap<>();
+        Map<Long, List<Dish>> subcategoriesMap = new HashMap<>();
         for(Category category : categoryService.findByRestaurant(restaurant.getId())) {
-            dishMap.put(category, dishService.findByCategoryId(category.getId()));
+            categoriesMap.put(category, new ArrayList<>());
+            for(SubCategory subCategory : subCategoryService.findByCategoryId(category.getId())) {
+                categoriesMap.get(category).add(subCategory);
+                subcategoriesMap.put(subCategory.getId(), dishService.findBySubCategoryId(subCategory.getId()));
+            }
         }
 
-        model.addAttribute("dishes", dishMap);
+        model.addAttribute("categories", categoriesMap);
+        model.addAttribute("subcategories", subcategoriesMap);
 
         Map<Hall, List<Desk>> hallMap = new HashMap<>();
         for(Hall hall : hallService.findByRestaurantId(id)) {
@@ -146,6 +157,9 @@ public class RestaurantController {
 
         model.addAttribute("halls", hallMap);
         model.addAttribute("towns", townService.findMapAll());
+        if (httpSession.getAttribute("category") != null) {
+            httpSession.removeAttribute("category");
+        }
         httpSession.setAttribute("back", "/restaurants/info/" + id);
         httpSession.setAttribute("restaurant", id);
         httpSession.setAttribute("restaurantName", restaurant.getName());

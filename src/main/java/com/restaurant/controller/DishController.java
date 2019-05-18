@@ -1,9 +1,15 @@
 package com.restaurant.controller;
 
+import com.restaurant.entity.Allergen;
+import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
+import com.restaurant.entity.SubCategory;
+import com.restaurant.service.AllergenService;
 import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
 import com.restaurant.service.IngredientService;
+import com.restaurant.service.ProteinService;
+import com.restaurant.service.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dishes")
@@ -38,15 +48,32 @@ public class DishController extends AbstractController<DishService, Dish> {
     CategoryService categoryService;
 
     @Autowired
+    SubCategoryService subCategoryService;
+
+    @Autowired
     IngredientService ingredientService;
+
+    @Autowired
+    ProteinService proteinService;
+
+    @Autowired
+    AllergenService allergenService;
 
     @Override
     @GetMapping("/add")
     public String showSignUpForm(Dish dish, @PathParam("id") long id, Model model) {
-        dish.setCategoryId(0);
-        model.addAttribute("categories", categoryService.findByRestaurant(id));
+        dish.setSubCategoryId(0);
+
+        List<Category> categories = categoryService.findByRestaurant(id);
+        List<SubCategory> subCategories = new ArrayList<>();
+        categories.forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
+
+        model.addAttribute("subcategories", subCategories);
+        model.addAttribute("categories", categories);
         model.addAttribute("ingredients", ingredientService.findAll());
         model.addAttribute("restaurantId", id);
+        model.addAttribute("allergens", allergenService.findAll());
+        model.addAttribute("proteins", proteinService.findAll());
         return prefix() + "/add";
     }
 
@@ -57,8 +84,13 @@ public class DishController extends AbstractController<DishService, Dish> {
 
         model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
         model.addAttribute("entity", entity);
-        model.addAttribute("categories", categoryService.findAll());
+        List<SubCategory> subCategories = new ArrayList<>();
+        categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant")).forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
+
+        model.addAttribute("subcategories", subCategories);
         model.addAttribute("ingredients", ingredientService.findAll());
+        model.addAttribute("allergens", allergenService.findAll());
+        model.addAttribute("proteins", proteinService.findAll());
 
         return prefix() + "/update";
     }

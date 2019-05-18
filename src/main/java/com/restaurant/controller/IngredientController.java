@@ -5,9 +5,14 @@ import com.restaurant.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 @Controller
@@ -30,8 +35,42 @@ public class IngredientController extends AbstractController<IngredientService, 
     @Override
     @GetMapping("/add")
     public String showSignUpForm(Ingredient entity, @PathParam(value ="id") long id, Model model) {
-        model.addAttribute("restaurantId", id);
+        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
         model.addAttribute("ingredients", ingredientService.findAll());
         return prefix() + "/add";
     }
+
+    @Override
+    @PostMapping("/add")
+    public String add(@Valid Ingredient entity, BindingResult result, Model model) {
+        if (result.hasErrors() ) {
+            model.addAttribute("ingredients", ingredientService.findAll());
+            model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
+            return prefix() + "/add";
+        }
+        try {
+            repository().save(entity);
+        } catch (Exception e) {
+            result.addError(new ObjectError("Error", "Такой элемент уже существует"));
+            model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
+            model.addAttribute("ingredients", ingredientService.findAll());
+            return prefix() + "/add";
+        }
+        if(getHttpSession().getAttribute("back") == null) {
+            model.addAttribute("list", repository().findAll());
+        }
+        return "redirect:" + prefix() + "/add?id=" + getHttpSession().getAttribute("restaurant");
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showUpdateForm(@PathVariable("id") long id, Model model) throws Throwable {
+        Ingredient entity = repository().findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
+        model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
+        model.addAttribute("ingredients", ingredientService.findAll());
+        model.addAttribute("ingredient", entity);
+        return  prefix() + "/update";
+    }
+
+
 }

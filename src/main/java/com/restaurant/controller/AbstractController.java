@@ -3,6 +3,7 @@ package com.restaurant.controller;
 import com.restaurant.entity.Data;
 import com.restaurant.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
@@ -26,7 +27,7 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
     private HttpSession httpSession;
 
     @GetMapping("/add")
-    public String showSignUpForm(V entity, @PathParam(value ="id") long id, Model model) {
+    public String showSignUpForm(V entity, @PathParam(value ="id") @Nullable long id, Model model) {
         model.addAttribute("restaurantId", id);
 
         return prefix() + "/add";

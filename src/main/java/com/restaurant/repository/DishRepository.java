@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface DishRepository extends CrudRepository<Dish, Long> {
 
-    List<Dish> findByCategoryId(long categoryId);
+    List<Dish> findBySubCategoryId(long subCategoryId);
 
 }

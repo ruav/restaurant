@@ -26,9 +26,16 @@ public class Restaurant implements Data{
             name="restaurantphoto",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
-
     )
     private Set<Photo> photos;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name="restaurantlogo",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "photo_id")
+    )
+    private Photo logo;
 
     @Column(name = "avgprice", nullable = false)
     private int avgPrice;
@@ -101,6 +108,14 @@ public class Restaurant implements Data{
 
     public void setPhotos(Set<Photo> photos) {
         this.photos = photos;
+    }
+
+    public Photo getLogo() {
+        return logo;
+    }
+
+    public void setLogo(Photo logo) {
+        this.logo = logo;
     }
 
     @Override

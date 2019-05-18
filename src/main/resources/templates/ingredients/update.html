@@ -43,14 +43,13 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <form action="#" class="ml-0 pt-2" method="post" th:action="@{/users/update/{id}(id=${user.id})}"
-                  th:object="${user}">
-                <div class="row ml-3 " th:if="${#fields.hasGlobalErrors()}">
+            <form action="#" class="ml-0 pt-2" method="post" th:action="@{/ingredients/update/{id}(id=${ingredient.id})}" th:object="${ingredient}">
+                <div class="row col-auto " th:if="${#fields.hasGlobalErrors()}">
                     <p class="error-message alert alert-danger col-auto"
                        th:each="error : ${#fields.errors('global')}"
                        th:text="${error}">Validation error</p>
                 </div>
-                <div class="form-row">
+                <div class="form-row ">
                     <div class="col-auto">
                         <label for="name">Название ингредиента</label>
                         <input class="form-control is-valid" id="name" placeholder="Название ингредиента" required
@@ -59,12 +58,27 @@
                         <span th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></span>
                     </div>
                 </div>
-                <input type="submit" value="Изменить ингредиент">
+                <input type="submit" value="Добавить ингредиент">
             </form>
+        </div>
+        <div class="col">
+            <label>Уже имеющиеся ингредиенты:</label>
+            <div class="row">
+                <div th:each="ingredient : ${ingredients}"   class="col-auto border">
+                    <div th:if="${#authorization.expression('hasAuthority(''Root'')')}">
+                        <a  class="btn btn-primary-outline btn-sm col-auto "
+                            th:href="@{/ingredients/edit/{id}(id=${ingredient.id})}" th:text="${ingredient.name}"
+                            role="button">
+                        </a>
+                    </div>
+                    <div th:unless="${#authorization.expression('hasAuthority(''Root'')')}" class=" col-auto "
+                         th:text="${ingredient.name}">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 <footer class="footer text-faded text-center py-5">
     <div class="container">
         <p class="m-0 small">Copyright &copy; Your Website 2019</p>

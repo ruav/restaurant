@@ -63,6 +63,28 @@
                 <input class="btn btn-success" type="submit" value="Изменить категорию">
             </form>
         </div>
+        <div class="col">
+            <label>Изображения сохраняются сразу же для текущей категории</label>
+            <div th:each="photo : ${entity.photos}">
+                <div class="row" style="width:180px;">
+                    <img class="img-thumbnail " th:src="@{'/image/' + ${photo.url}}"/>
+                    <a class="btn btn-primary btn-sm col-xs-6 h-75" href="#"
+                       role="button"
+                       th:href="@{'/categories/deleteImage/' +${entity.id} + '/' + ${photo.id}}"><i aria-hidden="true"
+                                                                                                    class="fa fa-trash"></i>
+                    </a>
+                    <br/>
+                </div>
+            </div>
+
+            <form class="col-mr-3" enctype="multipart/form-data" method="POST"
+                  th:action="@{/categories/upload/{id}(id=${entity.id})}" th:if="${entity.photos.size()} <10">
+                Выберите изображение: <input name="file" type="file">
+                <br/>
+                <br/>
+                <input type="submit" value="Добавить изображение">
+            </form>
+        </div>
     </div>
 </div>
 

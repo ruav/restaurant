@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "dish",uniqueConstraints=@UniqueConstraint(columnNames= {"category_id","name"}))
+@Table(name = "dish",uniqueConstraints=@UniqueConstraint(columnNames= {"subcategory_id","name"}))
 public class Dish implements Data{
 
     @Id
@@ -12,8 +12,8 @@ public class Dish implements Data{
     @Column
     private long id;
 
-    @Column(name = "category_id", nullable = false)
-    private long categoryId;
+    @Column(name = "subcategory_id", nullable = false)
+    private long subCategoryId;
 
     @Column(nullable = false)
     private String name;
@@ -42,6 +42,23 @@ public class Dish implements Data{
     @Column
     private float price;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="dish_proteins",
+            joinColumns = @JoinColumn(name = "dish_id"),
+            inverseJoinColumns = @JoinColumn(name = "protein_id")
+
+    )
+    private Set<Protein> proteins;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="dish_allergens",
+            joinColumns = @JoinColumn(name = "dish_id"),
+            inverseJoinColumns = @JoinColumn(name = "allergen_id")
+
+    )
+    private Set<Allergen> allergens;
 
     public long getId() {
         return id;
@@ -51,12 +68,12 @@ public class Dish implements Data{
         this.id = id;
     }
 
-    public long getCategoryId() {
-        return categoryId;
+    public long getSubCategoryId() {
+        return subCategoryId;
     }
 
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
+    public void setSubCategoryId(long subCategoryId) {
+        this.subCategoryId = subCategoryId;
     }
 
     public String getName() {
@@ -99,10 +116,26 @@ public class Dish implements Data{
         this.photos = photos;
     }
 
+    public Set<Protein> getProteins() {
+        return proteins;
+    }
+
+    public void setProteins(Set<Protein> proteins) {
+        this.proteins = proteins;
+    }
+
+    public Set<Allergen> getAllergens() {
+        return allergens;
+    }
+
+    public void setAllergens(Set<Allergen> allergens) {
+        this.allergens = allergens;
+    }
+
     @Override
     public String toString() {
         return "Dish{" +
-                "categoryId=" + categoryId +
+                "subcategoryId=" + subCategoryId +
                 ", name='" + name + '\'' +
                 ", weight=" + weight +
                 ", photos=" + photos +

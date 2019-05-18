@@ -64,20 +64,36 @@
         <span th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></span>
     </div>
     <div class="form-group col-md-4">
-        <label for="categoryId">Категория</label>
-        <select class="form-control" id="categoryId" required th:field="*{categoryId}">
-            <option th:each="category : ${categories}" th:text="${category.name}" th:value="${category.id}">Категория
+        <label for="subCategoryId">Подкатегория</label>
+        <select class="form-control" id="subCategoryId" required th:field="*{subCategoryId}">
+            <option th:each="subCategory : ${subcategories}" th:text="${subCategory.name}" th:value="${subCategory.id}">Категория
             </option>
         </select>
     </div>
     <div class="form-group col-md-4">
+        <label for="ingredients">Ингредиенты</label>
         <select class="form-control" id="ingredients" multiple="multiple" required th:field="*{ingredients}">
             <option th:each="ingredient : ${ingredients}" th:text="${ingredient.name}" th:value="${ingredient.id}">
                 Ингредиент
             </option>
         </select>
     </div>
-
+    <div class="form-group col-md-4">
+        <label for="proteins">Протеины</label>
+        <select class="form-control" id="proteins" multiple="multiple"  th:field="*{proteins}">
+            <option th:each="protein : ${proteins}" th:text="${protein.name}" th:value="${protein.id}">
+                Протеин
+            </option>
+        </select>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="allergens">Аллергены</label>
+        <select class="form-control" id="allergens" multiple="multiple"  th:field="*{allergens}">
+            <option th:each="allergen : ${allergens}" th:text="${allergen.name}" th:value="${allergen.id}">
+                Аллерген
+            </option>
+        </select>
+    </div>
     <input class="btn btn-success ml-3" type="submit" value="Добавить блюдо">
 </form>
 

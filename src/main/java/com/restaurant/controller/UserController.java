@@ -6,6 +6,7 @@ import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
 import com.restaurant.service.PasswordResetService;
 import com.restaurant.service.PhotoService;
+import com.restaurant.service.SubCategoryService;
 import com.restaurant.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,9 @@ public class UserController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    SubCategoryService subCategoryService;
 
     @Autowired
     DishService dishService;
@@ -112,12 +116,16 @@ public class UserController {
             x.getPhotos().forEach(y -> photoService.delete(y));
            categoryService.findByRestaurant(x.getId()).forEach(
                    c -> {
-                       dishService.findByCategoryId(c.getId()).forEach(
-                               dish -> {
-                                   dish.getPhotos().forEach(photo -> photoService.delete(photo));
-                                   dishService.delete(dish);
-                               }
-                       );
+                       subCategoryService.findByCategoryId(c.getId()).forEach(
+                           s ->{
+                                dishService.findBySubCategoryId(c.getId()).forEach(
+                                    dish -> {
+                                        dish.getPhotos().forEach(photo -> photoService.delete(photo));
+                                        dishService.delete(dish);
+                                    }
+                                );
+                               subCategoryService.delete(s);
+                       });
                        categoryService.delete(c);
                    }
            );
