@@ -80,7 +80,7 @@
             </div>
 
             <form class="col-mr-3" enctype="multipart/form-data" method="POST"
-                  th:action="@{/categories/upload/{id}(id=${entity.id})}" th:if="${entity.photos.size()} <10">
+                  th:action="@{/categories/upload/{id}(id=${entity.id})}" th:if="${entity.photos.size()} <1">
                 Выберите изображение: <input name="file" type="file">
                 <br/>
                 <br/>

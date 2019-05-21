@@ -5,11 +5,13 @@ import com.restaurant.entity.Dish;
 import com.restaurant.entity.Icon;
 import com.restaurant.entity.Photo;
 import com.restaurant.entity.Restaurant;
+import com.restaurant.entity.SubCategory;
 import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
 import com.restaurant.service.IconService;
 import com.restaurant.service.PhotoService;
 import com.restaurant.service.RestaurantService;
+import com.restaurant.service.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -47,6 +49,9 @@ public class FileUploadController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    SubCategoryService subCategoryService;
 
     @PostMapping(value = "/restaurants/upload/{id}")
     public String uploadRestaurantHandler(@RequestParam("file") MultipartFile file,
@@ -122,6 +127,25 @@ public class FileUploadController {
         return "redirect:/categories/edit/" + id;
     }
 
+    @PostMapping(value = "/subcategories/upload/{id}")
+    public String uploadSubcategoryHandler(@RequestParam("file") MultipartFile file,
+                                     @PathVariable("id") long id,
+                                     Model model) throws IOException {
+        if (file.isEmpty()) {
+            model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
+        } else {
+            SubCategory subCategory = subCategoryService.findById(id).get();
+
+            Photo photo = new Photo();
+            photo.setUrl(UUID.randomUUID().toString());
+            photo.setImage(file.getBytes());
+            subCategory.getPhotos().add(photo);
+            subCategoryService.save(subCategory);
+        }
+
+        return "redirect:/subcategories/edit/" + id;
+    }
+
     @PostMapping(value = "/ingredients/upload/{id}")
     public String uploadIngredientIconHandler(@RequestParam("file") MultipartFile file,
                                      @PathVariable("id") long id,
@@ -187,6 +211,20 @@ public class FileUploadController {
             photoService.delete(photo);
 
         return "redirect:/categories/edit/" + categoryId;
+    }
+
+    @GetMapping(value = "/subcategories/deleteImage/{subcategoryId}/{imageId}")
+    public String deleteSubCategoryHandler(@PathVariable("subcategoryId") long subcategoryId,
+                                          @PathVariable("imageId") long imageId,
+                                          Model model) {
+
+            SubCategory subCategory = subCategoryService.findById(subcategoryId).get();
+            Photo photo = photoService.findById(imageId).get();
+            subCategory.getPhotos().remove(photo);
+            subCategoryService.save(subCategory);
+            photoService.delete(photo);
+
+        return "redirect:/subcategories/edit/" + subcategoryId;
     }
 
     @GetMapping(value = "/image/{url}")

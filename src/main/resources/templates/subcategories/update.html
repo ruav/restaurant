@@ -12,6 +12,8 @@
     <title>Рестораны</title>
 
     <link href="../static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link href="/static/css/font.awesome.min.css" rel="stylesheet" th:href="@{/css/font.awesome.min.css}">
+
 
 </head>
 
@@ -66,6 +68,32 @@
                     </div>
                 </div>
                 <input type="submit" value="Изменить подкатегорию">
+            </form>
+        </div>
+        <div class="col">
+            <label>Изображения сохраняются сразу же для текущей категории</label>
+            <div th:each="photo : ${subcategory.photos}">
+                <div class="row no-gutters" style="width:180px;">
+                    <img class="img-thumbnail img-fluid col-auto" th:src="@{'/image/' + ${photo.url}}"/>
+                    <div class="row">
+                        <div class="col-auto">
+                            <a class="btn btn-primary-outline btn-sm col-xs-4 fa-2x" href="#"
+                               role="button"
+                               th:href="@{'/subcategories/deleteImage/' +${subcategory.id} + '/' + ${photo.id}}">
+                                <i aria-hidden="true" class="fa fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+
+            <form class="col-mr-3" enctype="multipart/form-data" method="POST"
+                  th:action="@{/subcategories/upload/{id}(id=${subcategory.id})}" th:if="${subcategory.photos.size()} <1">
+                Выберите изображение: <input name="file" type="file">
+                <br/>
+                <br/>
+                <input type="submit" value="Добавить изображение">
             </form>
         </div>
     </div>
