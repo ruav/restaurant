@@ -106,7 +106,12 @@
                  class="card-img-top"
                  src="..." th:unless="${subcategory.photos.size() > 0}">
             <div class="card-body">
-                <h5 class="card-title" th:text="${subcategory.name}"></h5>
+                <h5 class="card-title" >
+                    <a class="btn btn-link ml-auto"
+                       role="button"
+                       th:href="@{/dishes/list/{id}(id=${subcategory.id})}"
+                       th:text="${subcategory.name}">Категория</a>
+                </h5>
             </div>
             <div class="card-body">
                 <td><a class="card-link" th:href="@{/subcategories/edit/{id}(id=${subcategory.id})}">Редактировать</a></td>

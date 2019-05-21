@@ -68,11 +68,11 @@
                     <img class="img-thumbnail img-fluid col-auto" th:src="@{'/image/' + ${photo.url}}"/>
                     <div class="row">
                         <div class="col-auto">
-                    <a class="btn btn-primary-outline btn-sm col-xs-4 fa-2x" href="#"
-                       role="button"
-                       th:href="@{'/categories/deleteImage/' +${entity.id} + '/' + ${photo.id}}">
-                        <i aria-hidden="true" class="fa fa-trash"></i>
-                    </a>
+                            <a class="btn btn-primary-outline btn-sm col-xs-4 fa-2x" href="#"
+                               role="button"
+                               th:href="@{'/categories/deleteImage/' +${entity.id} + '/' + ${photo.id}}">
+                                <i aria-hidden="true" class="fa fa-trash"></i>
+                            </a>
                         </div>
                     </div>
                     <br/>

@@ -86,7 +86,12 @@
                  class="card-img-top"
                  src="..." th:unless="${element.key.photos.size() > 0}">
             <div class="card-body">
-                <h5 class="card-title" th:text="${element.key.name}"></h5>
+                <h5 class="card-title" >
+                    <a class="btn btn-link ml-auto"
+                       role="button"
+                       th:href="@{/subcategories/list/{id}(id=${element.key.id})}"
+                       th:text="${element.key.name}">Категория</a>
+                </h5>
                 <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
             </div>
             <!--<ul class="list-group list-group-flush">-->
