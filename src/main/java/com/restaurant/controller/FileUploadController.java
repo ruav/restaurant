@@ -177,7 +177,7 @@ public class FileUploadController {
     }
 
     @RequestMapping(value = "/categories/deleteImage/{categoryId}/{imageId}", method = RequestMethod.GET)
-§    public String deleteCategoryHandler(@PathVariable("categoryId") long categoryId,
+    public String deleteCategoryHandler(@PathVariable("categoryId") long categoryId,
                                           @PathVariable("imageId") long imageId,
                                           Model model) {
 
