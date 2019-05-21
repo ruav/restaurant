@@ -177,18 +177,17 @@ public class FileUploadController {
     }
 
     @RequestMapping(value = "/categories/deleteImage/{categoryId}/{imageId}", method = RequestMethod.GET)
-    public String deleteCategoryHandler(@PathVariable("categoryId") long dishId,
+§    public String deleteCategoryHandler(@PathVariable("categoryId") long categoryId,
                                           @PathVariable("imageId") long imageId,
                                           Model model) {
 
-            Dish dish = dishService.findById(dishId).get();
-
+            Category category = categoryService.findById(categoryId).get();
             Photo photo = photoService.findById(imageId).get();
-            dish.getPhotos().remove(photo);
-            dishService.save(dish);
+            category.getPhotos().remove(photo);
+            categoryService.save(category);
             photoService.delete(photo);
 
-        return "redirect:/dishes/edit/" + dishId;
+        return "redirect:/categories/edit/" + categoryId;
     }
 
     @RequestMapping(value = "/image/{url}")

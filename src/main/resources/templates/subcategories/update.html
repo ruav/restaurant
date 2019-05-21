@@ -29,7 +29,7 @@
     <li class="nav-item px-lg-1"><a class="nav-link " th:href="@{/restaurants/list}">Рестораны</a></li>
     <li class="nav-item px-lg-1"><a class="nav-link " th:href="@{'/restaurants/info/' + ${restaurantId}}">Текущий
         ресторан</a></li>
-    <li class="nav-item px-lg-1"><a class="nav-link active disabled" href="#">Изменение стола</a></li>
+    <li class="nav-item px-lg-1"><a class="nav-link active disabled" href="#">Изменение подкатегории</a></li>
 
     <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('Root')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a>
     <li class="nav-item px-lg-1 ml-auto"><a class="nav-link" th:href="@{/logout}">Выйти</a>
@@ -40,32 +40,32 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <form action="#" class="ml-0 pt-2" method="post" th:action="@{/tables/update/{id}(id=${desk.id})}"
-                  th:object="${desk}">
-                <div class="row ml-3 " th:if="${#fields.hasGlobalErrors()}">
+            <form action="#" class="ml-0 pt-2" method="post" th:action="@{/subcategories/update/{id}(id=${subcategory.id})}" th:object="${subcategory}">
+                <div class="row col-auto " th:if="${#fields.hasGlobalErrors()}">
                     <p class="error-message alert alert-danger col-auto"
                        th:each="error : ${#fields.errors('global')}"
                        th:text="${error}">Validation error</p>
                 </div>
-                <div class="form-row col-md-4">
+                <div class="form-row ">
                     <div class="col-auto">
-                        <label for="hall">Выбор зала</label>
-                        <select class="form-control" id="hall" th:field="*{hall}">
-                            <option th:each="hall : ${halls}" th:text="${hall.name}" th:value="${hall.id}">Название зала
+                        <label for="category">Выбор категории</label>
+                        <select class="form-control" id="category" th:field="*{categoryId}">
+                            <option th:each="category : ${categories}" th:text="${category.name}" th:value="${category.id}">
+                                Название категории
                             </option>
-                            <!--<option th:each="element : ${categories}">Category</option>-->
                         </select>
                     </div>
                 </div>
-                <div class="form-row ">
+
+                <div class="form-row">
                     <div class="col-auto">
-                        <label for="number">Номер стола</label>
-                        <input id="number" min="1" placeholder="Номер стола" step="1" th:field="*{number}"
-                               type="number">
-                        <span th:errors="*{number}" th:if="${#fields.hasErrors('number')}"></span>
+                        <label for="name">Наименование подкатегории</label>
+                        <input class="form-control is-valid" id="name" placeholder="Наименование подкатегории" required
+                               th:field="*{name}" type="text">
+                        <span th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></span>
                     </div>
                 </div>
-                <input type="submit" value="Изменить стол">
+                <input type="submit" value="Изменить подкатегорию">
             </form>
         </div>
     </div>

@@ -72,53 +72,60 @@
     </div>
 
 
-    <div class="carousel slide " data-ride="carousel" hidden="hidden" id="carouselExampleSlidesOnly"
-         th:if="${restaurant.photos.size()} > 0">
-        <div class="carousel-inner">
-            <div th:class="${iterStat.first} ? 'carousel-item active' : 'carousel-item'"
-                 th:each="photo,iterStat : ${restaurant.photos}">
-                <img alt="First slide" class="d-block w-25 col-lg-3" th:src="@{'/image/' + ${photo.url}}">
-            </div>
-        </div>
-        <a class="carousel-control-prev" data-slide="prev" href="#carouselExampleControls" role="button">
-            <span aria-hidden="true" class="carousel-control-prev-icon"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" data-slide="next" href="#carouselExampleControls" role="button">
-            <span aria-hidden="true" class="carousel-control-next-icon"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
+
     <div>
         <label>Меню по категориям</label>
     </div>
 
-
-    <div th:each="element : ${categories}">
-        <table class="table table-hover ">
-            <tr>
-                <td>
-                    <a class="btn btn-link ml-auto"
-                       role="button"
-                       th:href="@{/subcategories/list/{id}(id=${element.key.id})}"
-                       th:text="${element.key.name}">Категория</a>
-                </td>
-                <td>
-                    <div class="row no-gutters">
-                        <img alt=""
-
-                             class="img-thumbnail img-fluid" style="width:180px;height: 102px;"
-                             th:if="${element.key.photos.size() > 0}" th:src="@{'/image/' + ${element.key.photos.stream().findFirst().get().url}}"/>
-                    </div>
-                </td>
-                <td><a class="btn btn-link ml-auto" role="button"
-                       th:href="@{/categories/edit/{id}(id=${element.key.id})}">Редактировать</a></td>
-                <td><a class="btn btn-link ml-auto" role="button"
-                       th:href="@{/categories/delete/{id}(id=${element.key.id})}">Удалить</a></td>
-            </tr>
-        </table>
-
+    <div class="row px-lg-3">
+        <div class="card col-auto" style="width: 18rem;" th:each="element : ${categories}">
+            <img alt="" class=" card-img-top"
+                 th:if="${element.key.photos.size() > 0}"
+                 th:src="@{'/image/' + ${element.key.photos.stream().findFirst().get().url}}"/>
+            <img alt="..."
+                 class="card-img-top"
+                 src="..." th:unless="${element.key.photos.size() > 0}">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${element.key.name}"></h5>
+                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+            </div>
+            <!--<ul class="list-group list-group-flush">-->
+            <!--<li class="list-group-item" th:each="ingredient : ${dish.ingredients}"-->
+            <!--th:text="${ingredient.name}">Ингредиент-->
+            <!--</li>-->
+            <!--</ul>-->
+            <div class="card-body">
+                <td><a class="card-link" th:href="@{/categories/edit/{id}(id=${element.key.id})}">Редактировать</a></td>
+                <td><a class="card-link" th:href="@{/categories/delete/{id}(id=${element.key.id})}">Удалить</a></td>
+            </div>
+        </div>
     </div>
+
+    <!--<div th:each="element : ${categories}">-->
+        <!--<table class="table table-hover ">-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<a class="btn btn-link ml-auto"-->
+                       <!--role="button"-->
+                       <!--th:href="@{/subcategories/list/{id}(id=${element.key.id})}"-->
+                       <!--th:text="${element.key.name}">Категория</a>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<div class="row no-gutters">-->
+                        <!--<img alt=""-->
+
+                             <!--class="img-thumbnail img-fluid"-->
+                             <!--th:if="${element.key.photos.size() > 0}" th:src="@{'/image/' + ${element.key.photos.stream().findFirst().get().url}}"/>-->
+                    <!--</div>-->
+                <!--</td>-->
+                <!--<td><a class="btn btn-link ml-auto" role="button"-->
+                       <!--th:href="@{/categories/edit/{id}(id=${element.key.id})}">Редактировать</a></td>-->
+                <!--<td><a class="btn btn-link ml-auto" role="button"-->
+                       <!--th:href="@{/categories/delete/{id}(id=${element.key.id})}">Удалить</a></td>-->
+            <!--</tr>-->
+        <!--</table>-->
+
+    <!--</div>-->
 
     <p><a th:href="@{/categories/add?id={id}(id=${restaurant.id})}">Добавить новую категорию</a></p>
 

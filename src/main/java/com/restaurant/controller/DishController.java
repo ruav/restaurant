@@ -1,6 +1,5 @@
 package com.restaurant.controller;
 
-import com.restaurant.entity.Allergen;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
 import com.restaurant.entity.SubCategory;
@@ -23,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/dishes")
@@ -126,5 +123,16 @@ public class DishController extends AbstractController<DishService, Dish> {
                 ? "redirect:" + getHttpSession().getAttribute("back")
                 : prefix() + "/list";
     }
+
+    @GetMapping("/list/{id}")
+    public String index(@PathVariable("id") long id, Model model) {
+        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+        model.addAttribute("restaurantName", getHttpSession().getAttribute("restaurantName"));
+
+        model.addAttribute("subcategory", subCategoryService.findById(id).get());
+        model.addAttribute("dishes", repository().findBySubCategoryId(id));
+        return prefix() + "/list";
+    }
+
 
 }
