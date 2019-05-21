@@ -50,14 +50,17 @@ public class Converter {
         dto.setName(dish.getName());
         dto.setPrice(dish.getPrice());
         dto.setPhoto(dish.getPhotos().isEmpty() ? null : url + dish.getPhotos().stream().findFirst().get().getUrl());
-        dto.setIngredients(dish.getIngredients().stream().map(i -> ingredientDto(i, url)).collect(Collectors.toList()));
-        dto.setProteins(dish.getProteins().stream().map(p -> proteinDto(p)).collect(Collectors.toList()));
-        dto.setAllergens(dish.getAllergens().stream().map(a -> allergenDto(a)).collect(Collectors.toList()));
+        dto.setIngredients(dish.getIngredients().stream().map(i -> getIngredientDto(i, url)).collect(Collectors.toList()));
+        List<Long> allergens = dish.getAllergens().stream().map(Allergen::getId).collect(Collectors.toList());
+        List<Long> proteins = dish.getProteins().stream().map(Protein::getId).collect(Collectors.toList());
+
+        dto.setProteins(proteins);
+        dto.setAllergens(allergens);
         return dto;
 
     }
 
-    public static IngredientDto ingredientDto(Ingredient ingredient, String url) {
+    public static IngredientDto getIngredientDto(Ingredient ingredient, String url) {
         IngredientDto dto = new IngredientDto();
         dto.setId(ingredient.getId());
         dto.setName(ingredient.getName());
@@ -65,7 +68,7 @@ public class Converter {
         return dto;
     }
 
-    public static ProteinDto proteinDto(Protein protein) {
+    public static ProteinDto getProteinDto(Protein protein) {
         ProteinDto dto = new ProteinDto();
         dto.setId(protein.getId());
         dto.setName(protein.getName());
@@ -73,7 +76,7 @@ public class Converter {
         return dto;
     }
 
-    public static AllergenDto allergenDto(Allergen allergen) {
+    public static AllergenDto getAllergenDto(Allergen allergen) {
         AllergenDto dto = new AllergenDto();
         dto.setId(allergen.getId());
         dto.setName(allergen.getName());

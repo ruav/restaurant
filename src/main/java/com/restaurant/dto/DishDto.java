@@ -10,8 +10,8 @@ public class DishDto implements Serializable {
    private String photo;
    private float price;
    private int weight;
-   private List<ProteinDto> proteins;
-   private List<AllergenDto> allergens;
+   private List<Long> proteins;
+   private List<Long> allergens;
    private List<IngredientDto> ingredients;
 
    public long getId() {
@@ -54,19 +54,19 @@ public class DishDto implements Serializable {
       this.weight = weight;
    }
 
-   public List<ProteinDto> getProteins() {
+   public List<Long> getProteins() {
       return proteins;
    }
 
-   public void setProteins(List<ProteinDto> proteins) {
+   public void setProteins(List<Long> proteins) {
       this.proteins = proteins;
    }
 
-   public List<AllergenDto> getAllergens() {
+   public List<Long> getAllergens() {
       return allergens;
    }
 
-   public void setAllergens(List<AllergenDto> allergens) {
+   public void setAllergens(List<Long> allergens) {
       this.allergens = allergens;
    }
 
