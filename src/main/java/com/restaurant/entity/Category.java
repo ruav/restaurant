@@ -1,11 +1,12 @@
 package com.restaurant.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "category",uniqueConstraints=@UniqueConstraint(columnNames= {"restaurant_Id","name"}))
-public class Category implements Data{
+public class Category implements Data, Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

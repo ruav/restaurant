@@ -69,6 +69,7 @@ public class IngredientController extends AbstractController<IngredientService, 
         return "redirect:" + prefix() + "/add?id=" + getHttpSession().getAttribute("restaurant");
     }
 
+    @Override
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) throws Throwable {
         Ingredient entity = repository().findById(id)

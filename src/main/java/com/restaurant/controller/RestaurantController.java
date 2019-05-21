@@ -67,7 +67,7 @@ public class RestaurantController {
     @Autowired
     private HttpSession httpSession;
 
-    private final String PREFIX = "/restaurants";
+    private final static String PREFIX = "/restaurants";
 
     @GetMapping("/add")
     public String showSignUpForm(Restaurant restaurant, Model model) {

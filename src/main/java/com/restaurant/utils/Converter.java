@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 @Component
 public class Converter {
 
+    private Converter() {
+    }
+
     public static CategoryDto getCategoryDto(Category category, List<SubCategory> subCategories, Map<Long, List<Dish>> map, String url) {
         CategoryDto categoryDto = new CategoryDto();
 

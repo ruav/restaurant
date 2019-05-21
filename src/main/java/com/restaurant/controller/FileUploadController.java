@@ -16,10 +16,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +32,6 @@ public class FileUploadController {
 
 
     private static final String FAILED_UPLOAD_MESSAGE = "You failed to upload [%s] because the file because %s";
-    private static final String SUCCESS_UPLOAD_MESSAGE = "You successfully uploaded file = [%s]";
 
     @Autowired
     RestaurantService restaurantService;
@@ -49,7 +48,7 @@ public class FileUploadController {
     @Autowired
     CategoryService categoryService;
 
-    @RequestMapping(value = "/restaurants/upload/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/restaurants/upload/{id}")
     public String uploadRestaurantHandler(@RequestParam("file") MultipartFile file,
                                           @PathVariable("id") long id,
                                           Model model) throws IOException {
@@ -67,7 +66,7 @@ public class FileUploadController {
         return "redirect:/restaurants/edit/" + id;
     }
 
-    @RequestMapping(value = "/restaurants/upload/{id}/logo", method = RequestMethod.POST)
+    @PostMapping(value = "/restaurants/upload/{id}/logo")
     public String uploadRestaurantLogoHandler(@RequestParam("file") MultipartFile file,
                                           @PathVariable("id") long id,
                                           Model model) throws IOException {
@@ -85,7 +84,7 @@ public class FileUploadController {
         return "redirect:/restaurants/edit/" + id;
     }
 
-    @RequestMapping(value = "/dishes/upload/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/dishes/upload/{id}")
     public String uploadDishHandler(@RequestParam("file") MultipartFile file,
                                      @PathVariable("id") long id,
                                      Model model) throws IOException {
@@ -104,7 +103,7 @@ public class FileUploadController {
         return "redirect:/dishes/edit/" + id;
     }
 
-    @RequestMapping(value = "/categories/upload/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/categories/upload/{id}")
     public String uploadCategoryHandler(@RequestParam("file") MultipartFile file,
                                      @PathVariable("id") long id,
                                      Model model) throws IOException {
@@ -143,7 +142,7 @@ public class FileUploadController {
     }
 
 
-    @RequestMapping(value = "/restaurants/deleteImage/{restaurantId}/{imageId}", method = RequestMethod.GET)
+    @GetMapping(value = "/restaurants/deleteImage/{restaurantId}/{imageId}" )
     public String deleteRestaurantHandler(@PathVariable("restaurantId") long restaurantId,
                                           @PathVariable("imageId") long imageId,
                                           Model model) {
@@ -161,7 +160,7 @@ public class FileUploadController {
         return "redirect:/restaurants/edit/" + restaurantId;
     }
 
-    @RequestMapping(value = "/dishes/deleteImage/{dishId}/{imageId}", method = RequestMethod.GET)
+    @GetMapping(value = "/dishes/deleteImage/{dishId}/{imageId}")
     public String deleteDishHandler(@PathVariable("dishId") long dishId,
                                           @PathVariable("imageId") long imageId,
                                           Model model) {
@@ -176,7 +175,7 @@ public class FileUploadController {
         return "redirect:/dishes/edit/" + dishId;
     }
 
-    @RequestMapping(value = "/categories/deleteImage/{categoryId}/{imageId}", method = RequestMethod.GET)
+    @GetMapping(value = "/categories/deleteImage/{categoryId}/{imageId}")
     public String deleteCategoryHandler(@PathVariable("categoryId") long categoryId,
                                           @PathVariable("imageId") long imageId,
                                           Model model) {
@@ -190,7 +189,7 @@ public class FileUploadController {
         return "redirect:/categories/edit/" + categoryId;
     }
 
-    @RequestMapping(value = "/image/{url}")
+    @GetMapping(value = "/image/{url}")
     @ResponseBody
     public HttpEntity<byte[]> getImage(@PathVariable(value = "url") String url) {
 
@@ -207,7 +206,7 @@ public class FileUploadController {
         return new HttpEntity<>(array, headers);
     }
 
-    @RequestMapping(value = "/icon/{url}")
+    @GetMapping(value = "/icon/{url}")
     @ResponseBody
     public HttpEntity<byte[]> getIcon(@PathVariable(value = "url") String url) {
 

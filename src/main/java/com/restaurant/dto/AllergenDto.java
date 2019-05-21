@@ -1,9 +1,13 @@
 package com.restaurant.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class AllergenDto  {
 
+    @ApiModelProperty
     private long id;
 
+    @ApiModelProperty
     private String name;
 
     public long getId() {

@@ -94,6 +94,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
         return  prefix() + "/update";
     }
 
+    @Override
     @PostMapping("/update/{id}")
     public String update(@PathVariable("id") long id, @Valid SubCategory entity,
                          BindingResult result, Model model) {

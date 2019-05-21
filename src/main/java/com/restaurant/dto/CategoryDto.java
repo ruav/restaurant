@@ -1,14 +1,20 @@
 package com.restaurant.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDto implements Serializable {
 
+    @ApiModelProperty
     private long id;
+
+    @ApiModelProperty
     private String name;
 
+    @ApiModelProperty
     private List<SubCategoryDto> subCategories = new ArrayList<>();
 
     public long getId() {

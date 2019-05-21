@@ -79,6 +79,7 @@ public class DeskController extends AbstractController<DeskService, Desk> {
         return  prefix() + "/update";
     }
 
+    @Override
     @PostMapping("/update/{id}")
     public String update(@PathVariable("id") long id, @Valid Desk entity,
                          BindingResult result, Model model) {

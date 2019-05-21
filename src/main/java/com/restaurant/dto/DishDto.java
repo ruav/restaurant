@@ -1,17 +1,34 @@
 package com.restaurant.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class DishDto implements Serializable {
 
+   @ApiModelProperty
    private long id;
+
+   @ApiModelProperty
    private String name;
+
+   @ApiModelProperty
    private String photo;
+
+   @ApiModelProperty
    private float price;
+
+   @ApiModelProperty
    private int weight;
+
+   @ApiModelProperty
    private List<Long> proteins;
+
+   @ApiModelProperty
    private List<Long> allergens;
+
+   @ApiModelProperty
    private List<IngredientDto> ingredients;
 
    public long getId() {

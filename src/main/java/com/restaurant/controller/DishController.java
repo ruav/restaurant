@@ -74,6 +74,7 @@ public class DishController extends AbstractController<DishService, Dish> {
         return prefix() + "/add";
     }
 
+    @Override
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) throws Throwable {
         Dish entity = repository().findById(id)
