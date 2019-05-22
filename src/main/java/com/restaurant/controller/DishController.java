@@ -97,9 +97,17 @@ public class DishController extends AbstractController<DishService, Dish> {
     @PostMapping("/update/{id}")
     public String update(@PathVariable("id") long id, @Valid Dish entity,
                              BindingResult result, Model model) {
+        Long restaurantId = (Long) getHttpSession().getAttribute("restaurant");
+        SubCategory subCategory = subCategoryService.findById(id).get();
+        if (restaurantId == null) {
+            Category category = categoryService.findById(subCategory.getCategoryId()).get();
+            restaurantId = category.getRestaurantId();
+            getHttpSession().setAttribute("restaurant", restaurantId);
+        }
+
         if (result.hasErrors()) {
             entity.setId(id);
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+            model.addAttribute("restaurantId", restaurantId);
             model.addAttribute("entity", entity);
             model.addAttribute("categories", categoryService.findAll());
             model.addAttribute("ingredients", ingredientService.findAll());
@@ -110,7 +118,7 @@ public class DishController extends AbstractController<DishService, Dish> {
             repository().save(entity);
         } catch (Exception e) {
             entity.setId(id);
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+            model.addAttribute("restaurantId", restaurantId);
             model.addAttribute("entity", entity);
             model.addAttribute("categories", categoryService.findAll());
             model.addAttribute("ingredients", ingredientService.findAll());
@@ -127,7 +135,14 @@ public class DishController extends AbstractController<DishService, Dish> {
 
     @GetMapping("/list/{id}")
     public String index(@PathVariable("id") long id, Model model) {
-        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+
+        Long restaurantId = (Long) getHttpSession().getAttribute("restaurant");
+        SubCategory subCategory = subCategoryService.findById(id).get();
+        if (restaurantId == null) {
+            Category category = categoryService.findById(subCategory.getCategoryId()).get();
+            restaurantId = category.getRestaurantId();
+        }
+        model.addAttribute("restaurantId", restaurantId);
         model.addAttribute("restaurantName", getHttpSession().getAttribute("restaurantName"));
 
         model.addAttribute("subcategory", subCategoryService.findById(id).get());
