@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +65,7 @@ public class PublicEndpoint {
      * @param restaurantId id ресторана
      * @return результат в формате json.
      */
-    @ApiOperation(value ="Возвращает меню выбранного ресторана", response = RestaurantMenuModel.class)
+    @ApiOperation(value ="Возвращает меню выбранного ресторана", response = RestaurantMenuModel.class, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 401, message = "not authorized!"),
@@ -101,13 +102,13 @@ public class PublicEndpoint {
         return restaurantMenuModel;
     }
 
-    @ApiOperation(value ="about", response = String.class)
+    @ApiOperation(value ="about", response = String.class, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 401, message = "not authorized!"),
             @ApiResponse(code = 403, message = "forbidden!!!"),
             @ApiResponse(code = 404, message = "not found!!!") })
-    @GetMapping(value = "/about")
+    @GetMapping(value = "/about", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String about() {
         return "{\"vk\":\"https://vk.com/zabeiapp\",\"instagram\":\"https://www.instagram.com/zabeiapp/\",\"about\":[{\"title\":\"О приложении\",\"youtube\":\"https://www.youtube.com/watch?v=SPauxWv1Rnk\",\"description\":\"Приложение \\\"Забей\\\" помогает:- узнать, где сегодня будет туса;\\n- проверить наличие свободных мест;\\n- посмотреть 360-панораму зала;\\n- забронировать нужный столик;\\n- оплатить депозит;\\n- посмотреть меню;\\n- позвать официанта к столику.\"},{\"title\":\"Добавить заведение\",\"youtube\":null,\"description\":\"Чтобы добавить свое заведение в приложение, свяжитесь с администратором нашего сообщества Вконтакте.\"},{\"title\":\"Франшиза\",\"youtube\":\"https://www.youtube.com/watch?v=SPauxWv1Rnk\",\"description\":\"С нами можно заработать. Подробнее о франшизе можете прочитать в нашей группе Вконтакте\"}],\"authors\":{\"title\":\"Волшебники\",\"photos\":[\"http://img1.zabei.app/static/1.jpg\",\"http://img1.zabei.app/static/2.jpg\",\"http://img1.zabei.app/static/3.jpg\",\"http://img1.zabei.app/static/4.jpg\"]}}";
     }
