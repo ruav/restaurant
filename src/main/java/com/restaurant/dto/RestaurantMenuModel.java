@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-public class RestaurantModel {
+public class RestaurantMenuModel {
     @ApiModelProperty
     private String logo;
 

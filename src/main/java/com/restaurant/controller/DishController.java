@@ -8,6 +8,7 @@ import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
 import com.restaurant.service.IngredientService;
 import com.restaurant.service.ProteinService;
+import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,6 +56,9 @@ public class DishController extends AbstractController<DishService, Dish> {
 
     @Autowired
     AllergenService allergenService;
+
+    @Autowired
+    RestaurantService restaurantService;
 
     @Override
     @GetMapping("/add")
@@ -128,9 +132,11 @@ public class DishController extends AbstractController<DishService, Dish> {
         if(getHttpSession().getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
-        return getHttpSession().getAttribute("back") != null
-                ? "redirect:" + getHttpSession().getAttribute("back")
-                : prefix() + "/list";
+//        return getHttpSession().getAttribute("back") != null
+//                ? "redirect:" + getHttpSession().getAttribute("back")
+//                : prefix() + "/list";
+
+        return  "redirect:" + prefix() + "/list/" + entity.getSubCategoryId();
     }
 
     @GetMapping("/list/{id}")
@@ -142,12 +148,55 @@ public class DishController extends AbstractController<DishService, Dish> {
             Category category = categoryService.findById(subCategory.getCategoryId()).get();
             restaurantId = category.getRestaurantId();
         }
+        String restaurantName = (String) getHttpSession().getAttribute("restaurantName");
+        if (restaurantName == null) {
+            restaurantName = restaurantService.findById(restaurantId).get().getName();
+        }
         model.addAttribute("restaurantId", restaurantId);
-        model.addAttribute("restaurantName", getHttpSession().getAttribute("restaurantName"));
+        model.addAttribute("restaurantName", restaurantName);
 
         model.addAttribute("subcategory", subCategoryService.findById(id).get());
         model.addAttribute("dishes", repository().findBySubCategoryId(id));
         return prefix() + "/list";
+    }
+
+    @Override
+    @PostMapping("/add")
+    public String add(@Valid Dish entity, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            List<Category> categories = categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant"));
+            List<SubCategory> subCategories = new ArrayList<>();
+            categories.forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
+
+            model.addAttribute("subcategories", subCategories);
+            model.addAttribute("categories", categories);
+            model.addAttribute("ingredients", ingredientService.findAll());
+            model.addAttribute("allergens", allergenService.findAll());
+            model.addAttribute("proteins", proteinService.findAll());
+            model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
+            return prefix() + "/add";
+        }
+        try {
+            entity = repository().save(entity);
+        } catch (Exception e) {
+            result.addError(new ObjectError("Error", "Такой элемент уже существует"));
+            List<Category> categories = categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant"));
+            List<SubCategory> subCategories = new ArrayList<>();
+            categories.forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
+
+            model.addAttribute("subcategories", subCategories);
+            model.addAttribute("categories", categories);
+            model.addAttribute("ingredients", ingredientService.findAll());
+            model.addAttribute("allergens", allergenService.findAll());
+            model.addAttribute("proteins", proteinService.findAll());
+            model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
+            return prefix() + "/add";
+        }
+        if (getHttpSession().getAttribute("back") == null) {
+            model.addAttribute("list", repository().findAll());
+        }
+//        return getHttpSession().getAttribute("back") != null ? "redirect:" + getHttpSession().getAttribute("back") : "redirect:" + prefix() + "/list/" + entity.getSubCategoryId();
+        return  "redirect:" + prefix() + "/list/" + entity.getSubCategoryId();
     }
 
 

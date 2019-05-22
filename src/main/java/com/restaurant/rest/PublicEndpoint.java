@@ -3,7 +3,7 @@ package com.restaurant.rest;
 import com.restaurant.dto.AllergenDto;
 import com.restaurant.dto.CategoryDto;
 import com.restaurant.dto.ProteinDto;
-import com.restaurant.dto.RestaurantModel;
+import com.restaurant.dto.RestaurantMenuModel;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
 import com.restaurant.entity.Restaurant;
@@ -64,28 +64,28 @@ public class PublicEndpoint {
      * @param restaurantId id ресторана
      * @return результат в формате json.
      */
-    @ApiOperation(value ="Возвращает данные по выбранному ресторану", response = RestaurantModel.class)
+    @ApiOperation(value ="Возвращает меню выбранного ресторана", response = RestaurantMenuModel.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 401, message = "not authorized!"),
             @ApiResponse(code = 403, message = "forbidden!!!"),
             @ApiResponse(code = 404, message = "not found!!!") })
-    @GetMapping(value = "/restaurant/{restaurantId}")
-    public RestaurantModel restaurant(@ApiParam(value = "id ресторана.", example = "1", required = true) @PathVariable("restaurantId") long restaurantId, HttpServletRequest request) {
+    @GetMapping(value = "/menu/{restaurantId}")
+    public RestaurantMenuModel menu(@ApiParam(value = "id ресторана.", example = "1", required = true) @PathVariable("restaurantId") long restaurantId, HttpServletRequest request) {
         String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() ;
 
-        RestaurantModel restaurantModel = new RestaurantModel();
+        RestaurantMenuModel restaurantMenuModel = new RestaurantMenuModel();
 
         Optional<Restaurant> restaurant = restaurantService.findById(restaurantId);
 
         if (!restaurant.isPresent())
-            return restaurantModel;
+            return restaurantMenuModel;
 
-        restaurantModel.setLogo(restaurant.get().getLogo() == null ? null : (url + restaurant.get().getLogo().getUrl()));
+        restaurantMenuModel.setLogo(restaurant.get().getLogo() == null ? null : (url + restaurant.get().getLogo().getUrl()));
         List<AllergenDto> allergens = allergenService.findAll().stream().map(Converter::getAllergenDto).collect(Collectors.toList());
-        restaurantModel.setAllergens(allergens);
+        restaurantMenuModel.setAllergens(allergens);
         List<ProteinDto> proteins = proteinService.findAll().stream().map(Converter::getProteinDto).collect(Collectors.toList());
-        restaurantModel.setProteins(proteins);
+        restaurantMenuModel.setProteins(proteins);
         List<CategoryDto> categoryDtos = new ArrayList<>();
         for (Category category : categoryService.findByRestaurant(restaurantId)) {
 
@@ -96,9 +96,9 @@ public class PublicEndpoint {
             categoryDtos.add(categoryDto);
         }
 
-        restaurantModel.setCategoryDtos(categoryDtos);
+        restaurantMenuModel.setCategoryDtos(categoryDtos);
 
-        return restaurantModel;
+        return restaurantMenuModel;
     }
 
     @ApiOperation(value ="about", response = String.class)
