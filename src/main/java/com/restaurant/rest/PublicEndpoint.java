@@ -72,7 +72,7 @@ public class PublicEndpoint {
             @ApiResponse(code = 404, message = "not found!!!") })
     @GetMapping(value = "/restaurant/{restaurantId}")
     public RestaurantModel restaurant(@ApiParam(value = "id ресторана.", example = "1", required = true) @PathVariable("restaurantId") long restaurantId, HttpServletRequest request) {
-        String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/image/";
+        String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() ;
 
         RestaurantModel restaurantModel = new RestaurantModel();
 
@@ -99,6 +99,17 @@ public class PublicEndpoint {
         restaurantModel.setCategoryDtos(categoryDtos);
 
         return restaurantModel;
+    }
+
+    @ApiOperation(value ="about", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 401, message = "not authorized!"),
+            @ApiResponse(code = 403, message = "forbidden!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @GetMapping(value = "/about")
+    public String about() {
+        return "{\"vk\":\"https://vk.com/zabeiapp\",\"instagram\":\"https://www.instagram.com/zabeiapp/\",\"about\":[{\"title\":\"О приложении\",\"youtube\":\"https://www.youtube.com/watch?v=SPauxWv1Rnk\",\"description\":\"Приложение \\\"Забей\\\" помогает:- узнать, где сегодня будет туса;\\n- проверить наличие свободных мест;\\n- посмотреть 360-панораму зала;\\n- забронировать нужный столик;\\n- оплатить депозит;\\n- посмотреть меню;\\n- позвать официанта к столику.\"},{\"title\":\"Добавить заведение\",\"youtube\":null,\"description\":\"Чтобы добавить свое заведение в приложение, свяжитесь с администратором нашего сообщества Вконтакте.\"},{\"title\":\"Франшиза\",\"youtube\":\"https://www.youtube.com/watch?v=SPauxWv1Rnk\",\"description\":\"С нами можно заработать. Подробнее о франшизе можете прочитать в нашей группе Вконтакте\"}],\"authors\":{\"title\":\"Волшебники\",\"photos\":[\"http://img1.zabei.app/static/1.jpg\",\"http://img1.zabei.app/static/2.jpg\",\"http://img1.zabei.app/static/3.jpg\",\"http://img1.zabei.app/static/4.jpg\"]}}";
     }
 
 

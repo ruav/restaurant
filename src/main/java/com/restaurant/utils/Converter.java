@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 @Component
 public class Converter {
 
+    private static String image = "/image/";
+    private static String icon = "/icon/";
+
     private Converter() {
     }
 
@@ -29,7 +32,7 @@ public class Converter {
 
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
-
+        categoryDto.setPhoto(category.getPhotos().isEmpty() ? null : url + image + category.getPhotos().stream().findFirst().get().getUrl());
         subCategories.forEach(s -> categoryDto.getSubCategories().add(getSubCategoryDto(s, map.get(s.getId()), url)));
         return categoryDto;
     }
@@ -38,7 +41,7 @@ public class Converter {
         SubCategoryDto dto = new SubCategoryDto();
         dto.setId(s.getId());
         dto.setName(s.getName());
-        dto.setPhoto(s.getPhotos().isEmpty() ? null : url + s.getPhotos().stream().findFirst().get().getUrl());
+        dto.setPhoto(s.getPhotos().isEmpty() ? null : url + image + s.getPhotos().stream().findFirst().get().getUrl());
         List<DishDto> dishes = dishCollection.stream().map(dish -> getDishDto(dish, url)).collect(Collectors.toList());
         dto.setDishes(dishes);
         return dto;
@@ -52,7 +55,7 @@ public class Converter {
         dto.setPrice(dish.getPrice());
         dto.setName(dish.getName());
         dto.setPrice(dish.getPrice());
-        dto.setPhoto(dish.getPhotos().isEmpty() ? null : url + dish.getPhotos().stream().findFirst().get().getUrl());
+        dto.setPhoto(dish.getPhotos().isEmpty() ? null : url + image + dish.getPhotos().stream().findFirst().get().getUrl());
         dto.setIngredients(dish.getIngredients().stream().map(i -> getIngredientDto(i, url)).collect(Collectors.toList()));
         List<Long> allergens = dish.getAllergens().stream().map(Allergen::getId).collect(Collectors.toList());
         List<Long> proteins = dish.getProteins().stream().map(Protein::getId).collect(Collectors.toList());
@@ -67,7 +70,7 @@ public class Converter {
         IngredientDto dto = new IngredientDto();
         dto.setId(ingredient.getId());
         dto.setName(ingredient.getName());
-        dto.setIcon(ingredient.getIcon() == null ? null : url + ingredient.getIcon().getUrl());
+        dto.setIcon(ingredient.getIcon() == null ? (url + icon + "0") : url + icon + ingredient.getIcon().getUrl());
         return dto;
     }
 

@@ -20,6 +20,9 @@ public class DishDto implements Serializable {
    private float price;
 
    @ApiModelProperty
+   private int callories;
+
+   @ApiModelProperty
    private int weight;
 
    @ApiModelProperty
@@ -93,5 +96,13 @@ public class DishDto implements Serializable {
 
    public void setIngredients(List<IngredientDto> ingredients) {
       this.ingredients = ingredients;
+   }
+
+   public int getCallories() {
+      return callories;
+   }
+
+   public void setCallories(int callories) {
+      this.callories = callories;
    }
 }

@@ -30,7 +30,7 @@
 <br/>
 <ul class="nav nav-tabs">
     <li class="nav-item px-lg-1"><a class="nav-link " th:href="@{/restaurants/list}">Рестораны</a></li>
-    <li class="nav-item px-lg-1"><a class="nav-link " th:href="@{'/restaurants/info/' + ${restaurantId}}">Текущий
+    <li class="nav-item px-lg-1" th:if="${restaurantId != null}" ><a class="nav-link " th:href="@{'/restaurants/info/' + ${restaurantId}}">Текущий
         ресторан</a></li>
     <li class="nav-item px-lg-1"><a class="nav-link active disabled" href="#">Добавление ингредиента</a></li>
 

@@ -15,6 +15,9 @@ public class CategoryDto implements Serializable {
     private String name;
 
     @ApiModelProperty
+    private String photo;
+
+    @ApiModelProperty
     private List<SubCategoryDto> subCategories = new ArrayList<>();
 
     public long getId() {
@@ -39,5 +42,13 @@ public class CategoryDto implements Serializable {
 
     public void setSubCategories(List<SubCategoryDto> subCategories) {
         this.subCategories = subCategories;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

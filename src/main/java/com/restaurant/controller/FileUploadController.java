@@ -13,6 +13,7 @@ import com.restaurant.service.PhotoService;
 import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,13 +22,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class FileUploadController {
@@ -240,6 +241,7 @@ public class FileUploadController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_JPEG);
         headers.setContentLength(array.length);
+        headers.setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
 
         return new HttpEntity<>(array, headers);
     }
@@ -257,6 +259,7 @@ public class FileUploadController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_JPEG);
         headers.setContentLength(array.length);
+        headers.setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
 
         return new HttpEntity<>(array, headers);
     }
