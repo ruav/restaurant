@@ -42,6 +42,9 @@ public class Dish implements Data{
     @Column
     private float price;
 
+    @Column
+    private int callories;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name="dish_proteins",
@@ -132,6 +135,14 @@ public class Dish implements Data{
         this.allergens = allergens;
     }
 
+    public int getCallories() {
+        return callories;
+    }
+
+    public void setCallories(int callories) {
+        this.callories = callories;
+    }
+
     @Override
     public String toString() {
         return "Dish{" +
@@ -139,6 +150,7 @@ public class Dish implements Data{
                 ", name='" + name + '\'' +
                 ", weight=" + weight +
                 ", photos=" + photos +
+                ", callories=" + callories +
                 ", ingredients=" + ingredients +
                 ", price=" + price +
                 '}';

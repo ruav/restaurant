@@ -64,6 +64,11 @@
         <span th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></span>
     </div>
     <div class="form-group col-md-4">
+        <label for="name">Каллории</label>
+        <input class="form-control is-valid" id="callories" placeholder="Каллории" required th:field="*{callories}" type="number" min="0">
+        <span th:errors="*{callories}" th:if="${#fields.hasErrors('callories')}"></span>
+    </div>
+    <div class="form-group col-md-4">
         <label for="subCategoryId">Подкатегория</label>
         <select class="form-control" id="subCategoryId" required th:field="*{subCategoryId}">
             <option th:each="subCategory : ${subcategories}" th:text="${subCategory.name}" th:value="${subCategory.id}">Категория

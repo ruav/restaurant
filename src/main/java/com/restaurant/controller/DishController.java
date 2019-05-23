@@ -102,7 +102,7 @@ public class DishController extends AbstractController<DishService, Dish> {
     public String update(@PathVariable("id") long id, @Valid Dish entity,
                              BindingResult result, Model model) {
         Long restaurantId = (Long) getHttpSession().getAttribute("restaurant");
-        SubCategory subCategory = subCategoryService.findById(id).get();
+        SubCategory subCategory = subCategoryService.findById(entity.getSubCategoryId()).get();
         if (restaurantId == null) {
             Category category = categoryService.findById(subCategory.getCategoryId()).get();
             restaurantId = category.getRestaurantId();
@@ -199,5 +199,16 @@ public class DishController extends AbstractController<DishService, Dish> {
         return  "redirect:" + prefix() + "/list/" + entity.getSubCategoryId();
     }
 
+    @SuppressWarnings("unchecked")
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") long id, Model model) throws Throwable {
+        Dish entity =  repository().findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid  Id:" + id));
+        repository().delete(entity);
+        if (getHttpSession().getAttribute("back") == null) {
+            model.addAttribute("list", repository().findAll());
+        }
+        return "redirect:" + prefix() + "/list/" + entity.getSubCategoryId();
+    }
 
 }

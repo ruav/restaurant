@@ -65,6 +65,7 @@
                      src="..." th:unless="${dish.photos.size() > 0}">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${dish.name}"></h5>
+                    <p th:text="${dish.callories} + ' ккал'"></p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item" th:each="ingredient : ${dish.ingredients}"

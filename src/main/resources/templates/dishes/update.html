@@ -76,6 +76,14 @@
                         <span th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></span>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="col-auto">
+                        <label for="name">Каллории</label>
+                        <input class="form-control is-valid" id="callories" min="0" placeholder="Каллории" required
+                               th:field="*{callories}" type="number">
+                        <span th:errors="*{callories}" th:if="${#fields.hasErrors('callories')}"></span>
+                    </div>
+                </div>
                 <div class="form-group col-md-4">
                     <label for="subCategoryId">Подкатегория</label>
                     <select class="form-control" id="subCategoryId" required th:field="*{subCategoryId}">

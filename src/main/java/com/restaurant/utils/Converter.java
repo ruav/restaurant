@@ -55,6 +55,7 @@ public class Converter {
         dto.setPrice(dish.getPrice());
         dto.setName(dish.getName());
         dto.setPrice(dish.getPrice());
+        dto.setCallories(dish.getCallories());
         dto.setPhoto(dish.getPhotos().isEmpty() ? null : url + image + dish.getPhotos().stream().findFirst().get().getUrl());
         dto.setIngredients(dish.getIngredients().stream().map(i -> getIngredientDto(i, url)).collect(Collectors.toList()));
         List<Long> allergens = dish.getAllergens().stream().map(Allergen::getId).collect(Collectors.toList());
