@@ -103,7 +103,7 @@ public class IngredientController extends AbstractController<IngredientService, 
         if(getHttpSession().getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
-        return "redirect:" + prefix() + "/edit/" + entity.getId();
+        return "redirect:" + prefix() + "/list";
     }
 
 
