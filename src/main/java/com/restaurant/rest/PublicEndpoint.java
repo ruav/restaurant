@@ -82,7 +82,7 @@ public class PublicEndpoint {
         if (!restaurant.isPresent())
             return restaurantMenuModel;
 
-        restaurantMenuModel.setLogo(restaurant.get().getLogo() == null ? null : (url + restaurant.get().getLogo().getUrl()));
+        restaurantMenuModel.setLogo(restaurant.get().getLogo() == null ? null : (url + "/image/" + restaurant.get().getLogo().getUrl()));
         List<AllergenDto> allergens = allergenService.findAll().stream().map(Converter::getAllergenDto).collect(Collectors.toList());
         restaurantMenuModel.setAllergens(allergens);
         List<ProteinDto> proteins = proteinService.findAll().stream().map(Converter::getProteinDto).collect(Collectors.toList());
