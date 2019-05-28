@@ -2,6 +2,7 @@ package com.restaurant.controller;
 
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
+import com.restaurant.entity.Photo;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.service.AllergenService;
 import com.restaurant.service.CategoryService;
@@ -19,11 +20,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/dishes")
@@ -75,6 +79,7 @@ public class DishController extends AbstractController<DishService, Dish> {
         model.addAttribute("restaurantId", id);
         model.addAttribute("allergens", allergenService.findAll());
         model.addAttribute("proteins", proteinService.findAll());
+        model.addAttribute("linkEnable", restaurantService.findById(id).get().isVideoLink());
         return prefix() + "/add";
     }
 
@@ -117,7 +122,7 @@ public class DishController extends AbstractController<DishService, Dish> {
             model.addAttribute("ingredients", ingredientService.findAll());
             return prefix() + "/update";
         }
-        entity.setPhotos(dishService.findById(entity.getId()).get().getPhotos());
+        entity.setLogo(dishService.findById(entity.getId()).get().getLogo());
         try {
             repository().save(entity);
         } catch (Exception e) {
@@ -162,7 +167,7 @@ public class DishController extends AbstractController<DishService, Dish> {
 
     @Override
     @PostMapping("/add")
-    public String add(@Valid Dish entity, BindingResult result, Model model) {
+    public String add(@Valid Dish entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException {
         if (result.hasErrors()) {
             List<Category> categories = categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant"));
             List<SubCategory> subCategories = new ArrayList<>();
@@ -176,6 +181,13 @@ public class DishController extends AbstractController<DishService, Dish> {
             model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
             return prefix() + "/add";
         }
+        Photo photo = null;
+        if (file != null) {
+            photo = new Photo();
+            photo.setUrl(UUID.randomUUID().toString());
+            photo.setImage(file.getBytes());
+        }
+        entity.setLogo(photo);
         try {
             entity = repository().save(entity);
         } catch (Exception e) {

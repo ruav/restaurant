@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "category",uniqueConstraints=@UniqueConstraint(columnNames= {"restaurant_Id","name"}))
-public class Category implements Data, Serializable {
+public class Category implements DataWithLogo<Photo>, Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -19,14 +19,14 @@ public class Category implements Data, Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name="category_photo",
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
 
     )
-    private Set<Photo> photos;
+    private Photo logo;
 
     public long getId() {
         return id;
@@ -52,12 +52,14 @@ public class Category implements Data, Serializable {
         this.name = name;
     }
 
-    public Set<Photo> getPhotos() {
-        return photos;
+    @Override
+    public Photo getLogo() {
+        return logo;
     }
 
-    public void setPhotos(Set<Photo> photos) {
-        this.photos = photos;
+    @Override
+    public void setLogo(Photo logo) {
+        this.logo = logo;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.restaurant.controller;
 
 import com.restaurant.entity.Category;
+import com.restaurant.entity.Photo;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.service.CategoryService;
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/subcategories")
@@ -61,13 +65,20 @@ public class SubCategoryController extends AbstractController<SubCategoryService
 
     @Override
     @PostMapping("/add")
-    public String add(@Valid SubCategory entity, BindingResult result, Model model) {
+    public String add(@Valid SubCategory entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException {
         if (result.hasErrors() ) {
             model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
             model.addAttribute("subcategory", entity);
             model.addAttribute("categories", categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant")));
             return prefix() + "/add";
         }
+        Photo photo = null;
+        if (file != null) {
+            photo = new Photo();
+            photo.setUrl(UUID.randomUUID().toString());
+            photo.setImage(file.getBytes());
+        }
+        entity.setLogo(photo);
         try {
             repository().save(entity);
         } catch (Exception e) {

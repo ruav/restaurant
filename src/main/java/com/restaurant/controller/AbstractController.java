@@ -1,6 +1,8 @@
 package com.restaurant.controller;
 
 import com.restaurant.entity.Data;
+import com.restaurant.entity.DataWithLogo;
+import com.restaurant.entity.Photo;
 import com.restaurant.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -12,10 +14,13 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.util.UUID;
 
 public abstract class AbstractController<T extends AbstractService, V extends Data> {
 
@@ -41,9 +46,19 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
     }
 
     @PostMapping("/add")
-    public String add(@Valid V entity, BindingResult result, Model model) {
+    public String add(@Valid V entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException {
         if (result.hasErrors()) {
             return prefix() + "/add";
+        }
+
+        if (entity instanceof DataWithLogo) {
+            Photo photo = null;
+            if (file != null) {
+                photo = new Photo();
+                photo.setUrl(UUID.randomUUID().toString());
+                photo.setImage(file.getBytes());
+            }
+            ((DataWithLogo) entity).setLogo(photo);
         }
         try {
             repository().save(entity);

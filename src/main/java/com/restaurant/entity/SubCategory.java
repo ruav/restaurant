@@ -5,7 +5,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "subcategory",uniqueConstraints=@UniqueConstraint(columnNames= {"category_Id","name"}))
-public class SubCategory implements Data{
+public class SubCategory implements DataWithLogo<Photo>{
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -18,14 +18,14 @@ public class SubCategory implements Data{
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name="subcategory_photo",
             joinColumns = @JoinColumn(name = "subcategory_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
 
     )
-    private Set<Photo> photos;
+    private Photo logo;
 
     public long getId() {
         return id;
@@ -51,12 +51,14 @@ public class SubCategory implements Data{
         this.categoryId = categoryId;
     }
 
-    public Set<Photo> getPhotos() {
-        return photos;
+    @Override
+    public Photo getLogo() {
+        return logo;
     }
 
-    public void setPhotos(Set<Photo> photos) {
-        this.photos = photos;
+    @Override
+    public void setLogo(Photo logo) {
+        this.logo = logo;
     }
 
     @Override

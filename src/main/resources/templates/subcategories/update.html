@@ -72,14 +72,14 @@
         </div>
         <div class="col">
             <label>Изображения сохраняются сразу же для текущей категории</label>
-            <div th:each="photo : ${subcategory.photos}">
+            <div th:each="logo : ${subcategory.logo}">
                 <div class="row no-gutters" style="width:180px;">
-                    <img class="img-thumbnail img-fluid col-auto" th:src="@{'/image/' + ${photo.url}}"/>
+                    <img class="img-thumbnail img-fluid col-auto" th:src="@{'/image/' + ${logo.url}}"/>
                     <div class="row">
                         <div class="col-auto">
                             <a class="btn btn-primary-outline btn-sm col-xs-4 fa-2x" href="#"
                                role="button"
-                               th:href="@{'/subcategories/deleteImage/' +${subcategory.id} + '/' + ${photo.id}}">
+                               th:href="@{'/subcategories/deleteImage/' +${subcategory.id} + '/' + ${logo.id}}">
                                 <i aria-hidden="true" class="fa fa-trash"></i>
                             </a>
                         </div>
@@ -89,8 +89,8 @@
             </div>
 
             <form class="col-mr-3" enctype="multipart/form-data" method="POST"
-                  th:action="@{/subcategories/upload/{id}(id=${subcategory.id})}" th:if="${subcategory.photos.size()} <1">
-                Выберите изображение: <input name="file" type="file">
+                  th:action="@{/subcategories/upload/{id}(id=${subcategory.id})}" th:if="${subcategory.logo} == null">
+                Выберите изображение: <input name="file" type="file" accept="image/*">
                 <br/>
                 <br/>
                 <input type="submit" value="Добавить изображение">

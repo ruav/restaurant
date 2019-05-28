@@ -40,7 +40,7 @@
     </li>
 </ul>
 
-<form action="#" class="ml-0 pt-2" method="post" th:action="@{/dishes/add}" th:object="${dish}">
+<form action="#" class="ml-0 pt-2" method="post" enctype="multipart/form-data" th:action="@{/dishes/add}" th:object="${dish}">
 
     <div class="row ml-3 " th:if="${#fields.hasGlobalErrors()}">
         <p class="error-message alert alert-danger col-auto"
@@ -59,14 +59,54 @@
         <span th:errors="*{weight}" th:if="${#fields.hasErrors('weight')}"></span>
     </div>
     <div class="form-group col-md-4">
-        <label for="name">Цена</label>
+        <label for="price">Цена</label>
         <input class="form-control is-valid" id="price" placeholder="Цена" required th:field="*{price}" type="number" min="0">
         <span th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></span>
     </div>
     <div class="form-group col-md-4">
-        <label for="name">Каллории</label>
+        <label for="callories">Каллории</label>
         <input class="form-control is-valid" id="callories" placeholder="Каллории" required th:field="*{callories}" type="number" min="0">
         <span th:errors="*{callories}" th:if="${#fields.hasErrors('callories')}"></span>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="fiber">Белки</label>
+        <input class="form-control is-valid" id="fiber" placeholder="Белки" required th:field="*{fiber}" type="number" min="0">
+        <span th:errors="*{fiber}" th:if="${#fields.hasErrors('fiber')}"></span>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="fats">Жиры</label>
+        <input class="form-control is-valid" id="fats" placeholder="Жиры" required th:field="*{fats}" type="number" min="0">
+        <span th:errors="*{fats}" th:if="${#fields.hasErrors('fats')}"></span>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="saturatedFats">Насыщенные жиры</label>
+        <input class="form-control is-valid" id="saturatedFats" placeholder="Насыщенные жиры" required th:field="*{saturatedFats}" type="number" min="0">
+        <span th:errors="*{saturatedFats}" th:if="${#fields.hasErrors('saturatedFats')}"></span>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="carbohydrates">Углеводы</label>
+        <input class="form-control is-valid" id="carbohydrates" placeholder="Углеводы" required th:field="*{carbohydrates}" type="number" min="0">
+        <span th:errors="*{carbohydrates}" th:if="${#fields.hasErrors('carbohydrates')}"></span>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="sugar">Сахар</label>
+        <input class="form-control is-valid" id="sugar" placeholder="Сахар" required th:field="*{sugar}" type="number" min="0">
+        <span th:errors="*{sugar}" th:if="${#fields.hasErrors('sugar')}"></span>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="cellulose">Клетчатка</label>
+        <input class="form-control is-valid" id="cellulose" placeholder="Клетчатка" required th:field="*{cellulose}" type="number" min="0">
+        <span th:errors="*{cellulose}" th:if="${#fields.hasErrors('cellulose')}"></span>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="salt">Соль</label>
+        <input class="form-control is-valid" id="salt" placeholder="Соль" required th:field="*{salt}" type="number" min="0">
+        <span th:errors="*{salt}" th:if="${#fields.hasErrors('salt')}"></span>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="link">Ссылка на видео</label>
+        <input th:readonly="${linkEnable == false}" class="form-control is-valid" id="link" placeholder="Ссылка на видео"  th:field="*{link}" type="text" min="0">
+        <span th:errors="*{link}" th:if="${#fields.hasErrors('link')}"></span>
     </div>
     <div class="form-group col-md-4">
         <label for="subCategoryId">Подкатегория</label>
@@ -98,6 +138,15 @@
                 Аллерген
             </option>
         </select>
+    </div>
+    <div class="form-group">
+        <!--<form class="col-mr-3" enctype="multipart/form-data" method="POST"-->
+        <!--th:action="@{/restaurants/upload/{id}(id=${restaurant.id})}" th:if="${restaurant.photos.size()} <10" >-->
+        Выберите изображение: <input type="file" id="file" name="file" value="file" accept="image/*">
+        <br/>
+        <br/>
+        <!--<input type="submit" value="Добавить изображение">-->
+        <!--</form>-->
     </div>
     <input class="btn btn-success ml-3" type="submit" value="Добавить блюдо">
 </form>

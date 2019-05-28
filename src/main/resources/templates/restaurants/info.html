@@ -37,6 +37,7 @@
     <li class="nav-item px-lg-1"><a class="nav-link " th:href="@{/restaurants/list}">Рестораны</a></li>
     <li class="nav-item px-lg-1"><a class="nav-link active disabled" href="#"
                                     th:text="'Информация о ресторане ' + ${restaurant.name}"></a></li>
+    <li class="nav-item px-lg-1"><a class="nav-link " th:href="@{'/events/list/' + ${restaurant.id}}">События</a></li>
 
     <li class="nav-item px-lg-1 ml-auto"><a class="nav-link" th:href="@{/logout}">Выйти</a>
     </li>
@@ -80,11 +81,11 @@
     <div class="row px-lg-3">
         <div class="card col-auto" style="width: 18rem;" th:each="element : ${categories}">
             <img alt="" class=" card-img-top"
-                 th:if="${element.key.photos.size() > 0}"
-                 th:src="@{'/image/' + ${element.key.photos.stream().findFirst().get().url}}"/>
+                 th:if="${element.key.logo != null}"
+                 th:src="@{'/image/' + ${element.key.logo.url}}"/>
             <img alt="..."
                  class="card-img-top"
-                 src="..." th:unless="${element.key.photos.size() > 0}">
+                 src="..." th:unless="${element.key.logo != null}">
             <div class="card-body">
                 <h5 class="card-title" >
                     <a class="btn btn-link ml-auto"

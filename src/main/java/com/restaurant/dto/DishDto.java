@@ -34,6 +34,22 @@ public class DishDto implements Serializable {
    @ApiModelProperty
    private List<IngredientDto> ingredients;
 
+   private int fiber;
+   @ApiModelProperty
+   private int fats;
+   @ApiModelProperty
+   private int saturatedFats;
+   @ApiModelProperty
+   private int carbohydrates;
+   @ApiModelProperty
+   private int sugar;
+   @ApiModelProperty
+   private int cellulose;
+   @ApiModelProperty
+   private int salt;
+   @ApiModelProperty
+   private String link;
+
    public long getId() {
       return id;
    }
@@ -104,5 +120,69 @@ public class DishDto implements Serializable {
 
    public void setCallories(int callories) {
       this.callories = callories;
+   }
+
+   public int getFiber() {
+      return fiber;
+   }
+
+   public void setFiber(int fiber) {
+      this.fiber = fiber;
+   }
+
+   public int getFats() {
+      return fats;
+   }
+
+   public void setFats(int fats) {
+      this.fats = fats;
+   }
+
+   public int getSaturatedFats() {
+      return saturatedFats;
+   }
+
+   public void setSaturatedFats(int saturatedFats) {
+      this.saturatedFats = saturatedFats;
+   }
+
+   public int getCarbohydrates() {
+      return carbohydrates;
+   }
+
+   public void setCarbohydrates(int carbohydrates) {
+      this.carbohydrates = carbohydrates;
+   }
+
+   public int getSugar() {
+      return sugar;
+   }
+
+   public void setSugar(int sugar) {
+      this.sugar = sugar;
+   }
+
+   public int getCellulose() {
+      return cellulose;
+   }
+
+   public void setCellulose(int cellulose) {
+      this.cellulose = cellulose;
+   }
+
+   public int getSalt() {
+      return salt;
+   }
+
+   public void setSalt(int salt) {
+      this.salt = salt;
+   }
+
+   public String getLink() {
+      return link;
+   }
+
+   public void setLink(String link) {
+      this.link = link;
    }
 }

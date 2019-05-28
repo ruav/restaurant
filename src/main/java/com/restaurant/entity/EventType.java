@@ -1,10 +1,15 @@
 package com.restaurant.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-@Table(name="ingredient")
-public class Ingredient implements DataWithLogo<Icon> {
+@Table(name="eventtype")
+public class EventType implements Data {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -13,15 +18,6 @@ public class Ingredient implements DataWithLogo<Icon> {
 
     @Column(unique = true, nullable = false)
     private String name;
-
-    @OneToOne()
-    @JoinTable(
-            name="ingredientlogo",
-            joinColumns = @JoinColumn(name = "ingredient_id"),
-            inverseJoinColumns = @JoinColumn(name = "icon_id")
-
-    )
-    private Icon logo;
 
     public long getId() {
         return id;
@@ -39,21 +35,11 @@ public class Ingredient implements DataWithLogo<Icon> {
         this.name = name;
     }
 
-    public Icon getLogo() {
-        return logo;
-    }
-
-    @Override
-    public void setLogo(Icon logo) {
-        this.logo = logo;
-    }
-
     @Override
     public String toString() {
-        return "Ingredient{" +
+        return "EventType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", logo=" + logo +
                 '}';
     }
 }

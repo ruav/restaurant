@@ -2,12 +2,14 @@ package com.restaurant.controller;
 
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
+import com.restaurant.entity.Event;
 import com.restaurant.entity.Icon;
 import com.restaurant.entity.Photo;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
+import com.restaurant.service.EventService;
 import com.restaurant.service.IconService;
 import com.restaurant.service.PhotoService;
 import com.restaurant.service.RestaurantService;
@@ -54,6 +56,9 @@ public class FileUploadController {
     @Autowired
     SubCategoryService subCategoryService;
 
+    @Autowired
+    EventService eventService;
+
     @PostMapping(value = "/restaurants/upload/{id}")
     public String uploadRestaurantHandler(@RequestParam("file") MultipartFile file,
                                           @PathVariable("id") long id,
@@ -66,6 +71,24 @@ public class FileUploadController {
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());
             restaurant.getPhotos().add(photo);
+            restaurantService.save(restaurant);
+        }
+
+        return "redirect:/restaurants/edit/" + id;
+    }
+
+    @PostMapping(value = "/restaurants/upload/{id}/action")
+    public String uploadRestaurantActionHandler(@RequestParam("file") MultipartFile file,
+                                          @PathVariable("id") long id,
+                                          Model model) throws IOException {
+        if (file.isEmpty()) {
+            model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
+        } else {
+            Restaurant restaurant = restaurantService.findById(id).get();
+            Photo photo = new Photo();
+            photo.setUrl(UUID.randomUUID().toString());
+            photo.setImage(file.getBytes());
+            restaurant.getActions().add(photo);
             restaurantService.save(restaurant);
         }
 
@@ -102,7 +125,7 @@ public class FileUploadController {
             Photo photo = new Photo();
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());
-            dish.getPhotos().add(photo);
+            dish.setLogo(photo);
             dishService.save(dish);
         }
 
@@ -121,7 +144,7 @@ public class FileUploadController {
             Photo photo = new Photo();
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());
-            category.getPhotos().add(photo);
+            category.setLogo(photo);
             categoryService.save(category);
         }
 
@@ -140,7 +163,7 @@ public class FileUploadController {
             Photo photo = new Photo();
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());
-            subCategory.getPhotos().add(photo);
+            subCategory.setLogo(photo);
             subCategoryService.save(subCategory);
         }
 
@@ -154,18 +177,35 @@ public class FileUploadController {
         if (file.isEmpty()) {
             model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
         } else {
-
             Icon icon = new Icon();
             icon.setUrl(UUID.randomUUID().toString());
             icon.setImage(file.getBytes());
             iconService.save(icon);
-
-
         }
 
         return "redirect:/ingredients/edit/" + id;
     }
 
+    @PostMapping(value = "/events/upload/{id}")
+    public String uploadEventPhotoHandler(@RequestParam("file") MultipartFile file,
+                                              @PathVariable("id") long id,
+                                              Model model) throws IOException {
+        if (file.isEmpty()) {
+            model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
+        } else {
+            Event event = eventService.findById(id).get();
+
+            Photo photo = new Photo();
+            photo.setUrl(UUID.randomUUID().toString());
+            photo.setImage(file.getBytes());
+
+            event.getPhotos().add(photo);
+            eventService.save(event);
+
+        }
+
+        return "redirect:/ingredients/edit/" + id;
+    }
 
     @GetMapping(value = "/restaurants/deleteImage/{restaurantId}/{imageId}" )
     public String deleteRestaurantHandler(@PathVariable("restaurantId") long restaurantId,
@@ -177,6 +217,7 @@ public class FileUploadController {
             if (restaurant.getLogo() == photo) {
                  restaurant.setLogo(null);
             } else {
+                restaurant.getActions().remove(photo);
                 restaurant.getPhotos().remove(photo);
             }
             restaurantService.save(restaurant);
@@ -184,6 +225,22 @@ public class FileUploadController {
 
         return "redirect:/restaurants/edit/" + restaurantId;
     }
+
+    @GetMapping(value = "/events/deleteImage/{dishId}/{imageId}")
+    public String deleteEventHandler(@PathVariable("dishId") long dishId,
+                                    @PathVariable("imageId") long imageId,
+                                    Model model) {
+
+        Event event = eventService.findById(dishId).get();
+
+        Photo photo = photoService.findById(imageId).get();
+        event.getPhotos().remove(photo);
+        eventService.save(event);
+        photoService.delete(photo);
+
+        return "redirect:/events/edit/" + dishId;
+    }
+
 
     @GetMapping(value = "/dishes/deleteImage/{dishId}/{imageId}")
     public String deleteDishHandler(@PathVariable("dishId") long dishId,
@@ -193,7 +250,7 @@ public class FileUploadController {
             Dish dish = dishService.findById(dishId).get();
 
             Photo photo = photoService.findById(imageId).get();
-            dish.getPhotos().remove(photo);
+            dish.setLogo(null);
             dishService.save(dish);
             photoService.delete(photo);
 
@@ -207,7 +264,7 @@ public class FileUploadController {
 
             Category category = categoryService.findById(categoryId).get();
             Photo photo = photoService.findById(imageId).get();
-            category.getPhotos().remove(photo);
+            category.setLogo(null);
             categoryService.save(category);
             photoService.delete(photo);
 
@@ -221,7 +278,7 @@ public class FileUploadController {
 
             SubCategory subCategory = subCategoryService.findById(subcategoryId).get();
             Photo photo = photoService.findById(imageId).get();
-            subCategory.getPhotos().remove(photo);
+            subCategory.setLogo(null);
             subCategoryService.save(subCategory);
             photoService.delete(photo);
 

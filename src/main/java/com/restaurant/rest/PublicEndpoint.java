@@ -6,6 +6,7 @@ import com.restaurant.dto.ProteinDto;
 import com.restaurant.dto.RestaurantMenuModel;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
+import com.restaurant.entity.Photo;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.service.AllergenService;
@@ -87,6 +88,10 @@ public class PublicEndpoint {
         restaurantMenuModel.setAllergens(allergens);
         List<ProteinDto> proteins = proteinService.findAll().stream().map(Converter::getProteinDto).collect(Collectors.toList());
         restaurantMenuModel.setProteins(proteins);
+
+        List<String> actions = restaurant.get().getActions().stream().map(action -> url + "/image/" + action.getUrl()).collect(Collectors.toList());
+
+        restaurantMenuModel.setActions(actions);
         List<CategoryDto> categoryDtos = new ArrayList<>();
         for (Category category : categoryService.findByRestaurant(restaurantId)) {
 

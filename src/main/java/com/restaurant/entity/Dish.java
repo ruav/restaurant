@@ -5,7 +5,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "dish",uniqueConstraints=@UniqueConstraint(columnNames= {"subcategory_id","name"}))
-public class Dish implements Data{
+public class Dish implements DataWithLogo<Photo>{
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -21,14 +21,14 @@ public class Dish implements Data{
     @Column
     private int weight;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name="dish_photo",
             joinColumns = @JoinColumn(name = "dish_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
 
     )
-    private Set<Photo> photos;
+    private Photo logo;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -62,6 +62,23 @@ public class Dish implements Data{
 
     )
     private Set<Allergen> allergens;
+
+    @Column
+    private Integer fiber;
+    @Column
+    private Integer fats;
+    @Column
+    private Integer saturatedFats;
+    @Column
+    private Integer carbohydrates;
+    @Column
+    private Integer sugar;
+    @Column
+    private Integer cellulose;
+    @Column
+    private Integer salt;
+    @Column
+    private String link;
 
     public long getId() {
         return id;
@@ -111,12 +128,14 @@ public class Dish implements Data{
         this.price = price;
     }
 
-    public Set<Photo> getPhotos() {
-        return photos;
+    @Override
+    public Photo getLogo() {
+        return logo;
     }
 
-    public void setPhotos(Set<Photo> photos) {
-        this.photos = photos;
+    @Override
+    public void setLogo(Photo logo) {
+        this.logo = logo;
     }
 
     public Set<Protein> getProteins() {
@@ -143,13 +162,77 @@ public class Dish implements Data{
         this.callories = callories;
     }
 
+    public Integer getFiber() {
+        return fiber;
+    }
+
+    public void setFiber(Integer fiber) {
+        this.fiber = fiber;
+    }
+
+    public Integer getFats() {
+        return fats;
+    }
+
+    public void setFats(Integer fats) {
+        this.fats = fats;
+    }
+
+    public Integer getSaturatedFats() {
+        return saturatedFats;
+    }
+
+    public void setSaturatedFats(Integer saturatedFats) {
+        this.saturatedFats = saturatedFats;
+    }
+
+    public Integer getCarbohydrates() {
+        return carbohydrates;
+    }
+
+    public void setCarbohydrates(Integer carbohydrates) {
+        this.carbohydrates = carbohydrates;
+    }
+
+    public Integer getSugar() {
+        return sugar;
+    }
+
+    public void setSugar(Integer sugar) {
+        this.sugar = sugar;
+    }
+
+    public Integer getCellulose() {
+        return cellulose;
+    }
+
+    public void setCellulose(Integer cellulose) {
+        this.cellulose = cellulose;
+    }
+
+    public Integer getSalt() {
+        return salt;
+    }
+
+    public void setSalt(Integer salt) {
+        this.salt = salt;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
     @Override
     public String toString() {
         return "Dish{" +
                 "subcategoryId=" + subCategoryId +
                 ", name='" + name + '\'' +
                 ", weight=" + weight +
-                ", photos=" + photos +
+                ", logo=" + logo +
                 ", callories=" + callories +
                 ", ingredients=" + ingredients +
                 ", price=" + price +

@@ -4,6 +4,7 @@ import com.restaurant.entity.Category;
 import com.restaurant.entity.Desk;
 import com.restaurant.entity.Dish;
 import com.restaurant.entity.Hall;
+import com.restaurant.entity.Photo;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.entity.User;
@@ -27,13 +28,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/restaurants")
@@ -70,8 +78,53 @@ public class RestaurantController {
     private final static String PREFIX = "/restaurants";
 
     @GetMapping("/add")
-    public String showSignUpForm(Restaurant restaurant, Model model) {
+    public String showSignUpForm(Restaurant restaurant, MultipartFile file,  Model model) {
+        model.addAttribute("restaurant", restaurant);
+        if (file == null) {
+            file = new MultipartFile() {
+                @Override
+                public String getName() {
+                    return null;
+                }
 
+                @Override
+                public String getOriginalFilename() {
+                    return null;
+                }
+
+                @Override
+                public String getContentType() {
+                    return null;
+                }
+
+                @Override
+                public boolean isEmpty() {
+                    return false;
+                }
+
+                @Override
+                public long getSize() {
+                    return 0;
+                }
+
+                @Override
+                public byte[] getBytes() throws IOException {
+                    return new byte[0];
+                }
+
+                @Override
+                public InputStream getInputStream() throws IOException {
+                    return null;
+                }
+
+                @Override
+                public void transferTo(File file) throws IOException, IllegalStateException {
+
+                }
+            };
+        }
+        model.addAttribute("file", file);
+        restaurant.setLogo(new Photo());
         model.addAttribute("towns", townService.findAll());
         return PREFIX + "/add";
     }
@@ -111,12 +164,23 @@ public class RestaurantController {
     }
 
     @PostMapping("/add")
-    public String add(@Valid Restaurant restaurant, BindingResult result, Model model) {
+    public String add(@Valid Restaurant restaurant, @Valid MultipartFile file, BindingResult result, Model model) throws IOException {
         if (result.hasErrors()) {
             return PREFIX + "/add";
         }
 
-        userService.addRestaurant(userService.findByEmail(getUser().getUsername()), restaurantService.save(restaurant));
+        Photo photo = null;
+        if (file != null) {
+            photo = new Photo();
+            photo.setUrl(UUID.randomUUID().toString());
+            photo.setImage(file.getBytes());
+        }
+
+        restaurant.setLogo(photo);
+        restaurant = restaurantService.save(restaurant);
+
+        userService.addRestaurant(userService.findByEmail(getUser().getUsername()), restaurant);
+
         return "redirect:" + PREFIX + "/list";
     }
 

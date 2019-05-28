@@ -39,7 +39,7 @@
 </ul>
 
 <div class="container">
-<form  class="ml-0 pt-2 " action="#" method="post" th:action="@{/restaurants/add}" th:object="${restaurant}">
+<form  class="ml-0 pt-2 "  method="post" enctype="multipart/form-data" th:action="@{/restaurants/add}" th:object="${restaurant}">
 
     <div class="form-group">
         <label for="name">Название ресторана</label>
@@ -70,6 +70,26 @@
         <span th:errors="*{latitude}" th:if="${#fields.hasErrors('latitude')}"></span>
         <input class="form-control  col-3" id="longtitude" placeholder="Долгота" th:field="*{longtitude}" type="text" required>
         <span th:errors="*{longtitude}" th:if="${#fields.hasErrors('longtitude')}"></span>
+        </div>
+    </div>
+    <div class="form-group form-check" >
+        <input type="checkbox" th:disabled="${#authorization.expression('hasAuthority(''Root'')')}" name="videoLink" id="videoLink" class="form-check-input"
+               th:checked="*{videoLink}" th:field="*{videoLink}" />
+        <label for="videoLink" class="form-check-label">Добавление ссылки на видео для блюд</label>
+    </div>
+    <div class="form-group">
+        <div class="input-group-sm rounded-sm">
+        <!--<form class="col-mr-3" enctype="multipart/form-data" method="POST"-->
+              <!--th:action="@{/restaurants/upload/{id}(id=${restaurant.id})}" th:if="${restaurant.photos.size()} <10" >-->
+            <div class="custom-file">
+                <input type="file" id="file" name="file" value="file" accept="image/*" class="custom-file-input form-control-sm" >
+                <label class="custom-file-label">Выберите лого</label>
+            </div>
+            <!--Выберите изображение: <input type="file" id="file" name="file" value="file" accept="image/*">-->
+            <br/>
+            <br/>
+            <!--<input type="submit" value="Добавить изображение">-->
+        <!--</form>-->
         </div>
     </div>
     <input class="btn btn-success" type="submit" value="Добавить ресторан">

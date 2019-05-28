@@ -120,7 +120,7 @@ public class UserController {
                            s ->{
                                 dishService.findBySubCategoryId(c.getId()).forEach(
                                     dish -> {
-                                        dish.getPhotos().forEach(photo -> photoService.delete(photo));
+                                        dish.setLogo(null);
                                         dishService.delete(dish);
                                     }
                                 );

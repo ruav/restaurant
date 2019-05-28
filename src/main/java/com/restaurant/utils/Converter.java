@@ -32,7 +32,7 @@ public class Converter {
 
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
-        categoryDto.setPhoto(category.getPhotos().isEmpty() ? null : url + image + category.getPhotos().stream().findFirst().get().getUrl());
+        categoryDto.setPhoto(category.getLogo() == null ? null : url + image + category.getLogo().getUrl());
         subCategories.forEach(s -> categoryDto.getSubCategories().add(getSubCategoryDto(s, map.get(s.getId()), url)));
         return categoryDto;
     }
@@ -41,7 +41,7 @@ public class Converter {
         SubCategoryDto dto = new SubCategoryDto();
         dto.setId(s.getId());
         dto.setName(s.getName());
-        dto.setPhoto(s.getPhotos().isEmpty() ? null : url + image + s.getPhotos().stream().findFirst().get().getUrl());
+        dto.setPhoto(s.getLogo() == null ? null : url + image + s.getLogo().getUrl());
         List<DishDto> dishes = dishCollection.stream().map(dish -> getDishDto(dish, url)).collect(Collectors.toList());
         dto.setDishes(dishes);
         return dto;
@@ -56,8 +56,16 @@ public class Converter {
         dto.setName(dish.getName());
         dto.setPrice(dish.getPrice());
         dto.setCallories(dish.getCallories());
-        dto.setPhoto(dish.getPhotos().isEmpty() ? null : url + image + dish.getPhotos().stream().findFirst().get().getUrl());
+        dto.setPhoto(dish.getLogo() == null ? null : url + image + dish.getLogo().getUrl());
         dto.setIngredients(dish.getIngredients().stream().map(i -> getIngredientDto(i, url)).collect(Collectors.toList()));
+        dto.setSalt(dish.getSalt());
+        dto.setCarbohydrates(dish.getCarbohydrates());
+        dto.setCellulose(dish.getCellulose());
+        dto.setFats(dish.getFats());
+        dto.setFiber(dish.getFiber());
+        dto.setSaturatedFats(dish.getSaturatedFats());
+        dto.setSugar(dish.getSugar());
+        dto.setLink(dish.getLink());
         List<Long> allergens = dish.getAllergens().stream().map(Allergen::getId).collect(Collectors.toList());
         List<Long> proteins = dish.getProteins().stream().map(Protein::getId).collect(Collectors.toList());
 
@@ -71,7 +79,7 @@ public class Converter {
         IngredientDto dto = new IngredientDto();
         dto.setId(ingredient.getId());
         dto.setName(ingredient.getName());
-        dto.setIcon(ingredient.getIcon() == null ? (url + icon + "0") : url + icon + ingredient.getIcon().getUrl());
+        dto.setIcon(ingredient.getLogo() == null ? (url + icon + "0") : url + icon + ingredient.getLogo().getUrl());
         return dto;
     }
 

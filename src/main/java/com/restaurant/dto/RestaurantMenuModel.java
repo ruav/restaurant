@@ -9,6 +9,9 @@ public class RestaurantMenuModel {
     private String logo;
 
     @ApiModelProperty
+    List<String> actions;
+
+    @ApiModelProperty
     private List<AllergenDto> allergens;
 
     @ApiModelProperty
@@ -47,5 +50,13 @@ public class RestaurantMenuModel {
 
     public void setCategoryDtos(List<CategoryDto> categoryDtos) {
         this.categoryDtos = categoryDtos;
+    }
+
+    public List<String> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<String> actions) {
+        this.actions = actions;
     }
 }

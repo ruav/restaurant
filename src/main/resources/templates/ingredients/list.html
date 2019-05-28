@@ -47,8 +47,8 @@
                 <div th:each="ingredient : ${list}"   class="col-auto border">
                     <div th:if="${#authorization.expression('hasAuthority(''Root'')')}" class="media">
                         <div class="media-left media-top">
-                            <img th:if="${ingredient.icon == null}" th:src="@{'/icon/0'}" class="media-object" style="width:60px">
-                            <img th:unless="${ingredient.icon == null}" th:src="@{'/icon/' + ${ingredient.icon.url}}" class="media-object" style="width:60px">
+                            <img th:if="${ingredient.logo == null}" th:src="@{'/icon/0'}" class="media-object" style="width:60px">
+                            <img th:unless="${ingredient.logo == null}" th:src="@{'/icon/' + ${ingredient.logo.url}}" class="media-object" style="width:60px">
                         </div>
                         <a  class="btn btn-primary-outline btn-sm col-auto "
                             th:href="@{/ingredients/edit/{id}(id=${ingredient.id})}" th:text="${ingredient.name}"
@@ -57,8 +57,8 @@
                     </div>
                     <div th:unless="${#authorization.expression('hasAuthority(''Root'')')}" class="media">
                         <div class="media-left media-top">
-                            <img th:if="${ingredient.icon == null}" th:src="@{'/icon/0'}" class="media-object" style="width:60px">
-                            <img th:unless="${ingredient.icon == null}" th:src="@{'/icon/' + ${ingredient.icon.url}}" class="media-object" style="width:60px">
+                            <img th:if="${ingredient.logo == null}" th:src="@{'/icon/0'}" class="media-object" style="width:60px">
+                            <img th:unless="${ingredient.logo == null}" th:src="@{'/icon/' + ${ingredient.logo.url}}" class="media-object" style="width:60px">
                         </div>
                         <div th:text="${ingredient.name}"></div>
                     </div>
