@@ -45,6 +45,7 @@ public class EventController extends AbstractController<EventService, Event> {
     @GetMapping("/add")
     public String showSignUpForm(Event event, @PathParam("id") long id, Model model) {
         Long restaurantId = (Long) getHttpSession().getAttribute("restaurant");
+        event.setRestaurantId(restaurantId);
         model.addAttribute("restaurantId", restaurantId);
         model.addAttribute("event", event);
 
@@ -79,6 +80,7 @@ public class EventController extends AbstractController<EventService, Event> {
             model.addAttribute("types", eventTypeService.findAll());
             return prefix() + "/update";
         }
+        entity.setPhotos(eventService.findById(entity.getId()).get().getPhotos());
         try {
             repository().save(entity);
         } catch (Exception e) {
@@ -111,6 +113,7 @@ public class EventController extends AbstractController<EventService, Event> {
             model.addAttribute("event", entity);
             return prefix() + "/add";
         }
+        entity.setRestaurantId((Long) getHttpSession().getAttribute("restaurant"));
         try {
             entity = repository().save(entity);
         } catch (Exception e) {

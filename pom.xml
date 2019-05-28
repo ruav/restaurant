@@ -73,7 +73,11 @@
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>
             <version>RELEASE</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+            <version>RELEASE</version>
+        </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>

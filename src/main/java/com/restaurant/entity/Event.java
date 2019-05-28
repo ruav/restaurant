@@ -1,5 +1,7 @@
 package com.restaurant.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -13,11 +15,16 @@ public class Event implements Data {
     @Column
     private long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column
-    private Date date;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date start_date;
+
+    @Temporal(TemporalType.TIME)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm")
+    private Date start_hour;
 
     @OneToOne()
     @JoinTable(
@@ -61,12 +68,20 @@ public class Event implements Data {
         this.name = name;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getStart_date() {
+        return start_date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
+    }
+
+    public Date getStart_hour() {
+        return start_hour;
+    }
+
+    public void setStart_hour(Date start_hour) {
+        this.start_hour = start_hour;
     }
 
     public String getDescription() {
@@ -114,7 +129,6 @@ public class Event implements Data {
         return "Event{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", date=" + date +
                 ", type=" + type +
                 ", Description='" + Description + '\'' +
                 ", photos=" + photos +

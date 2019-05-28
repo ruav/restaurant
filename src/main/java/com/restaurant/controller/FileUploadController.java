@@ -204,7 +204,7 @@ public class FileUploadController {
 
         }
 
-        return "redirect:/ingredients/edit/" + id;
+        return "redirect:/events/edit/" + id;
     }
 
     @GetMapping(value = "/restaurants/deleteImage/{restaurantId}/{imageId}" )
