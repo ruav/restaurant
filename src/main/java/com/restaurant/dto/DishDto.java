@@ -1,5 +1,6 @@
 package com.restaurant.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -34,19 +35,20 @@ public class DishDto implements Serializable {
    @ApiModelProperty
    private List<IngredientDto> ingredients;
 
-   private int fiber;
    @ApiModelProperty
-   private int fats;
+   private Integer fiber;
    @ApiModelProperty
-   private int saturatedFats;
+   private Integer fats;
    @ApiModelProperty
-   private int carbohydrates;
+   private Integer saturatedFats;
    @ApiModelProperty
-   private int sugar;
+   private Integer carbohydrates;
    @ApiModelProperty
-   private int cellulose;
+   private Integer sugar;
    @ApiModelProperty
-   private int salt;
+   private Integer cellulose;
+   @ApiModelProperty
+   private Integer salt;
    @ApiModelProperty
    private String link;
 
@@ -122,59 +124,59 @@ public class DishDto implements Serializable {
       this.callories = callories;
    }
 
-   public int getFiber() {
+   public Integer getFiber() {
       return fiber;
    }
 
-   public void setFiber(int fiber) {
+   public void setFiber(Integer fiber) {
       this.fiber = fiber;
    }
 
-   public int getFats() {
+   public Integer getFats() {
       return fats;
    }
 
-   public void setFats(int fats) {
+   public void setFats(Integer fats) {
       this.fats = fats;
    }
 
-   public int getSaturatedFats() {
+   public Integer getSaturatedFats() {
       return saturatedFats;
    }
 
-   public void setSaturatedFats(int saturatedFats) {
+   public void setSaturatedFats(Integer saturatedFats) {
       this.saturatedFats = saturatedFats;
    }
 
-   public int getCarbohydrates() {
+   public Integer getCarbohydrates() {
       return carbohydrates;
    }
 
-   public void setCarbohydrates(int carbohydrates) {
+   public void setCarbohydrates(Integer carbohydrates) {
       this.carbohydrates = carbohydrates;
    }
 
-   public int getSugar() {
+   public Integer getSugar() {
       return sugar;
    }
 
-   public void setSugar(int sugar) {
+   public void setSugar(Integer sugar) {
       this.sugar = sugar;
    }
 
-   public int getCellulose() {
+   public Integer getCellulose() {
       return cellulose;
    }
 
-   public void setCellulose(int cellulose) {
+   public void setCellulose(Integer cellulose) {
       this.cellulose = cellulose;
    }
 
-   public int getSalt() {
+   public Integer getSalt() {
       return salt;
    }
 
-   public void setSalt(int salt) {
+   public void setSalt(Integer salt) {
       this.salt = salt;
    }
 

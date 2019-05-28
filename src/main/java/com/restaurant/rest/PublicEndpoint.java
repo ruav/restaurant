@@ -6,7 +6,6 @@ import com.restaurant.dto.ProteinDto;
 import com.restaurant.dto.RestaurantMenuModel;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
-import com.restaurant.entity.Photo;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.service.AllergenService;
