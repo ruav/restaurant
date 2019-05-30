@@ -55,7 +55,7 @@ public class Converter {
         dto.setPrice(dish.getPrice());
         dto.setName(dish.getName());
         dto.setPrice(dish.getPrice());
-        dto.setCallories(dish.getCallories());
+        dto.setCalories(dish.getCalories());
         dto.setPhoto(dish.getLogo() == null ? null : url + image + dish.getLogo().getUrl());
         dto.setIngredients(dish.getIngredients().stream().map(i -> getIngredientDto(i, url)).collect(Collectors.toList()));
         dto.setSalt(dish.getSalt());
@@ -65,7 +65,7 @@ public class Converter {
         dto.setFiber(dish.getFiber());
         dto.setSaturatedFats(dish.getSaturatedFats());
         dto.setSugar(dish.getSugar());
-        dto.setLink(dish.getLink());
+        dto.setVideo(dish.getVideo());
         List<Long> allergens = dish.getAllergens().stream().map(Allergen::getId).collect(Collectors.toList());
         List<Long> proteins = dish.getProteins().stream().map(Protein::getId).collect(Collectors.toList());
 

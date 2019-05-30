@@ -43,7 +43,7 @@ public class Dish implements DataWithLogo<Photo>{
     private float price;
 
     @Column
-    private int callories;
+    private int calories;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -78,7 +78,7 @@ public class Dish implements DataWithLogo<Photo>{
     @Column
     private Integer salt;
     @Column
-    private String link;
+    private String video;
 
     public long getId() {
         return id;
@@ -154,12 +154,12 @@ public class Dish implements DataWithLogo<Photo>{
         this.allergens = allergens;
     }
 
-    public int getCallories() {
-        return callories;
+    public int getCalories() {
+        return calories;
     }
 
-    public void setCallories(int callories) {
-        this.callories = callories;
+    public void setCalories(int calories) {
+        this.calories = calories;
     }
 
     public Integer getFiber() {
@@ -218,12 +218,12 @@ public class Dish implements DataWithLogo<Photo>{
         this.salt = salt;
     }
 
-    public String getLink() {
-        return link;
+    public String getVideo() {
+        return video;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setVideo(String video) {
+        this.video = video;
     }
 
     @Override
@@ -233,7 +233,7 @@ public class Dish implements DataWithLogo<Photo>{
                 ", name='" + name + '\'' +
                 ", weight=" + weight +
                 ", logo=" + logo +
-                ", callories=" + callories +
+                ", callories=" + calories +
                 ", ingredients=" + ingredients +
                 ", price=" + price +
                 '}';

@@ -237,6 +237,7 @@ public class RestaurantController {
             restaurant.setId(id);
             return PREFIX + "/update";
         }
+        restaurant.setLogo(restaurantService.findById(restaurant.getId()).get().getLogo());
         restaurant.setPhotos(restaurantService.findById(restaurant.getId()).get().getPhotos());
         try {
             restaurantService.save(restaurant);

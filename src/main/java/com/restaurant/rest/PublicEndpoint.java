@@ -101,7 +101,7 @@ public class PublicEndpoint {
             categoryDtos.add(categoryDto);
         }
 
-        restaurantMenuModel.setCategoryDtos(categoryDtos);
+        restaurantMenuModel.setCategories(categoryDtos);
 
         return restaurantMenuModel;
     }
@@ -114,7 +114,35 @@ public class PublicEndpoint {
             @ApiResponse(code = 404, message = "not found!!!") })
     @GetMapping(value = "/about", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String about() {
-        return "{\"vk\":\"https://vk.com/zabeiapp\",\"instagram\":\"https://www.instagram.com/zabeiapp/\",\"about\":[{\"title\":\"О приложении\",\"youtube\":\"https://www.youtube.com/watch?v=SPauxWv1Rnk\",\"description\":\"Приложение \\\"Забей\\\" помогает:- узнать, где сегодня будет туса;\\n- проверить наличие свободных мест;\\n- посмотреть 360-панораму зала;\\n- забронировать нужный столик;\\n- оплатить депозит;\\n- посмотреть меню;\\n- позвать официанта к столику.\"},{\"title\":\"Добавить заведение\",\"youtube\":null,\"description\":\"Чтобы добавить свое заведение в приложение, свяжитесь с администратором нашего сообщества Вконтакте.\"},{\"title\":\"Франшиза\",\"youtube\":\"https://www.youtube.com/watch?v=SPauxWv1Rnk\",\"description\":\"С нами можно заработать. Подробнее о франшизе можете прочитать в нашей группе Вконтакте\"}],\"authors\":{\"title\":\"Волшебники\",\"photos\":[\"http://img1.zabei.app/static/1.jpg\",\"http://img1.zabei.app/static/2.jpg\",\"http://img1.zabei.app/static/3.jpg\",\"http://img1.zabei.app/static/4.jpg\"]}}";
+        return "{\n" +
+                "\t\"vk\": \"https://vk.com/zabeiapp\",\n" +
+                "\t\"instagram\": \"https://www.instagram.com/zabeiapp/\",\n" +
+                "\t\"about\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"title\": \"О приложении\",\n" +
+                "\t\t\t\"youtube\": \"SPauxWv1Rnk\",\n" +
+                "\t\t\t\"description\": \"Приложение \\\"Забей\\\" помогает:\\n- узнать, где сегодня будет туса;\\n- проверить наличие свободных мест;\\n- посмотреть 360-панораму зала;\\n- забронировать нужный столик;\\n- оплатить депозит;\\n- посмотреть меню;\\n- позвать официанта к столику.\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"title\": \"Добавить заведение\",\n" +
+                "\t\t\t\"youtube\": null,\n" +
+                "\t\t\t\"description\": \"Чтобы добавить свое заведение в приложение, свяжитесь с администратором нашего сообщества Вконтакте.\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"title\": \"Франшиза\",\n" +
+                "\t\t\t\"youtube\": \"SPauxWv1Rnk\",\n" +
+                "\t\t\t\"description\": \"С нами можно заработать. Подробнее о франшизе можете прочитать в нашей группе Вконтакте\"\n" +
+                "\t\t}\n" +
+                "\t],\n" +
+                "\t\"authors\": {\n" +
+                "\t\t\"title\": \"Волшебники\",\n" +
+                "\t\t\"photos\": [\n" +
+                "\t\t\t\"https://zabei.app/img/person.jpg\",\n" +
+                "\t\t\t\"https://zabei.app/img/person.jpg\",\n" +
+                "\t\t\t\"https://zabei.app/img/person.jpg\"\n" +
+                "\t\t]\n" +
+                "\t}\n" +
+                "}";
     }
 
 

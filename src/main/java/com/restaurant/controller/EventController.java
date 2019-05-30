@@ -57,6 +57,7 @@ public class EventController extends AbstractController<EventService, Event> {
     public String showUpdateForm(@PathVariable("id") long id, Model model) throws Throwable {
         Event entity = repository().findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
+        model.addAttribute("restaurantId", entity.getRestaurantId());
 
         model.addAttribute("event", entity);
         model.addAttribute("types", eventTypeService.findAll());

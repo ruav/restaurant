@@ -61,8 +61,8 @@
                 <div class="form-row" >
                     <div class="col-auto">
                         <div th:each="logo : ${icons}" class="custom-control-inline">
-                            <input type="radio"  th:field="*{logo}" th:value="${logo.id}" class="custom-control-input"/>
-                            <label th:for="${#ids.prev('icon')}"  class="custom-control-label">
+                            <input type="radio" th:id="@{'icon' + ${logo.id}}"  th:field="*{logo}" th:value="${logo.id}" class="custom-control-input"/>
+                            <label th:for="@{'icon' + ${logo.id}}" class="custom-control-label">
                                 <img th:src="@{'/icon/' + ${logo.url}}" alt="" > </label>
                         </div>
                     </div>

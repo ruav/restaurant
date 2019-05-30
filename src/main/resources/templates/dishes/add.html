@@ -64,9 +64,9 @@
         <span th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></span>
     </div>
     <div class="form-group col-md-4">
-        <label for="callories">Каллории</label>
-        <input class="form-control is-valid" id="callories" placeholder="Каллории" required th:field="*{callories}" type="number" min="0">
-        <span th:errors="*{callories}" th:if="${#fields.hasErrors('callories')}"></span>
+        <label for="calories">Каллории</label>
+        <input class="form-control is-valid" id="calories" placeholder="Каллории" required th:field="*{calories}" type="number" min="0">
+        <span th:errors="*{calories}" th:if="${#fields.hasErrors('calories')}"></span>
     </div>
     <div class="form-group col-md-4">
         <label for="fiber">Белки</label>
@@ -104,9 +104,9 @@
         <span th:errors="*{salt}" th:if="${#fields.hasErrors('salt')}"></span>
     </div>
     <div class="form-group col-md-4">
-        <label for="link">Ссылка на видео</label>
-        <input th:readonly="${linkEnable == false}" class="form-control is-valid" id="link" placeholder="Ссылка на видео"  th:field="*{link}" type="text" min="0">
-        <span th:errors="*{link}" th:if="${#fields.hasErrors('link')}"></span>
+        <label for="video">Ссылка на видео</label>
+        <input th:readonly="${linkEnable == false}" class="form-control is-valid" id="video" placeholder="Ссылка на видео"  th:field="*{video}" type="text" min="0">
+        <span th:errors="*{video}" th:if="${#fields.hasErrors('video')}"></span>
     </div>
     <div class="form-group col-md-4">
         <label for="subCategoryId">Подкатегория</label>

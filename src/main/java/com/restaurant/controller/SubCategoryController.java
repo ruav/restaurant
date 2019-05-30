@@ -116,6 +116,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
             model.addAttribute("entity", entity);
             return prefix() + "/update";
         }
+        entity.setLogo(repository().findById(entity.getId()).get().getLogo());
         try {
             repository().save(entity);
         } catch (Exception e) {

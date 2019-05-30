@@ -1,6 +1,5 @@
 package com.restaurant.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -21,7 +20,7 @@ public class DishDto implements Serializable {
    private float price;
 
    @ApiModelProperty
-   private int callories;
+   private int calories;
 
    @ApiModelProperty
    private int weight;
@@ -50,7 +49,7 @@ public class DishDto implements Serializable {
    @ApiModelProperty
    private Integer salt;
    @ApiModelProperty
-   private String link;
+   private String video;
 
    public long getId() {
       return id;
@@ -116,12 +115,12 @@ public class DishDto implements Serializable {
       this.ingredients = ingredients;
    }
 
-   public int getCallories() {
-      return callories;
+   public int getCalories() {
+      return calories;
    }
 
-   public void setCallories(int callories) {
-      this.callories = callories;
+   public void setCalories(int calories) {
+      this.calories = calories;
    }
 
    public Integer getFiber() {
@@ -180,11 +179,11 @@ public class DishDto implements Serializable {
       this.salt = salt;
    }
 
-   public String getLink() {
-      return link;
+   public String getVideo() {
+      return video;
    }
 
-   public void setLink(String link) {
-      this.link = link;
+   public void setVideo(String video) {
+      this.video = video;
    }
 }

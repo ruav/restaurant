@@ -78,10 +78,10 @@
                 </div>
                 <div class="form-row">
                     <div class="col-auto">
-                        <label for="callories">Каллории</label>
-                        <input class="form-control is-valid" id="callories" min="0" placeholder="Каллории" required
-                               th:field="*{callories}" type="number">
-                        <span th:errors="*{callories}" th:if="${#fields.hasErrors('callories')}"></span>
+                        <label for="calories">Каллории</label>
+                        <input class="form-control is-valid" id="calories" min="0" placeholder="Каллории" required
+                               th:field="*{calories}" type="number">
+                        <span th:errors="*{calories}" th:if="${#fields.hasErrors('calories')}"></span>
                     </div>
                 </div>
                 <div class="form-group col-md-4">
@@ -120,9 +120,9 @@
                     <span th:errors="*{salt}" th:if="${#fields.hasErrors('salt')}"></span>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="link">Ссылка на видео</label>
-                    <input th:readonly="${linkEnable == false}" class="form-control is-valid" id="link" placeholder="Ссылка на видео"  th:field="*{link}" type="text" min="0">
-                    <span th:errors="*{link}" th:if="${#fields.hasErrors('link')}"></span>
+                    <label for="video">Ссылка на видео</label>
+                    <input th:readonly="${linkEnable == false}" class="form-control is-valid" id="video" placeholder="Ссылка на видео"  th:field="*{video}" type="text" min="0">
+                    <span th:errors="*{video}" th:if="${#fields.hasErrors('video')}"></span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="subCategoryId">Подкатегория</label>
@@ -189,11 +189,11 @@
             </div>
 
             <form class="col-mr-3" enctype="multipart/form-data" method="POST"
-                  th:action="@{/dishes/upload/{id}(id=${entity.id})}" th:if="${entity.logo} == null">
+                  th:action="@{/dishes/upload/{id}(id=${entity.id})}" >
                 Выберите изображение: <input name="file" type="file" accept="image/*">
                 <br/>
                 <br/>
-                <input type="submit" value="Добавить изображение">
+                <input type="submit" value="Добавить логотип">
             </form>
         </div>
     </div>

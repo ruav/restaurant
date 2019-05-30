@@ -18,7 +18,7 @@ public class RestaurantMenuModel {
     List<ProteinDto> proteins;
 
     @ApiModelProperty
-    List<CategoryDto> categoryDtos;
+    List<CategoryDto> categories;
 
     public String getLogo() {
         return logo;
@@ -44,12 +44,12 @@ public class RestaurantMenuModel {
         this.proteins = proteins;
     }
 
-    public List<CategoryDto> getCategoryDtos() {
-        return categoryDtos;
+    public List<CategoryDto> getCategories() {
+        return categories;
     }
 
-    public void setCategoryDtos(List<CategoryDto> categoryDtos) {
-        this.categoryDtos = categoryDtos;
+    public void setCategories(List<CategoryDto> categories) {
+        this.categories = categories;
     }
 
     public List<String> getActions() {
