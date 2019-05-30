@@ -17,13 +17,13 @@ public class DishDto implements Serializable {
    private String photo;
 
    @ApiModelProperty
-   private float price;
+   private Float price;
 
    @ApiModelProperty
-   private int calories;
+   private Integer calories;
 
    @ApiModelProperty
-   private int weight;
+   private Integer weight;
 
    @ApiModelProperty
    private List<Long> proteins;
@@ -75,19 +75,27 @@ public class DishDto implements Serializable {
       this.photo = photo;
    }
 
-   public float getPrice() {
+   public Float getPrice() {
       return price;
    }
 
-   public void setPrice(float price) {
+   public void setPrice(Float price) {
       this.price = price;
    }
 
-   public int getWeight() {
+   public Integer getCalories() {
+      return calories;
+   }
+
+   public void setCalories(Integer calories) {
+      this.calories = calories;
+   }
+
+   public Integer getWeight() {
       return weight;
    }
 
-   public void setWeight(int weight) {
+   public void setWeight(Integer weight) {
       this.weight = weight;
    }
 
@@ -113,14 +121,6 @@ public class DishDto implements Serializable {
 
    public void setIngredients(List<IngredientDto> ingredients) {
       this.ingredients = ingredients;
-   }
-
-   public int getCalories() {
-      return calories;
-   }
-
-   public void setCalories(int calories) {
-      this.calories = calories;
    }
 
    public Integer getFiber() {
