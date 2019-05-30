@@ -43,7 +43,7 @@ public class Dish implements DataWithLogo<Photo>{
     private float price;
 
     @Column
-    private int calories;
+    private Integer calories;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -154,11 +154,11 @@ public class Dish implements DataWithLogo<Photo>{
         this.allergens = allergens;
     }
 
-    public int getCalories() {
+    public Integer getCalories() {
         return calories;
     }
 
-    public void setCalories(int calories) {
+    public void setCalories(Integer calories) {
         this.calories = calories;
     }
 
