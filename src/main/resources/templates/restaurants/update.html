@@ -130,7 +130,7 @@
                        enctype="multipart/form-data" method="POST" accept="image/*"
                       th:action="@{/restaurants/upload/{id}/logo(id=${restaurant.id})}" >
                     <div class="custom-file">
-                        <input name="file" type="file" class="custom-file-input form-control-sm" >
+                        <input name="file" type="file" class="custom-file-input form-control-sm"  accept="image/*">
                         <label class="custom-file-label">Выберите лого</label>
                     </div>
                     <div class="input-group-append">
@@ -163,7 +163,7 @@
                 <form class="col-mr-3 input-group input-group-sm rounded-sm" enctype="multipart/form-data" method="POST"
                        th:action="@{/restaurants/upload/{id}(id=${restaurant.id})}" th:if="${restaurant.photos.size()} < 10" >
                     <div class="custom-file">
-                        <input name="file" type="file" class="custom-file-input form-control-sm" >
+                        <input name="file" type="file" class="custom-file-input form-control-sm"  accept="image/*">
                         <label class="custom-file-label">Выберите изображение</label>
                     </div>
                     <div class="input-group-append">
@@ -205,7 +205,7 @@
                 <form class="col-mr-3 input-group input-group-sm rounded-sm" enctype="multipart/form-data" method="POST"
                       th:action="@{'/restaurants/upload/' + ${restaurant.id} + '/action'}" th:if="${restaurant.actions.size()} < 10" >
                     <div class="custom-file">
-                        <input name="file" type="file" class="custom-file-input form-control-sm" >
+                        <input name="file" type="file" class="custom-file-input form-control-sm"  accept="image/*">
                         <label class="custom-file-label">Выберите изображение</label>
                     </div>
                     <div class="input-group-append">

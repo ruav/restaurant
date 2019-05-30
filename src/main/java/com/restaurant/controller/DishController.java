@@ -181,7 +181,7 @@ public class DishController extends AbstractController<DishService, Dish> {
             model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
             return prefix() + "/add";
         }
-        if (file != null) {
+        if (!file.isEmpty()) {
             Photo photo = new Photo();
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());

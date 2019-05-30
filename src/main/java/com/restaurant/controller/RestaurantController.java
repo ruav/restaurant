@@ -169,14 +169,14 @@ public class RestaurantController {
             return PREFIX + "/add";
         }
 
-        Photo photo = null;
-        if (file != null) {
+        if (!file.isEmpty()) {
+            Photo photo = null;
             photo = new Photo();
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());
+            restaurant.setLogo(photo);
         }
 
-        restaurant.setLogo(photo);
         restaurant = restaurantService.save(restaurant);
 
         userService.addRestaurant(userService.findByEmail(getUser().getUsername()), restaurant);

@@ -72,7 +72,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
             model.addAttribute("categories", categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant")));
             return prefix() + "/add";
         }
-        if (file != null) {
+        if (!file.isEmpty()) {
             Photo photo = new Photo();
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());

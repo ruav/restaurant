@@ -52,7 +52,7 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
         }
 
         if (entity instanceof DataWithLogo) {
-            if (file != null) {
+            if (!file.isEmpty()) {
                 Photo photo = new Photo();
                 photo.setUrl(UUID.randomUUID().toString());
                 photo.setImage(file.getBytes());
