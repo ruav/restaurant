@@ -67,7 +67,7 @@ public class DishController extends AbstractController<DishService, Dish> {
     @Override
     @GetMapping("/add")
     public String showSignUpForm(Dish dish, @PathParam("id") long id, Model model) {
-        dish.setSubCategoryId(0);
+        dish.setSubCategoryId(0l);
 
         List<Category> categories = categoryService.findByRestaurant(id);
         List<SubCategory> subCategories = new ArrayList<>();
