@@ -13,13 +13,13 @@ public class Dish implements DataWithLogo<Photo>{
     private long id;
 
     @Column(name = "subcategory_id", nullable = false)
-    private long subCategoryId;
+    private Long subCategoryId;
 
     @Column(nullable = false)
     private String name;
 
     @Column
-    private int weight;
+    private Integer weight;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -40,7 +40,7 @@ public class Dish implements DataWithLogo<Photo>{
     private Set<Ingredient> ingredients;
 
     @Column
-    private float price;
+    private Float price;
 
     @Column
     private Integer calories;
@@ -80,19 +80,30 @@ public class Dish implements DataWithLogo<Photo>{
     @Column
     private String video;
 
+    @Override
+    public Photo getLogo() {
+        return logo;
+    }
+
+    @Override
+    public void setLogo(Photo logo) {
+        this.logo = logo;
+    }
+
     public long getId() {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
 
-    public long getSubCategoryId() {
+    public Long getSubCategoryId() {
         return subCategoryId;
     }
 
-    public void setSubCategoryId(long subCategoryId) {
+    public void setSubCategoryId(Long subCategoryId) {
         this.subCategoryId = subCategoryId;
     }
 
@@ -104,11 +115,11 @@ public class Dish implements DataWithLogo<Photo>{
         this.name = name;
     }
 
-    public int getWeight() {
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 
@@ -120,22 +131,20 @@ public class Dish implements DataWithLogo<Photo>{
         this.ingredients = ingredients;
     }
 
-    public float getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
-    @Override
-    public Photo getLogo() {
-        return logo;
+    public Integer getCalories() {
+        return calories;
     }
 
-    @Override
-    public void setLogo(Photo logo) {
-        this.logo = logo;
+    public void setCalories(Integer calories) {
+        this.calories = calories;
     }
 
     public Set<Protein> getProteins() {
@@ -152,14 +161,6 @@ public class Dish implements DataWithLogo<Photo>{
 
     public void setAllergens(Set<Allergen> allergens) {
         this.allergens = allergens;
-    }
-
-    public Integer getCalories() {
-        return calories;
-    }
-
-    public void setCalories(Integer calories) {
-        this.calories = calories;
     }
 
     public Integer getFiber() {
