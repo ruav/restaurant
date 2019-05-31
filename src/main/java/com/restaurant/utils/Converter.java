@@ -1,43 +1,101 @@
 package com.restaurant.utils;
 
+import com.restaurant.dto.AllergenDto;
 import com.restaurant.dto.CategoryDto;
 import com.restaurant.dto.DishDto;
-import com.restaurant.dto.PhotoDto;
+import com.restaurant.dto.IngredientDto;
+import com.restaurant.dto.ProteinDto;
+import com.restaurant.dto.SubCategoryDto;
+import com.restaurant.entity.Allergen;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
-import com.restaurant.entity.Photo;
+import com.restaurant.entity.Ingredient;
+import com.restaurant.entity.Protein;
+import com.restaurant.entity.SubCategory;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+@Component
 public class Converter {
 
+    private static String image = "/image/";
+    private static String icon = "/icon/";
 
-    public static CategoryDto getCategoryDto(Category category, List<Dish> dishes, String url) {
+    private Converter() {
+    }
+
+    public static CategoryDto getCategoryDto(Category category, List<SubCategory> subCategories, Map<Long, List<Dish>> map, String url) {
         CategoryDto categoryDto = new CategoryDto();
 
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
-
-        dishes.forEach(dish -> categoryDto.getDishes().add(getDishDto(dish, url)));
-
+        categoryDto.setPhoto(category.getLogo() == null ? null : url + image + category.getLogo().getUrl());
+        subCategories.forEach(s -> categoryDto.getSubCategories().add(getSubCategoryDto(s, map.get(s.getId()), url)));
         return categoryDto;
+    }
+
+    public static SubCategoryDto getSubCategoryDto(SubCategory s, List<Dish> dishCollection, String url) {
+        SubCategoryDto dto = new SubCategoryDto();
+        dto.setId(s.getId());
+        dto.setName(s.getName());
+        dto.setPhoto(s.getLogo() == null ? null : url + image + s.getLogo().getUrl());
+        List<DishDto> dishes = dishCollection.stream().map(dish -> getDishDto(dish, url)).collect(Collectors.toList());
+        dto.setDishes(dishes);
+        return dto;
     }
 
 
     public static DishDto getDishDto(Dish dish, String url) {
-        DishDto dishDto = new DishDto();
+        DishDto dto = new DishDto();
 
-        dishDto.setId(dish.getId());
-        dishDto.setName(dish.getName());
-        dishDto.setPrice(dish.getPrice());
-        dishDto.setPhoto(dish.getPhotos().isEmpty() ? null : url + dish.getPhotos().stream().findFirst().get().getUrl());
+        dto.setId(dish.getId());
+        dto.setPrice(dish.getPrice());
+        dto.setName(dish.getName());
+        dto.setPrice(dish.getPrice());
+        dto.setCalories(dish.getCalories());
+        dto.setPhoto(dish.getLogo() == null ? null : url + image + dish.getLogo().getUrl());
+        dto.setIngredients(dish.getIngredients().stream().map(i -> getIngredientDto(i, url)).collect(Collectors.toList()));
+        dto.setSalt(dish.getSalt());
+        dto.setCarbohydrates(dish.getCarbohydrates());
+        dto.setCellulose(dish.getCellulose());
+        dto.setFats(dish.getFats());
+        dto.setFiber(dish.getFiber());
+        dto.setSaturatedFats(dish.getSaturatedFats());
+        dto.setSugar(dish.getSugar());
+        dto.setVideo(dish.getVideo());
+        List<Long> allergens = dish.getAllergens().stream().map(Allergen::getId).collect(Collectors.toList());
+        List<Long> proteins = dish.getProteins().stream().map(Protein::getId).collect(Collectors.toList());
 
-        return dishDto;
+        dto.setProteins(proteins);
+        dto.setAllergens(allergens);
+        return dto;
 
     }
 
-    public static PhotoDto getPhotoDto(Photo photo, String url) {
-        return new PhotoDto(url + photo.getUrl());
+    public static IngredientDto getIngredientDto(Ingredient ingredient, String url) {
+        IngredientDto dto = new IngredientDto();
+        dto.setId(ingredient.getId());
+        dto.setName(ingredient.getName());
+        dto.setIcon(ingredient.getLogo() == null ? (url + icon + "0") : url + icon + ingredient.getLogo().getUrl());
+        return dto;
+    }
+
+    public static ProteinDto getProteinDto(Protein protein) {
+        ProteinDto dto = new ProteinDto();
+        dto.setId(protein.getId());
+        dto.setName(protein.getName());
+
+        return dto;
+    }
+
+    public static AllergenDto getAllergenDto(Allergen allergen) {
+        AllergenDto dto = new AllergenDto();
+        dto.setId(allergen.getId());
+        dto.setName(allergen.getName());
+        return dto;
     }
 
 }

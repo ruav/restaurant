@@ -1,8 +1,11 @@
 package com.restaurant.controller;
 
 import com.restaurant.entity.Data;
+import com.restaurant.entity.DataWithLogo;
+import com.restaurant.entity.Photo;
 import com.restaurant.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
@@ -11,14 +14,18 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.util.UUID;
 
 public abstract class AbstractController<T extends AbstractService, V extends Data> {
 
     abstract T repository();
+
     abstract String prefix();
 
 
@@ -26,7 +33,7 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
     private HttpSession httpSession;
 
     @GetMapping("/add")
-    public String showSignUpForm(V entity, @PathParam(value ="id") long id, Model model) {
+    public String showSignUpForm(V entity, @PathParam(value = "id") @Nullable long id, Model model) {
         model.addAttribute("restaurantId", id);
 
         return prefix() + "/add";
@@ -39,9 +46,18 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
     }
 
     @PostMapping("/add")
-    public String add(@Valid V entity, BindingResult result, Model model) {
-        if (result.hasErrors() ) {
+    public String add(@Valid V entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException {
+        if (result.hasErrors()) {
             return prefix() + "/add";
+        }
+
+        if (entity instanceof DataWithLogo) {
+            if (!file.isEmpty()) {
+                Photo photo = new Photo();
+                photo.setUrl(UUID.randomUUID().toString());
+                photo.setImage(file.getBytes());
+                ((DataWithLogo) entity).setLogo(photo);
+            }
         }
         try {
             repository().save(entity);
@@ -50,7 +66,7 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
             model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
             return prefix() + "/add";
         }
-        if(httpSession.getAttribute("back") == null) {
+        if (httpSession.getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
         return httpSession.getAttribute("back") != null ? "redirect:" + httpSession.getAttribute("back") : prefix() + "/list";
@@ -61,14 +77,14 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
     public String showUpdateForm(@PathVariable("id") long id, Model model) throws Throwable {
         V entity = (V) repository().findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-            model.addAttribute("entity", entity);
-        return  prefix() + "/update";
+        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+        model.addAttribute("entity", entity);
+        return prefix() + "/update";
     }
 
     @PostMapping("/update/{id}")
     public String update(@PathVariable("id") long id, @Valid V entity,
-                             BindingResult result, Model model) {
+                         BindingResult result, Model model) {
         if (result.hasErrors()) {
             entity.setId(id);
             model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
@@ -84,19 +100,19 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
             result.addError(new ObjectError("error", "Ошибка сохранения. Такой элемент уже существует"));
             return prefix() + "/update";
         }
-        if(httpSession.getAttribute("back") == null) {
+        if (httpSession.getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
-        return httpSession.getAttribute("back") != null ? "redirect:" +httpSession.getAttribute("back") : prefix() + "/list";
+        return httpSession.getAttribute("back") != null ? "redirect:" + httpSession.getAttribute("back") : prefix() + "/list";
     }
 
     @SuppressWarnings("unchecked")
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id, Model model) throws Throwable {
         V entity = (V) repository().findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid  Id:" + id));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid  Id:" + id));
         repository().delete(entity);
-        if(httpSession.getAttribute("back") == null) {
+        if (httpSession.getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
         return httpSession.getAttribute("back") != null ? "redirect:" + httpSession.getAttribute("back") : prefix() + "/list";
@@ -107,7 +123,7 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
         return httpSession;
     }
 
-    private UserDetails getUser() {
+    protected UserDetails getUser() {
         return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 

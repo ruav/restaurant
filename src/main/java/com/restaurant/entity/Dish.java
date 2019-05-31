@@ -4,31 +4,31 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "dish",uniqueConstraints=@UniqueConstraint(columnNames= {"category_id","name"}))
-public class Dish implements Data{
+@Table(name = "dish",uniqueConstraints=@UniqueConstraint(columnNames= {"subcategory_id","name"}))
+public class Dish implements DataWithLogo<Photo>{
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column
     private long id;
 
-    @Column(name = "category_id", nullable = false)
-    private long categoryId;
+    @Column(name = "subcategory_id", nullable = false)
+    private Long subCategoryId;
 
     @Column(nullable = false)
     private String name;
 
     @Column
-    private int weight;
+    private Integer weight;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name="dish_photo",
             joinColumns = @JoinColumn(name = "dish_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
 
     )
-    private Set<Photo> photos;
+    private Photo logo;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -40,23 +40,71 @@ public class Dish implements Data{
     private Set<Ingredient> ingredients;
 
     @Column
-    private float price;
+    private Float price;
 
+    @Column
+    private Integer calories;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="dish_proteins",
+            joinColumns = @JoinColumn(name = "dish_id"),
+            inverseJoinColumns = @JoinColumn(name = "protein_id")
+
+    )
+    private Set<Protein> proteins;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="dish_allergens",
+            joinColumns = @JoinColumn(name = "dish_id"),
+            inverseJoinColumns = @JoinColumn(name = "allergen_id")
+
+    )
+    private Set<Allergen> allergens;
+
+    @Column
+    private Integer fiber;
+    @Column
+    private Integer fats;
+    @Column
+    private Integer saturatedFats;
+    @Column
+    private Integer carbohydrates;
+    @Column
+    private Integer sugar;
+    @Column
+    private Integer cellulose;
+    @Column
+    private Integer salt;
+    @Column
+    private String video;
+
+    @Override
+    public Photo getLogo() {
+        return logo;
+    }
+
+    @Override
+    public void setLogo(Photo logo) {
+        this.logo = logo;
+    }
 
     public long getId() {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
 
-    public long getCategoryId() {
-        return categoryId;
+    public Long getSubCategoryId() {
+        return subCategoryId;
     }
 
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
+    public void setSubCategoryId(Long subCategoryId) {
+        this.subCategoryId = subCategoryId;
     }
 
     public String getName() {
@@ -67,11 +115,11 @@ public class Dish implements Data{
         this.name = name;
     }
 
-    public int getWeight() {
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 
@@ -83,29 +131,110 @@ public class Dish implements Data{
         this.ingredients = ingredients;
     }
 
-    public float getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
-    public Set<Photo> getPhotos() {
-        return photos;
+    public Integer getCalories() {
+        return calories;
     }
 
-    public void setPhotos(Set<Photo> photos) {
-        this.photos = photos;
+    public void setCalories(Integer calories) {
+        this.calories = calories;
+    }
+
+    public Set<Protein> getProteins() {
+        return proteins;
+    }
+
+    public void setProteins(Set<Protein> proteins) {
+        this.proteins = proteins;
+    }
+
+    public Set<Allergen> getAllergens() {
+        return allergens;
+    }
+
+    public void setAllergens(Set<Allergen> allergens) {
+        this.allergens = allergens;
+    }
+
+    public Integer getFiber() {
+        return fiber;
+    }
+
+    public void setFiber(Integer fiber) {
+        this.fiber = fiber;
+    }
+
+    public Integer getFats() {
+        return fats;
+    }
+
+    public void setFats(Integer fats) {
+        this.fats = fats;
+    }
+
+    public Integer getSaturatedFats() {
+        return saturatedFats;
+    }
+
+    public void setSaturatedFats(Integer saturatedFats) {
+        this.saturatedFats = saturatedFats;
+    }
+
+    public Integer getCarbohydrates() {
+        return carbohydrates;
+    }
+
+    public void setCarbohydrates(Integer carbohydrates) {
+        this.carbohydrates = carbohydrates;
+    }
+
+    public Integer getSugar() {
+        return sugar;
+    }
+
+    public void setSugar(Integer sugar) {
+        this.sugar = sugar;
+    }
+
+    public Integer getCellulose() {
+        return cellulose;
+    }
+
+    public void setCellulose(Integer cellulose) {
+        this.cellulose = cellulose;
+    }
+
+    public Integer getSalt() {
+        return salt;
+    }
+
+    public void setSalt(Integer salt) {
+        this.salt = salt;
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
     }
 
     @Override
     public String toString() {
         return "Dish{" +
-                "categoryId=" + categoryId +
+                "subcategoryId=" + subCategoryId +
                 ", name='" + name + '\'' +
                 ", weight=" + weight +
-                ", photos=" + photos +
+                ", logo=" + logo +
+                ", callories=" + calories +
                 ", ingredients=" + ingredients +
                 ", price=" + price +
                 '}';

@@ -1,14 +1,24 @@
 package com.restaurant.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryDto {
+public class CategoryDto implements Serializable {
 
+    @ApiModelProperty
     private long id;
+
+    @ApiModelProperty
     private String name;
 
-    private List<DishDto> dishes = new ArrayList<>();
+    @ApiModelProperty
+    private String photo;
+
+    @ApiModelProperty
+    private List<SubCategoryDto> subCategories = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -26,11 +36,19 @@ public class CategoryDto {
         this.name = name;
     }
 
-    public List<DishDto> getDishes() {
-        return dishes;
+    public List<SubCategoryDto> getSubCategories() {
+        return subCategories;
     }
 
-    public void setDishes(List<DishDto> dishes) {
-        this.dishes = dishes;
+    public void setSubCategories(List<SubCategoryDto> subCategories) {
+        this.subCategories = subCategories;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

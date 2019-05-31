@@ -5,10 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import java.io.Serializable;
 
 @Entity
-public class Photo implements Data {
+public class Photo implements Data, Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

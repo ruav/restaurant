@@ -1,9 +1,11 @@
 package com.restaurant.dto;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
-public class PasswordForgotDto {
+import java.io.Serializable;
+
+public class PasswordForgotDto implements Serializable {
 
     @Email
     @NotEmpty

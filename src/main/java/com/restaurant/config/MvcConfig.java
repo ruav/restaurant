@@ -22,6 +22,7 @@ import java.util.Properties;
 @EnableWebSecurity
 public class MvcConfig implements WebMvcConfigurer {
 
+    @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/home").setViewName("/home");
         registry.addViewController("/").setViewName("/index");
@@ -80,6 +81,7 @@ public class MvcConfig implements WebMvcConfigurer {
         props.put("mail.smtp.auth", true);
 
         return Session.getInstance(props, new Authenticator() {
+            @Override
             protected PasswordAuthentication  getPasswordAuthentication() {
                 return new PasswordAuthentication(
                         props.getProperty("mail.smtp.user"), props.getProperty("mail.smtp.password"));

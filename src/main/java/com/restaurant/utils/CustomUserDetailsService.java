@@ -1,8 +1,11 @@
 package com.restaurant.utils;
 
 import com.restaurant.entity.User;
+import com.restaurant.handler.CustomAccessDeniedHandler;
 import com.restaurant.service.UserService;
 import com.restaurant.vo.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userRepository;
 
+    private static Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
+
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 
@@ -26,8 +31,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         try {
             userIn = userRepository.findByEmail(username);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(), e);
         }
+
+        if (userIn == null) return null;
 
         List<SimpleGrantedAuthority> authList = new ArrayList<>();
         if(userIn.getId() != 0) {

@@ -12,7 +12,7 @@
     <title>Рестораны</title>
 
     <link href="../../static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link href="../..static/css/font.awesome.min.css" rel="stylesheet" th:href="@{/css/font.awesome.min.css}">
+    <link href="/static/css/font.awesome.min.css" rel="stylesheet" th:href="@{/css/font.awesome.min.css}">
     <style type="text/css">
         .row img {
             display: block;
@@ -45,8 +45,8 @@
 
 <div class="container">
     <div class="row">
-        <div class="col">
-            <form action="#" class="ml-0 pt-2" method="post"
+        <div class="col-md-8">
+            <form action="#" class="ml-0 pt-2 col-12" method="post"
                   th:action="@{/restaurants/update/{id}(id=${restaurant.id})}" th:object="${restaurant}">
 
                 <div class="form-row">
@@ -96,33 +96,125 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="form-group form-check" th:if="${#authorization.expression('hasAuthority(''Root'')')}">
+                    <input type="checkbox" name="videoLink" id="videoLink" class="form-check-input"
+                           th:checked="*{videoLink}" th:field="*{videoLink}" />
+                    <label for="videoLink" class="form-check-label">Добавление ссылки на видео для блюд</label>
+                </div>
+                <div class="form-group form-check" th:unless="${#authorization.expression('hasAuthority(''Root'')')}">
+                    <input type="checkbox" disabled name="videoLink" id="videoLink" class="form-check-input"
+                           th:checked="*{videoLink}" th:field="*{videoLink}" />
+                    <label for="videoLink" class="form-check-label">Добавление ссылки на видео для блюд</label>
+                </div>
 
                 <input class="btn btn-success" type="submit" value="Изменить ресторан">
             </form>
         </div>
         <div class="col">
             <label>Изображения сохраняются сразу же для текущего ресторана</label>
-            <div th:each="photo : ${restaurant.photos}">
-                <div class="row" style="width:180px;">
-                    <img  th:src="@{'/image/' + ${photo.url}}" class="img-thumbnail "/>
-                    <a class="btn btn-primary btn-sm col-xs-4 h-25" href="#"
-                       th:href="@{'/restaurants/deleteImage/' +${restaurant.id} + '/' + ${photo.id}}"
-                       role="button"><i class="fa fa-trash" aria-hidden="true"></i>
-                    </a>
+            <div class="row">
+                <div>
+                    <div th:if="${restaurant.logo} != null"  class="col-auto col-xs-4" >
+                        <div class="row no-gutters">
+                        <img   th:src="@{'/image/' + ${restaurant.logo.url}}" class=" col-auto img-fluid"/>
+                        <a class="btn btn-primary-outline btn-sm col-xs-4 fa-2x" href="#"
+                           th:href="@{'/restaurants/deleteImage/' +${restaurant.id} + '/' + ${restaurant.logo.id}}"
+                           role="button"><i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                        </div>
+                        <br/>
+                        <br/>
+                    </div>
+                </div>
+                <form  th:if="${restaurant.logo} == null" class="col-mr-3 input-group input-group-sm rounded-sm"
+                       enctype="multipart/form-data" method="POST" accept="image/*"
+                      th:action="@{/restaurants/upload/{id}/logo(id=${restaurant.id})}" >
+                    <div class="custom-file">
+                        <input name="file" type="file" class="custom-file-input form-control-sm"  accept="image/*">
+                        <label class="custom-file-label">Выберите лого</label>
+                    </div>
+                    <div class="input-group-append">
+                        <input type="submit" class="btn btn-outline-secondary" value="Загрузить">
+                    </div>
                     <br/>
                     <br/>
+                </form>
+            </div>
+            <br/>
+
+            <h5>Фотографии ресторана</h5>
+            <div class="row">
+                <div th:each="photo : ${restaurant.photos}">
+                    <div class="col-xs-4" style="width:180px;">
+                    <div class="row no-gutters">
+                        <img  th:src="@{'/image/' + ${photo.url}}" class="img-thumbnail col-auto"/>
+                        <a class="btn btn-primary-outline btn-sm col-auto h-25" href="#"
+                           th:href="@{'/restaurants/deleteImage/' +${restaurant.id} + '/' + ${photo.id}}"
+                           role="button"><i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                        <br/>
+                        <br/>
+                    </div>
                 </div>
             </div>
 
-            <form class="col-mr-3" enctype="multipart/form-data" method="POST"
-                  th:action="@{/restaurants/upload/{id}(id=${restaurant.id})}" th:if="${restaurant.photos.size()} <10" >
-                Выберите изображение: <input name="file" type="file" >
-                <br/>
-                <br/>
-                <input type="submit" value="Добавить изображение">
-            </form>
+            <div class="row">
+                <form class="col-mr-3 input-group input-group-sm rounded-sm" enctype="multipart/form-data" method="POST"
+                       th:action="@{/restaurants/upload/{id}(id=${restaurant.id})}" th:if="${restaurant.photos.size()} < 10" >
+                    <div class="custom-file">
+                        <input name="file" type="file" class="custom-file-input form-control-sm"  accept="image/*">
+                        <label class="custom-file-label">Выберите изображение</label>
+                    </div>
+                    <div class="input-group-append">
+                        <input type="submit" class="btn btn-outline-secondary" value="Загрузить">
+                    </div>
+                    <br/>
+                    <br/>
+                </form>
+            <!--<form class="col-mr-3" enctype="multipart/form-data" method="POST"-->
+                  <!--th:action="@{/restaurants/upload/{id}(id=${restaurant.id})}" th:if="${restaurant.photos.size()} <10" >-->
+                <!--Выберите изображение: <input name="file" type="file" >-->
+                <!--<br/>-->
+                <!--<br/>-->
+                <!--<input type="submit" value="Добавить изображение">-->
+            <!--</form>-->
+            <!--</div>-->
         </div>
+
+
+            <h5>Акции ресторана</h5>
+
+            <div class="row">
+                <div th:each="action : ${restaurant.actions}">
+                    <div class="col-xs-4" style="width:180px;">
+                        <div class="row no-gutters">
+                            <img  th:src="@{'/image/' + ${action.url}}" class="img-thumbnail col-auto"/>
+                            <a class="btn btn-primary-outline btn-sm col-auto h-25" href="#"
+                               th:href="@{'/restaurants/deleteImage/' +${restaurant.id} + '/' + ${action.id}}"
+                               role="button"><i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <br/>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <form class="col-mr-3 input-group input-group-sm rounded-sm" enctype="multipart/form-data" method="POST"
+                      th:action="@{'/restaurants/upload/' + ${restaurant.id} + '/action'}" th:if="${restaurant.actions.size()} < 10" >
+                    <div class="custom-file">
+                        <input name="file" type="file" class="custom-file-input form-control-sm"  accept="image/*">
+                        <label class="custom-file-label">Выберите изображение</label>
+                    </div>
+                    <div class="input-group-append">
+                        <input type="submit" class="btn btn-outline-secondary" value="Загрузить">
+                    </div>
+                    <br/>
+                    <br/>
+                </form>
+            </div>
     </div>
 </div>
 

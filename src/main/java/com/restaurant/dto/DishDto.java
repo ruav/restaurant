@@ -1,48 +1,189 @@
 package com.restaurant.dto;
 
-public class DishDto {
+import io.swagger.annotations.ApiModelProperty;
 
-    private long id;
-    private String name;
-    private float price;
-    private String photo;
+import java.io.Serializable;
+import java.util.List;
 
-//    public DishPojo(long id, String name, long price, String photo) {
-//        this.id = id;
-//        this.name = name;
-//        this.price = price;
-//        this.photo = photo;
-//    }
+public class DishDto implements Serializable {
 
-    public long getId() {
-        return id;
-    }
+   @ApiModelProperty
+   private long id;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+   @ApiModelProperty
+   private String name;
 
-    public String getName() {
-        return name;
-    }
+   @ApiModelProperty
+   private String photo;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+   @ApiModelProperty
+   private Float price;
 
-    public float getPrice() {
-        return price;
-    }
+   @ApiModelProperty
+   private Integer calories;
 
-    public void setPrice(float price) {
-        this.price = price;
-    }
+   @ApiModelProperty
+   private Integer weight;
 
-    public String getPhoto() {
-        return photo;
-    }
+   @ApiModelProperty
+   private List<Long> proteins;
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
+   @ApiModelProperty
+   private List<Long> allergens;
+
+   @ApiModelProperty
+   private List<IngredientDto> ingredients;
+
+   @ApiModelProperty
+   private Integer fiber;
+   @ApiModelProperty
+   private Integer fats;
+   @ApiModelProperty
+   private Integer saturatedFats;
+   @ApiModelProperty
+   private Integer carbohydrates;
+   @ApiModelProperty
+   private Integer sugar;
+   @ApiModelProperty
+   private Integer cellulose;
+   @ApiModelProperty
+   private Integer salt;
+   @ApiModelProperty
+   private String video;
+
+   public long getId() {
+      return id;
+   }
+
+   public void setId(long id) {
+      this.id = id;
+   }
+
+   public String getName() {
+      return name;
+   }
+
+   public void setName(String name) {
+      this.name = name;
+   }
+
+   public String getPhoto() {
+      return photo;
+   }
+
+   public void setPhoto(String photo) {
+      this.photo = photo;
+   }
+
+   public Float getPrice() {
+      return price;
+   }
+
+   public void setPrice(Float price) {
+      this.price = price;
+   }
+
+   public Integer getCalories() {
+      return calories;
+   }
+
+   public void setCalories(Integer calories) {
+      this.calories = calories;
+   }
+
+   public Integer getWeight() {
+      return weight;
+   }
+
+   public void setWeight(Integer weight) {
+      this.weight = weight;
+   }
+
+   public List<Long> getProteins() {
+      return proteins;
+   }
+
+   public void setProteins(List<Long> proteins) {
+      this.proteins = proteins;
+   }
+
+   public List<Long> getAllergens() {
+      return allergens;
+   }
+
+   public void setAllergens(List<Long> allergens) {
+      this.allergens = allergens;
+   }
+
+   public List<IngredientDto> getIngredients() {
+      return ingredients;
+   }
+
+   public void setIngredients(List<IngredientDto> ingredients) {
+      this.ingredients = ingredients;
+   }
+
+   public Integer getFiber() {
+      return fiber;
+   }
+
+   public void setFiber(Integer fiber) {
+      this.fiber = fiber;
+   }
+
+   public Integer getFats() {
+      return fats;
+   }
+
+   public void setFats(Integer fats) {
+      this.fats = fats;
+   }
+
+   public Integer getSaturatedFats() {
+      return saturatedFats;
+   }
+
+   public void setSaturatedFats(Integer saturatedFats) {
+      this.saturatedFats = saturatedFats;
+   }
+
+   public Integer getCarbohydrates() {
+      return carbohydrates;
+   }
+
+   public void setCarbohydrates(Integer carbohydrates) {
+      this.carbohydrates = carbohydrates;
+   }
+
+   public Integer getSugar() {
+      return sugar;
+   }
+
+   public void setSugar(Integer sugar) {
+      this.sugar = sugar;
+   }
+
+   public Integer getCellulose() {
+      return cellulose;
+   }
+
+   public void setCellulose(Integer cellulose) {
+      this.cellulose = cellulose;
+   }
+
+   public Integer getSalt() {
+      return salt;
+   }
+
+   public void setSalt(Integer salt) {
+      this.salt = salt;
+   }
+
+   public String getVideo() {
+      return video;
+   }
+
+   public void setVideo(String video) {
+      this.video = video;
+   }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
@@ -46,7 +47,7 @@ public class DeskController extends AbstractController<DeskService, Desk> {
 
     @Override
     @PostMapping("/add")
-    public String add(@Valid Desk entity, BindingResult result, Model model) {
+    public String add(@Valid Desk entity, @Valid MultipartFile file, BindingResult result, Model model) {
         if (result.hasErrors() ) {
             model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
             model.addAttribute("halls", hallService.findByRestaurantId((Long) getHttpSession().getAttribute("restaurant")));
@@ -79,6 +80,7 @@ public class DeskController extends AbstractController<DeskService, Desk> {
         return  prefix() + "/update";
     }
 
+    @Override
     @PostMapping("/update/{id}")
     public String update(@PathVariable("id") long id, @Valid Desk entity,
                          BindingResult result, Model model) {
