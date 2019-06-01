@@ -73,8 +73,8 @@ public class MvcConfig implements WebMvcConfigurer {
         Properties props = System.getProperties();
         props.put("mail.smtp.starttls.enable", true);
         props.put("mail.smtp.host", "smtp.mail.ru");
-        props.put("mail.smtp.user", "ruavtest@mail.ru");
-        props.put("mail.smtp.password", "abcd1234");
+        props.put("mail.smtp.user", "");
+        props.put("mail.smtp.password", "");
         props.put("mail.smtp.socketFactory.class",
                 "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.port", "465");
