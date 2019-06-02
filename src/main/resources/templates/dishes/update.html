@@ -86,37 +86,37 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="fiber">Белки</label>
-                    <input class="form-control is-valid" id="fiber" placeholder="Белки"  th:field="*{fiber}" type="number">
+                    <input class="form-control is-valid" id="fiber" placeholder="Белки"  th:field="*{fiber}" type="number" min="0">
                     <span th:errors="*{fiber}" th:if="${#fields.hasErrors('fiber')}"></span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="fats">Жиры</label>
-                    <input class="form-control is-valid" id="fats" placeholder="Жиры"  th:field="*{fats}" type="number">
+                    <input class="form-control is-valid" id="fats" placeholder="Жиры"  th:field="*{fats}" type="number" min="0">
                     <span th:errors="*{fats}" th:if="${#fields.hasErrors('fats')}"></span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="saturatedFats">Насыщенные жиры</label>
-                    <input class="form-control is-valid" id="saturatedFats" placeholder="Насыщенные жиры"  th:field="*{saturatedFats}" type="number">
+                    <input class="form-control is-valid" id="saturatedFats" placeholder="Насыщенные жиры"  th:field="*{saturatedFats}" type="number" min="0">
                     <span th:errors="*{saturatedFats}" th:if="${#fields.hasErrors('saturatedFats')}"></span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="carbohydrates">Углеводы</label>
-                    <input class="form-control is-valid" id="carbohydrates" placeholder="Углеводы"  th:field="*{carbohydrates}" type="number">
+                    <input class="form-control is-valid" id="carbohydrates" placeholder="Углеводы"  th:field="*{carbohydrates}" type="number" min="0">
                     <span th:errors="*{carbohydrates}" th:if="${#fields.hasErrors('carbohydrates')}"></span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="sugar">Сахар</label>
-                    <input class="form-control is-valid" id="sugar" placeholder="Сахар"  th:field="*{sugar}" type="number">
+                    <input class="form-control is-valid" id="sugar" placeholder="Сахар"  th:field="*{sugar}" type="number" min="0">
                     <span th:errors="*{sugar}" th:if="${#fields.hasErrors('sugar')}"></span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="cellulose">Клетчатка</label>
-                    <input class="form-control is-valid" id="cellulose" placeholder="Клетчатка"  th:field="*{cellulose}" type="number">
+                    <input class="form-control is-valid" id="cellulose" placeholder="Клетчатка"  th:field="*{cellulose}" type="number" min="0">
                     <span th:errors="*{cellulose}" th:if="${#fields.hasErrors('cellulose')}"></span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="salt">Соль</label>
-                    <input class="form-control is-valid" id="salt" placeholder="Соль"  th:field="*{salt}" type="number">
+                    <input class="form-control is-valid" id="salt" placeholder="Соль"  th:field="*{salt}" type="number" min="0">
                     <span th:errors="*{salt}" th:if="${#fields.hasErrors('salt')}"></span>
                 </div>
                 <div class="form-group col-md-4">
