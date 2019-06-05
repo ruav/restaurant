@@ -44,139 +44,116 @@
 </ul>
 
 <br/>
-
-<div class="col">
-    <form action="#" th:object="${restaurant}">
-        <label for="address">Адрес</label>
-        <input id="address" placeholder="Адрес" readonly th:field="*{address}" type="text">
-        <span th:errors="*{address}" th:if="${#fields.hasErrors('address')}"></span>
-        <label for="city">Город</label>
-        <input id="city" placeholder="Город" readonly th:value="${towns.get(restaurant.city).name}" type="text">
-        <span th:errors="*{city}" th:if="${#fields.hasErrors('city')}"></span>
-        <label for="avgPrice">Средний чек</label>
-        <input id="avgPrice" placeholder="Средний чек" readonly th:field="*{avgPrice}" type="text">
-        <span th:errors="*{avgPrice}" th:if="${#fields.hasErrors('avgPrice')}"></span>
-        <label for="coordinate">Координаты</label>
-        <input id="coordinate" placeholder="Координаты" readonly th:value="*{latitude} + ',' + *{longtitude}"
-               type="text">
-        <span th:errors="*{latitude}" th:if="${#fields.hasErrors('latitude')}"></span>
-        <span th:errors="*{longtitude}" th:if="${#fields.hasErrors('longtitude')}"></span>
-    </form>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-auto" th:each="photo : ${restaurant.photos}">
-                <img alt="" class="img-thumbnail img-fluid" style="width:180px;height: 102px;"
-                     th:src="@{'/image/' + ${photo.url}}">
-            </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <form action="#" th:object="${restaurant}">
+                <label for="address">Адрес</label>
+                <input id="address" placeholder="Адрес" readonly th:field="*{address}" type="text">
+                <span th:errors="*{address}" th:if="${#fields.hasErrors('address')}"></span>
+                <label for="city">Город</label>
+                <input id="city" placeholder="Город" readonly th:value="${towns.get(restaurant.city).name}" type="text">
+                <span th:errors="*{city}" th:if="${#fields.hasErrors('city')}"></span>
+                <label for="avgPrice">Средний чек</label>
+                <input id="avgPrice" placeholder="Средний чек" readonly th:field="*{avgPrice}" type="text">
+                <span th:errors="*{avgPrice}" th:if="${#fields.hasErrors('avgPrice')}"></span>
+                <label for="coordinate">Координаты</label>
+                <input id="coordinate" placeholder="Координаты" readonly th:value="*{latitude} + ',' + *{longtitude}"
+                       type="text">
+                <span th:errors="*{latitude}" th:if="${#fields.hasErrors('latitude')}"></span>
+                <span th:errors="*{longtitude}" th:if="${#fields.hasErrors('longtitude')}"></span>
+            </form>
         </div>
     </div>
-
-
-
-    <div>
-        <label>Меню по категориям</label>
-    </div>
-
-    <div class="row px-lg-3">
-        <div class="card col-auto" style="width: 18rem;" th:each="element : ${categories}">
-            <img alt="" class=" card-img-top"
-                 th:if="${element.key.logo != null}"
-                 th:src="@{'/image/' + ${element.key.logo.url}}"/>
-            <img alt="..."
-                 class="card-img-top"
-                 src="..." th:unless="${element.key.logo != null}">
-            <div class="card-body">
-                <h5 class="card-title" >
-                    <a class="btn btn-link ml-auto"
-                       role="button"
-                       th:href="@{/subcategories/list/{id}(id=${element.key.id})}"
-                       th:text="${element.key.name}">Категория</a>
-                </h5>
-                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+    <div class="col">
+        <!--<div class="container">-->
+            <div class="row justify-content-center">
+                <div class="col-auto" th:each="photo : ${restaurant.photos}">
+                    <img alt="" class="img-thumbnail img-fluid" style="width:180px;height: 102px;"
+                         th:src="@{'/image/' + ${photo.url}}">
+                </div>
             </div>
-            <!--<ul class="list-group list-group-flush">-->
-            <!--<li class="list-group-item" th:each="ingredient : ${dish.ingredients}"-->
-            <!--th:text="${ingredient.name}">Ингредиент-->
-            <!--</li>-->
-            <!--</ul>-->
-            <div class="card-body">
-                <td><a class="card-link" th:href="@{/categories/edit/{id}(id=${element.key.id})}">Редактировать</a></td>
-                <td><a class="card-link" th:href="@{/categories/delete/{id}(id=${element.key.id})}">Удалить</a></td>
+        <!--</div>-->
+
+
+
+        <div>
+            <label>Меню по категориям</label>
+        </div>
+
+        <div class="row ml-0">
+            <div class="card col-auto" style="width: 18rem;" th:each="element : ${categories}">
+                <img alt="" class=" card-img-top"
+                     th:if="${element.key.logo != null}"
+                     th:src="@{'/image/' + ${element.key.logo.url}}"/>
+                <img alt="..."
+                     class="card-img-top"
+                     src="..." th:unless="${element.key.logo != null}">
+                <div class="card-body">
+                    <h5 class="card-title" >
+                        <a class="btn btn-link ml-auto"
+                           role="button"
+                           th:href="@{/subcategories/list/{id}(id=${element.key.id})}"
+                           th:text="${element.key.name}">Категория</a>
+                    </h5>
+                    <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                </div>
+                <!--<ul class="list-group list-group-flush">-->
+                <!--<li class="list-group-item" th:each="ingredient : ${dish.ingredients}"-->
+                <!--th:text="${ingredient.name}">Ингредиент-->
+                <!--</li>-->
+                <!--</ul>-->
+                <div class="card-body">
+                    <td><a class="card-link" th:href="@{/categories/edit/{id}(id=${element.key.id})}">Редактировать</a></td>
+                    <td><a class="card-link" th:href="@{/categories/delete/{id}(id=${element.key.id})}">Удалить</a></td>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!--<div th:each="element : ${categories}">-->
-        <!--<table class="table table-hover ">-->
-            <!--<tr>-->
-                <!--<td>-->
-                    <!--<a class="btn btn-link ml-auto"-->
-                       <!--role="button"-->
-                       <!--th:href="@{/subcategories/list/{id}(id=${element.key.id})}"-->
-                       <!--th:text="${element.key.name}">Категория</a>-->
-                <!--</td>-->
-                <!--<td>-->
-                    <!--<div class="row no-gutters">-->
-                        <!--<img alt=""-->
-
-                             <!--class="img-thumbnail img-fluid"-->
-                             <!--th:if="${element.key.photos.size() > 0}" th:src="@{'/image/' + ${element.key.photos.stream().findFirst().get().url}}"/>-->
-                    <!--</div>-->
-                <!--</td>-->
-                <!--<td><a class="btn btn-link ml-auto" role="button"-->
-                       <!--th:href="@{/categories/edit/{id}(id=${element.key.id})}">Редактировать</a></td>-->
-                <!--<td><a class="btn btn-link ml-auto" role="button"-->
-                       <!--th:href="@{/categories/delete/{id}(id=${element.key.id})}">Удалить</a></td>-->
-            <!--</tr>-->
-        <!--</table>-->
-
-    <!--</div>-->
-
-    <p><a th:href="@{/categories/add?id={id}(id=${restaurant.id})}">Добавить новую категорию</a></p>
+        <p><a th:href="@{/categories/add?id={id}(id=${restaurant.id})}">Добавить новую категорию</a></p>
 
 
-    <div>
-        <label>Информация по столикам(по залам) </label>
-    </div>
+        <div>
+            <label>Информация по столикам(по залам) </label>
+        </div>
 
-    <div th:each="element : ${halls}">
-        <table>
-            <tr>
-                <td>
-                    <a aria-expanded="true" class="btn btn-primary" data-toggle="collapse"
-                       role="button" th:attr="aria-controls='#hall' + ${element.key.id}"
-                       th:href="'#hall' + ${element.key.id}"
-                       th:text="'Информация по ' + ${element.key.name}">
-                        <div th:text="${element.key.name}">Зал</div>
-                    </a>
-                </td>
-                <!--<td th:text="'Информация по ' + ${element.key.name}">Зал</td>-->
-                <td><a class="btn btn-link ml-auto"
-                       th:href="@{/halls/edit/{id}(id=${element.key.id})}">Редактировать</a></td>
-                <td><a class="btn btn-link ml-auto" th:href="@{/halls/delete/{id}(id=${element.key.id})}">Удалить</a>
-                </td>
-            </tr>
-        </table>
-        <div class="panel panel-default collapse" th:id="'hall' + ${element.key.id}">
-            <!--<div class="panel-heading">Информация по столикам</div>-->
-            <div class="panel-body"></div>
-            <table class="table table-striped table-hover">
-                <tr th:each="desk : ${element.value}">
-                    <td></td>
-                    <td th:text="${desk.number}">Номер столика</td>
-                    <td><a th:href="@{/tables/edit/{id}(id=${desk.id})}">Редактировать</a></td>
-                    <td><a th:href="@{/tables/delete/{id}(id=${desk.id})}">Удалить</a></td>
+        <div th:each="element : ${halls}">
+            <table>
+                <tr>
+                    <td>
+                        <a aria-expanded="true" class="btn btn-primary" data-toggle="collapse"
+                           role="button" th:attr="aria-controls='#hall' + ${element.key.id}"
+                           th:href="'#hall' + ${element.key.id}"
+                           th:text="'Информация по ' + ${element.key.name}">
+                            <div th:text="${element.key.name}">Зал</div>
+                        </a>
+                    </td>
+                    <!--<td th:text="'Информация по ' + ${element.key.name}">Зал</td>-->
+                    <td><a class="btn btn-link ml-auto"
+                           th:href="@{/halls/edit/{id}(id=${element.key.id})}">Редактировать</a></td>
+                    <td><a class="btn btn-link ml-auto" th:href="@{/halls/delete/{id}(id=${element.key.id})}">Удалить</a>
+                    </td>
                 </tr>
             </table>
+            <div class="panel panel-default collapse" th:id="'hall' + ${element.key.id}">
+                <!--<div class="panel-heading">Информация по столикам</div>-->
+                <div class="panel-body"></div>
+                <table class="table table-striped table-hover">
+                    <tr th:each="desk : ${element.value}">
+                        <td></td>
+                        <td th:text="${desk.number}">Номер столика</td>
+                        <td><a th:href="@{/tables/edit/{id}(id=${desk.id})}">Редактировать</a></td>
+                        <td><a th:href="@{/tables/delete/{id}(id=${desk.id})}">Удалить</a></td>
+                    </tr>
+                </table>
+            </div>
         </div>
+
+        <p><a th:href="@{/halls/add?id={id}(id=${restaurant.id})}">Добавить зал</a></p>
+        <p><a th:href="@{/tables/add?id={id}(id=${restaurant.id})}">Добавить столик</a></p>
+        <p><a th:href="@{/ingredients/add?id={id}(id=${restaurant.id})}">Добавить ингредиент</a></p>
     </div>
-
-    <p><a th:href="@{/halls/add?id={id}(id=${restaurant.id})}">Добавить зал</a></p>
-    <p><a th:href="@{/tables/add?id={id}(id=${restaurant.id})}">Добавить столик</a></p>
-    <p><a th:href="@{/ingredients/add?id={id}(id=${restaurant.id})}">Добавить ингредиент</a></p>
 </div>
-
 <footer class="footer text-faded text-center py-5">
     <div class="container">
         <p class="m-0 small">Copyright &copy; Your Website 2019</p>

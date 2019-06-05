@@ -67,19 +67,20 @@ public class DishController extends AbstractController<DishService, Dish> {
     @Override
     @GetMapping("/add")
     public String showSignUpForm(Dish dish, @PathParam("id") long id, Model model) {
-        dish.setSubCategoryId(0l);
+        dish.setSubCategoryId(id);
 
-        List<Category> categories = categoryService.findByRestaurant(id);
-        List<SubCategory> subCategories = new ArrayList<>();
-        categories.forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
+//        List<Category> categories = categoryService.findByRestaurant(id);
+//        List<SubCategory> subCategories = new ArrayList<>();
+//        categories.forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
 
-        model.addAttribute("subcategories", subCategories);
-        model.addAttribute("categories", categories);
+//        model.addAttribute("subcategories", subCategories);
+//        model.addAttribute("categories", categories);
+        model.addAttribute("subcategory", subCategoryService.findById(id).get());
         model.addAttribute("ingredients", ingredientService.findAll());
-        model.addAttribute("restaurantId", id);
+//        model.addAttribute("restaurantId", id);
         model.addAttribute("allergens", allergenService.findAll());
         model.addAttribute("proteins", proteinService.findAll());
-        model.addAttribute("linkEnable", restaurantService.findById(id).get().isVideoLink());
+        model.addAttribute("linkEnable", restaurantService.findById((Long) getHttpSession().getAttribute("restaurant")).get().isVideoLink());
         return prefix() + "/add";
     }
 

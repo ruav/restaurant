@@ -73,7 +73,7 @@
         </div>
     </div>
     <div class="form-group form-check" >
-        <input type="checkbox" th:disabled="${#authorization.expression('hasAuthority(''Root'')')}" name="videoLink" id="videoLink" class="form-check-input"
+        <input type="checkbox" th:disabled="${#authorization.expression('!hasAuthority(''Root'')')}" name="videoLink" id="videoLink" class="form-check-input"
                th:checked="*{videoLink}" th:field="*{videoLink}" />
         <label for="videoLink" class="form-check-label">Добавление ссылки на видео для блюд</label>
     </div>

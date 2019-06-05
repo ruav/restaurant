@@ -80,7 +80,7 @@
         </div>
 
         <!--<p><a th:href="@{/subcategories/add?id={id}(id=${restaurantId})}">Добавить новую подкатегорию</a></p>-->
-        <p><a th:href="@{/dishes/add?id={id}(id=${restaurantId})}">Добавить новое блюдо</a></p>
+        <p><a th:href="@{/dishes/add?id={id}(id=${subcategory.id})}">Добавить новое блюдо</a></p>
 
         <!--<p><a th:href="@{/ingredients/add?id={id}(id=${restaurant.id})}">Добавить ингредиент</a></p>-->
     </div>

@@ -57,9 +57,10 @@ public class SubCategoryController extends AbstractController<SubCategoryService
     @Override
     @GetMapping("/add")
     public String showSignUpForm(SubCategory entity, @PathParam(value ="id") long id, Model model) {
-        model.addAttribute("restaurantId", id);
+//        model.addAttribute("category", id);
+        entity.setCategoryId(id);
         model.addAttribute("subcategory", entity);
-        model.addAttribute("categories", categoryService.findByRestaurant(id));
+        model.addAttribute("category", categoryService.findById(id).get());
         return prefix() + "/add";
     }
 

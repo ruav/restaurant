@@ -47,11 +47,12 @@
                 </div>
                 <div class="form-row ">
                     <div class="col-auto">
-                        <label for="category">Выбор категории</label>
-                        <select class="form-control" id="category" th:field="*{categoryId}">
-                            <option th:each="category : ${categories}" th:text="${category.name}" th:value="${category.id}">Название зала
-                            </option>
-                        </select>
+                        <label for="category">Категория</label>
+                        <!--<select class="form-control" id="category" th:field="*{categoryId}">-->
+                            <input th:field="*{categoryId}" readonly hidden type="number" th:value="${category.id}">
+                            <span  th:text="${category.name}" id="category" readonly >
+                            </span>
+                        <!--</select>-->
                     </div>
                 </div>
 

@@ -53,6 +53,24 @@
                type="text">
         <span th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></span>
     </div>
+    <!--<div class="form-group col-md-4">-->
+        <!--<label for="subCategoryId">Подкатегория</label>-->
+        <!--<select class="form-control" id="subCategoryId" required th:field="*{subCategoryId}">-->
+            <!--<option th:each="subCategory : ${subcategories}" th:text="${subCategory.name}" th:value="${subCategory.id}">Категория-->
+            <!--</option>-->
+        <!--</select>-->
+    <!--</div>-->
+
+    <div class="form-group col-md-4">
+    <label for="subCategoryId">Подкатегория</label>
+    <!--<select class="form-control" id="category" th:field="*{categoryId}">-->
+        <input th:field="*{subCategoryId}" readonly hidden type="number" th:value="${subcategory.id}">
+        <span  th:text="${subcategory.name}" id="subCategoryId" readonly >
+
+        </span>
+        <!--</select>-->
+    </div>
+
     <div class="form-group col-md-4">
         <label for="name">Вес</label>
         <input class="form-control is-valid" id="weight" placeholder="Вес"  th:field="*{weight}" type="number" min="0">
@@ -107,13 +125,6 @@
         <label for="video">Ссылка на видео</label>
         <input th:readonly="${linkEnable == false}" class="form-control is-valid" id="video" placeholder="Ссылка на видео"  th:field="*{video}" type="text">
         <span th:errors="*{video}" th:if="${#fields.hasErrors('video')}"></span>
-    </div>
-    <div class="form-group col-md-4">
-        <label for="subCategoryId">Подкатегория</label>
-        <select class="form-control" id="subCategoryId" required th:field="*{subCategoryId}">
-            <option th:each="subCategory : ${subcategories}" th:text="${subCategory.name}" th:value="${subCategory.id}">Категория
-            </option>
-        </select>
     </div>
     <div class="form-group col-md-4">
         <label for="ingredients">Ингредиенты</label>
