@@ -1,5 +1,8 @@
 server:
   port: 8090
+  servlet:
+    session:
+      timeout: 90d
 spring:
   datasource:
     driver-class-name: org.h2.Driver
