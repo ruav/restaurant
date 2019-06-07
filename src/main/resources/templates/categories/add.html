@@ -59,6 +59,11 @@
                         <input hidden id="restaurant" placeholder="restaurant" th:field="*{restaurantId}" type="text">
                     </div>
                 </div>
+                <div class="form-group form-check" >
+                    <input type="checkbox" name="active" id="active" class="form-check-input"
+                           th:checked="*{active}" th:field="*{active}" />
+                    <label for="active" class="form-check-label">Активен</label>
+                </div>
                 <div class="form-group">
                     <!--<form class="col-mr-3" enctype="multipart/form-data" method="POST"-->
                     <!--th:action="@{/restaurants/upload/{id}(id=${restaurant.id})}" th:if="${restaurant.photos.size()} <10" >-->

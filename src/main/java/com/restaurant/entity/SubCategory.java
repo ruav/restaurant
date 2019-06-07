@@ -1,7 +1,8 @@
 package com.restaurant.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "subcategory",uniqueConstraints=@UniqueConstraint(columnNames= {"category_Id","name"}))
@@ -17,6 +18,10 @@ public class SubCategory implements DataWithLogo<Photo>{
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @ColumnDefault("true")
+    @Column(name = "active")
+    private boolean active;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -49,6 +54,14 @@ public class SubCategory implements DataWithLogo<Photo>{
 
     public void setCategoryId(long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

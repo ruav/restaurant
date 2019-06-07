@@ -70,7 +70,12 @@
         </span>
         <!--</select>-->
     </div>
-
+    <div class="form-group col-md-4">
+        <label for="description">Описание блюда</label>
+        <input class="form-control is-valid" id="description" placeholder="Описание блюда" required th:field="*{description}"
+               type="text">
+        <span th:errors="*{description}" th:if="${#fields.hasErrors('description')}"></span>
+    </div>
     <div class="form-group col-md-4">
         <label for="name">Вес</label>
         <input class="form-control is-valid" id="weight" placeholder="Вес"  th:field="*{weight}" type="number" min="0">
@@ -150,7 +155,7 @@
             </option>
         </select>
     </div>
-    <div class="form-group">
+    <div class="form-group col-md-4">
         <!--<form class="col-mr-3" enctype="multipart/form-data" method="POST"-->
         <!--th:action="@{/restaurants/upload/{id}(id=${restaurant.id})}" th:if="${restaurant.photos.size()} <10" >-->
         Выберите изображение: <input type="file" id="file" name="file" value="file" required accept="image/*">
@@ -158,6 +163,11 @@
         <br/>
         <!--<input type="submit" value="Добавить изображение">-->
         <!--</form>-->
+    </div>
+    <div class="form-group pl-5 col-md-4" >
+        <input type="checkbox" name="active" id="active" class="form-check-input"
+               th:checked="*{active}" th:field="*{active}" />
+        <label for="active" class="form-check-label">Активен</label>
     </div>
     <input class="btn btn-success ml-3" type="submit" value="Добавить блюдо">
 </form>

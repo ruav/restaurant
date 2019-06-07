@@ -1,8 +1,9 @@
 package com.restaurant.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity
 @Table(name = "category",uniqueConstraints=@UniqueConstraint(columnNames= {"restaurant_Id","name"}))
@@ -18,6 +19,10 @@ public class Category implements DataWithLogo<Photo>, Serializable {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @ColumnDefault("true")
+    @Column(name = "active")
+    private boolean active;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -50,6 +55,14 @@ public class Category implements DataWithLogo<Photo>, Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

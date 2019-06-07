@@ -1,5 +1,7 @@
 package com.restaurant.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -20,6 +22,10 @@ public class Dish implements DataWithLogo<Photo>{
 
     @Column
     private Integer weight;
+
+    @ColumnDefault("true")
+    @Column(name = "active")
+    private boolean active;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -79,7 +85,8 @@ public class Dish implements DataWithLogo<Photo>{
     private Integer salt;
     @Column
     private String video;
-
+    @Column
+    private String description;
     @Override
     public Photo getLogo() {
         return logo;
@@ -227,6 +234,22 @@ public class Dish implements DataWithLogo<Photo>{
         this.video = video;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "Dish{" +
@@ -237,6 +260,7 @@ public class Dish implements DataWithLogo<Photo>{
                 ", callories=" + calories +
                 ", ingredients=" + ingredients +
                 ", price=" + price +
+                ", description=" + description +
                 '}';
     }
 }

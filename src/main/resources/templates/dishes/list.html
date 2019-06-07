@@ -56,7 +56,7 @@
 
 
         <div class="row">
-            <div class="card col-auto" style="width: 18rem;" th:each="dish : ${dishes}">
+            <div class="card col-auto" th:classappend="${dish.isActive()} ? border-primary : ''" style="width: 18rem;" th:each="dish : ${dishes}">
                 <img alt="" class=" card-img-top"
                      th:if="${dish.logo != null}"
                      th:src="@{'/image/' + ${dish.logo.url}}"/>

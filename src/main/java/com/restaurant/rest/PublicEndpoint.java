@@ -79,7 +79,7 @@ public class PublicEndpoint {
 
         Optional<Restaurant> restaurant = restaurantService.findById(restaurantId);
 
-        if (!restaurant.isPresent())
+        if (!restaurant.isPresent() || !restaurant.get().isActive())
             return restaurantMenuModel;
 
         restaurantMenuModel.setLogo(restaurant.get().getLogo() == null ? null : (url + "/image/" + restaurant.get().getLogo().getUrl()));
@@ -92,10 +92,10 @@ public class PublicEndpoint {
 
         restaurantMenuModel.setActions(actions);
         List<CategoryDto> categoryDtos = new ArrayList<>();
-        for (Category category : categoryService.findByRestaurant(restaurantId)) {
+        for (Category category : categoryService.findActiveByRestaurant(restaurantId)) {
 
-            List<SubCategory> subCategories = subCategoryService.findByCategoryId(category.getId());
-            Map<Long, List<Dish>> collect = subCategories.stream().collect(Collectors.toMap(SubCategory::getId, subCategory -> dishService.findBySubCategoryId(subCategory.getId()), (a, b) -> b));
+            List<SubCategory> subCategories = subCategoryService.findActiveByCategoryId(category.getId());
+            Map<Long, List<Dish>> collect = subCategories.stream().collect(Collectors.toMap(SubCategory::getId, subCategory -> dishService.findActiveBySubCategoryId(subCategory.getId()), (a, b) -> b));
             CategoryDto categoryDto = Converter.getCategoryDto(category, subCategories,
                     collect, url);
             categoryDtos.add(categoryDto);

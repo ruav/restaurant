@@ -54,7 +54,7 @@ public class Converter {
         dto.setId(dish.getId());
         dto.setPrice(dish.getPrice());
         dto.setName(dish.getName());
-        dto.setDescription("Здесь будет сочное и вкусное описание. Пока что описание отсутствует и на его месте находится placeholder.");
+        dto.setDescription(dish.getDescription());
         dto.setPrice(dish.getPrice());
         dto.setCalories(dish.getCalories());
         dto.setPhoto(dish.getLogo() == null ? null : url + image + dish.getLogo().getUrl());

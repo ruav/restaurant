@@ -82,7 +82,7 @@
         </div>
 
         <div class="row ml-0">
-            <div class="card col-auto" style="width: 18rem;" th:each="element : ${categories}">
+            <div class="card col-auto" th:classappend="${element.key.isActive()} ? border-primary : ''" style="width: 18rem;" th:each="element : ${categories}">
                 <img alt="" class=" card-img-top"
                      th:if="${element.key.logo != null}"
                      th:src="@{'/image/' + ${element.key.logo.url}}"/>

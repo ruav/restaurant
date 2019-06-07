@@ -48,6 +48,10 @@ public class Restaurant implements DataWithLogo<Photo>{
     @Column(name = "longtitude", nullable = false)
     private Float longtitude;
 
+    @ColumnDefault("true")
+    @Column(name = "active")
+    private boolean active;
+
     @ColumnDefault("false")
     @Column(nullable = false)
     private boolean videoLink = false;
@@ -138,6 +142,14 @@ public class Restaurant implements DataWithLogo<Photo>{
 
     public void setVideoLink(boolean videoLink) {
         this.videoLink = videoLink;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

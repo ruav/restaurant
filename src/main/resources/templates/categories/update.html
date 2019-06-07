@@ -58,6 +58,11 @@
                         <input hidden id="restaurant" placeholder="restaurant" th:field="*{restaurantId}" type="text">
                     </div>
                 </div>
+                <div class="form-group form-check" >
+                    <input type="checkbox" name="active" id="active" class="form-check-input"
+                           th:checked="*{active}" th:field="*{active}" />
+                    <label for="active" class="form-check-label">Активен</label>
+                </div>
                 <input class="btn btn-success" type="submit" value="Изменить категорию">
             </form>
         </div>

@@ -98,7 +98,7 @@
 
 
     <div class="row">
-        <div class="card col-auto" style="width: 18rem;" th:each="subcategory : ${subcategories}">
+        <div class="card col-auto" style="width: 18rem;" th:classappend="${subcategory.isActive()} ? border-primary : ''" th:each="subcategory : ${subcategories}">
             <img alt="" class=" card-img-top"
                  th:if="${subcategory.logo != null}"
                  th:src="@{'/image/' + ${subcategory.logo.url}}"/>

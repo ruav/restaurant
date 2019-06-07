@@ -106,7 +106,11 @@
                            th:checked="*{videoLink}" th:field="*{videoLink}" />
                     <label for="videoLink" class="form-check-label">Добавление ссылки на видео для блюд</label>
                 </div>
-
+                <div class="form-group form-check" >
+                    <input type="checkbox" name="active" id="active" class="form-check-input"
+                           th:checked="*{active}" th:field="*{active}" />
+                    <label for="active" class="form-check-label">Активен</label>
+                </div>
                 <input class="btn btn-success" type="submit" value="Изменить ресторан">
             </form>
         </div>
