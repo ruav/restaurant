@@ -3,8 +3,6 @@ package com.restaurant.config;
 import com.restaurant.handler.CustomLogoutSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +29,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/index").setViewName("/index");
         registry.addViewController("/registration").setViewName("/registration");
         registry.addViewController("/main").setViewName("/index");
+        registry.addViewController("/qr2").setViewName("/qr2");
     }
 
     @Bean
@@ -46,24 +45,6 @@ public class MvcConfig implements WebMvcConfigurer {
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new CustomLogoutSuccessHandler();
-    }
-
-    @Bean
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.mail.ru");
-        mailSender.setPort(465);
-        mailSender.setUsername(""); //почтовый адрес, с которого отправляем письма
-        mailSender.setPassword(""); // пароль для почтового ящика
-
-        Properties props = mailSender.getJavaMailProperties();
-
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
-
-        return mailSender;
     }
 
     @Bean

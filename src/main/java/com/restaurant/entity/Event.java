@@ -26,14 +26,8 @@ public class Event implements Data {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm")
     private Date start_hour;
 
-    @OneToOne()
-    @JoinTable(
-            name="eventstype",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "type_id")
-
-    )
-    private EventType type;
+    @Column()
+    private long type;
 
     @Column
     private String Description;
@@ -108,11 +102,11 @@ public class Event implements Data {
         this.link = link;
     }
 
-    public EventType getType() {
+    public long getType() {
         return type;
     }
 
-    public void setType(EventType type) {
+    public void setType(long type) {
         this.type = type;
     }
 

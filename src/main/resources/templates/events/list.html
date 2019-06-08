@@ -61,7 +61,7 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item" th:text="${event.start_date} + ' ' + ${event.start_hour}"></li>
-                        <li class="list-group-item" th:text="${event.type}"></li>
+                        <li class="list-group-item" th:text="${types.get(event.type)}"></li>
                         <li class="list-group-item" th:if="${event.link != null}"
                             th:text="${event.link}" ></li>
                     </ul>

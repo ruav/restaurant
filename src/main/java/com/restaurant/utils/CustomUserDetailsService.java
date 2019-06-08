@@ -1,7 +1,6 @@
 package com.restaurant.utils;
 
 import com.restaurant.entity.User;
-import com.restaurant.handler.CustomAccessDeniedHandler;
 import com.restaurant.service.UserService;
 import com.restaurant.vo.Role;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userRepository;
 
-    private static Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {

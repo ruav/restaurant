@@ -1,5 +1,6 @@
 package com.restaurant.controller;
 
+import com.restaurant.Exception.ForbiddenException;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Desk;
 import com.restaurant.entity.Dish;
@@ -18,6 +19,7 @@ import com.restaurant.service.TownService;
 import com.restaurant.service.UserService;
 import com.restaurant.vo.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -186,6 +188,7 @@ public class RestaurantController {
 
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
+        checkAccess(id);
         Restaurant restaurant = restaurantService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant Id:" + id));
 
@@ -196,6 +199,7 @@ public class RestaurantController {
 
     @GetMapping("/info/{id}")
     public String showInfoForm(@PathVariable("id") long id, Model model) {
+        checkAccess(id);
         Restaurant restaurant = restaurantService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant Id:" + id));
 
@@ -233,6 +237,7 @@ public class RestaurantController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable("id") long id, @Valid Restaurant restaurant,
                              BindingResult result, Model model) {
+        checkAccess(id);
         if (result.hasErrors()) {
             restaurant.setId(id);
             return PREFIX + "/update";
@@ -252,6 +257,7 @@ public class RestaurantController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id, Model model) {
+        checkAccess(id);
         Restaurant restaurant = restaurantService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant Id:" + id));
         for (User u : userService.findAll()) {
@@ -269,5 +275,12 @@ public class RestaurantController {
     private UserDetails getUser() {
         return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+    private void checkAccess(long id) {
+        if (!getUser().getAuthorities().contains(new SimpleGrantedAuthority(Role.Root.name())) && !userService.findByEmail(getUser().getUsername()).getRestaurants().contains(restaurantService.findById(id).get())) {
+            throw new ForbiddenException();
+        }
+    }
+
 
 }

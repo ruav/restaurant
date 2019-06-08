@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="eventtype")
+@Table(name="event_type")
 public class EventType implements Data {
 
     @Id

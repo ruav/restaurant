@@ -5,12 +5,14 @@ import com.restaurant.dto.CategoryDto;
 import com.restaurant.dto.DishDto;
 import com.restaurant.dto.IngredientDto;
 import com.restaurant.dto.ProteinDto;
+import com.restaurant.dto.RestaurantDto;
 import com.restaurant.dto.SubCategoryDto;
 import com.restaurant.entity.Allergen;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
 import com.restaurant.entity.Ingredient;
 import com.restaurant.entity.Protein;
+import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.SubCategory;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +21,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class Converter {
+public class DtoConverter {
 
     private static String image = "/image/";
     private static String icon = "/icon/";
 
-    private Converter() {
+    private DtoConverter() {
     }
 
     public static CategoryDto getCategoryDto(Category category, List<SubCategory> subCategories, Map<Long, List<Dish>> map, String url) {
@@ -67,6 +69,7 @@ public class Converter {
         dto.setSaturatedFats(dish.getSaturatedFats());
         dto.setSugar(dish.getSugar());
         dto.setVideo(dish.getVideo());
+        dto.setWeight(dish.getWeight());
         List<Long> allergens = dish.getAllergens().stream().map(Allergen::getId).collect(Collectors.toList());
         List<Long> proteins = dish.getProteins().stream().map(Protein::getId).collect(Collectors.toList());
 
@@ -96,6 +99,14 @@ public class Converter {
         AllergenDto dto = new AllergenDto();
         dto.setId(allergen.getId());
         dto.setName(allergen.getName());
+        return dto;
+    }
+
+    public static RestaurantDto getRestaurantDto(Restaurant restaurant) {
+        RestaurantDto dto = new RestaurantDto();
+        dto.setId(restaurant.getId());
+        dto.setLatitude(restaurant.getLatitude());
+        dto.setLongtitude(restaurant.getLongtitude());
         return dto;
     }
 

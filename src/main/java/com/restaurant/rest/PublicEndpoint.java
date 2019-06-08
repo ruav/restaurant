@@ -3,6 +3,7 @@ package com.restaurant.rest;
 import com.restaurant.dto.AllergenDto;
 import com.restaurant.dto.CategoryDto;
 import com.restaurant.dto.ProteinDto;
+import com.restaurant.dto.RestaurantDto;
 import com.restaurant.dto.RestaurantMenuModel;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
@@ -14,7 +15,7 @@ import com.restaurant.service.DishService;
 import com.restaurant.service.ProteinService;
 import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
-import com.restaurant.utils.Converter;
+import com.restaurant.utils.DtoConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -58,7 +59,7 @@ public class PublicEndpoint {
     ProteinService proteinService;
 
     @Autowired
-    Converter converter;
+    DtoConverter dtoConverter;
 
     /**
      * Возвращает данные по выбранному ресторану
@@ -83,9 +84,9 @@ public class PublicEndpoint {
             return restaurantMenuModel;
 
         restaurantMenuModel.setLogo(restaurant.get().getLogo() == null ? null : (url + "/image/" + restaurant.get().getLogo().getUrl()));
-        List<AllergenDto> allergens = allergenService.findAll().stream().map(Converter::getAllergenDto).collect(Collectors.toList());
+        List<AllergenDto> allergens = allergenService.findAll().stream().map(DtoConverter::getAllergenDto).collect(Collectors.toList());
         restaurantMenuModel.setAllergens(allergens);
-        List<ProteinDto> proteins = proteinService.findAll().stream().map(Converter::getProteinDto).collect(Collectors.toList());
+        List<ProteinDto> proteins = proteinService.findAll().stream().map(DtoConverter::getProteinDto).collect(Collectors.toList());
         restaurantMenuModel.setProteins(proteins);
 
         List<String> actions = restaurant.get().getActions().stream().map(action -> url + "/image/" + action.getUrl()).collect(Collectors.toList());
@@ -96,7 +97,7 @@ public class PublicEndpoint {
 
             List<SubCategory> subCategories = subCategoryService.findActiveByCategoryId(category.getId());
             Map<Long, List<Dish>> collect = subCategories.stream().collect(Collectors.toMap(SubCategory::getId, subCategory -> dishService.findActiveBySubCategoryId(subCategory.getId()), (a, b) -> b));
-            CategoryDto categoryDto = Converter.getCategoryDto(category, subCategories,
+            CategoryDto categoryDto = DtoConverter.getCategoryDto(category, subCategories,
                     collect, url);
             categoryDtos.add(categoryDto);
         }
@@ -145,5 +146,16 @@ public class PublicEndpoint {
                 "}";
     }
 
+    @ApiOperation(value ="restaurants", response = String.class, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 401, message = "not authorized!"),
+            @ApiResponse(code = 403, message = "forbidden!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @GetMapping(value = "/restaurants", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<RestaurantDto> findRestaurant() {
+        return  restaurantService.findByCoordinate()
+                    .stream().map(DtoConverter::getRestaurantDto).collect(Collectors.toList());
+    }
 
 }

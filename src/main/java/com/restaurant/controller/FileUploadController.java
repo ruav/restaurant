@@ -14,6 +14,7 @@ import com.restaurant.service.IconService;
 import com.restaurant.service.PhotoService;
 import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
+import com.restaurant.utils.ResizeImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpEntity;
@@ -67,10 +68,7 @@ public class FileUploadController {
             model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
         } else {
             Restaurant restaurant = restaurantService.findById(id).get();
-            Photo photo = new Photo();
-            photo.setUrl(UUID.randomUUID().toString());
-            photo.setImage(file.getBytes());
-            restaurant.getPhotos().add(photo);
+            restaurant.getPhotos().add(createPhoto(file, ResizeImage.Size.PHOTO));
             restaurantService.save(restaurant);
         }
 
@@ -85,10 +83,7 @@ public class FileUploadController {
             model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
         } else {
             Restaurant restaurant = restaurantService.findById(id).get();
-            Photo photo = new Photo();
-            photo.setUrl(UUID.randomUUID().toString());
-            photo.setImage(file.getBytes());
-            restaurant.getActions().add(photo);
+            restaurant.getActions().add(createPhoto(file, ResizeImage.Size.PHOTO));
             restaurantService.save(restaurant);
         }
 
@@ -103,10 +98,7 @@ public class FileUploadController {
             model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
         } else {
             Restaurant restaurant = restaurantService.findById(id).get();
-            Photo photo = new Photo();
-            photo.setUrl(UUID.randomUUID().toString());
-            photo.setImage(file.getBytes());
-            restaurant.setLogo(photo);
+            restaurant.setLogo(createPhoto(file, ResizeImage.Size.LOGO));
             restaurantService.save(restaurant);
         }
 
@@ -121,11 +113,7 @@ public class FileUploadController {
             model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
         } else {
             Dish dish = dishService.findById(id).get();
-
-            Photo photo = new Photo();
-            photo.setUrl(UUID.randomUUID().toString());
-            photo.setImage(file.getBytes());
-            dish.setLogo(photo);
+            dish.setLogo(createPhoto(file, ResizeImage.Size.PHOTO));
             dishService.save(dish);
         }
 
@@ -140,11 +128,7 @@ public class FileUploadController {
             model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
         } else {
             Category category = categoryService.findById(id).get();
-
-            Photo photo = new Photo();
-            photo.setUrl(UUID.randomUUID().toString());
-            photo.setImage(file.getBytes());
-            category.setLogo(photo);
+            category.setLogo(createPhoto(file, ResizeImage.Size.LOGO));
             categoryService.save(category);
         }
 
@@ -159,11 +143,7 @@ public class FileUploadController {
             model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
         } else {
             SubCategory subCategory = subCategoryService.findById(id).get();
-
-            Photo photo = new Photo();
-            photo.setUrl(UUID.randomUUID().toString());
-            photo.setImage(file.getBytes());
-            subCategory.setLogo(photo);
+            subCategory.setLogo(createPhoto(file, ResizeImage.Size.LOGO));
             subCategoryService.save(subCategory);
         }
 
@@ -199,7 +179,7 @@ public class FileUploadController {
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());
 
-            event.getPhotos().add(photo);
+            event.getPhotos().add(createPhoto(file, ResizeImage.Size.PHOTO));
             eventService.save(event);
 
         }
@@ -314,10 +294,18 @@ public class FileUploadController {
         byte[] array = icon.getImage();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentType(MediaType.IMAGE_PNG);
         headers.setContentLength(array.length);
         headers.setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
 
         return new HttpEntity<>(array, headers);
     }
+
+    private Photo createPhoto(MultipartFile file, ResizeImage.Size size) throws IOException {
+        Photo photo = new Photo();
+        photo.setUrl(UUID.randomUUID().toString());
+        photo.setImage(ResizeImage.resize(file.getInputStream(), size, file.getContentType()));
+        return photo;
+    }
+
 }

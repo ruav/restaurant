@@ -25,7 +25,7 @@ public class Restaurant implements DataWithLogo<Photo>{
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name="restaurantphoto",
+            name="restaurant_photo",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
@@ -33,7 +33,7 @@ public class Restaurant implements DataWithLogo<Photo>{
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinTable(
-            name="restaurantlogo",
+            name="restaurant_logo",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
@@ -58,7 +58,7 @@ public class Restaurant implements DataWithLogo<Photo>{
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name="restaurantactions",
+            name="restaurant_actions",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
@@ -66,7 +66,7 @@ public class Restaurant implements DataWithLogo<Photo>{
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name="restaurantevents",
+            name="restaurant_events",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )

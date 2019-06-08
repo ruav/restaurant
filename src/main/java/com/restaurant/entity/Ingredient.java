@@ -16,7 +16,7 @@ public class Ingredient implements DataWithLogo<Icon> {
 
     @OneToOne()
     @JoinTable(
-            name="ingredientlogo",
+            name="ingredient_logo",
             joinColumns = @JoinColumn(name = "ingredient_id"),
             inverseJoinColumns = @JoinColumn(name = "icon_id")
 

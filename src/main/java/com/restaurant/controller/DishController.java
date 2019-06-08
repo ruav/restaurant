@@ -124,6 +124,9 @@ public class DishController extends AbstractController<DishService, Dish> {
             return prefix() + "/update";
         }
         entity.setLogo(dishService.findById(entity.getId()).get().getLogo());
+        if (entity.getVideo() != null && entity.getVideo().isEmpty()) {
+            entity.setVideo(null);
+        }
         try {
             repository().save(entity);
         } catch (Exception e) {
@@ -187,6 +190,9 @@ public class DishController extends AbstractController<DishService, Dish> {
             photo.setUrl(UUID.randomUUID().toString());
             photo.setImage(file.getBytes());
             entity.setLogo(photo);
+        }
+        if (entity.getVideo() != null && entity.getVideo().isEmpty()) {
+            entity.setVideo(null);
         }
         try {
             entity = repository().save(entity);

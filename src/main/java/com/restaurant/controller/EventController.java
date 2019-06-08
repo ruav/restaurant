@@ -2,9 +2,11 @@ package com.restaurant.controller;
 
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Event;
+import com.restaurant.entity.EventType;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.service.EventService;
 import com.restaurant.service.EventTypeService;
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/events")
@@ -48,6 +51,7 @@ public class EventController extends AbstractController<EventService, Event> {
         event.setRestaurantId(restaurantId);
         model.addAttribute("restaurantId", restaurantId);
         model.addAttribute("event", event);
+        model.addAttribute("types", eventTypeService.findAll());
 
         return prefix() + "/add";
     }
@@ -103,6 +107,9 @@ public class EventController extends AbstractController<EventService, Event> {
 //        Long restaurantId = (Long) getHttpSession().getAttribute("restaurant");
         model.addAttribute("restaurantId", id);
 
+
+        model.addAttribute("types", eventTypeService.findAll()
+                .stream().collect(Collectors.toMap(EventType::getId, EventType::getName)));
         model.addAttribute("list", eventService.findByRestaurantId(id));
         return prefix() + "/list";
     }

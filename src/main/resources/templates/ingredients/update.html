@@ -49,7 +49,7 @@
     <div class="row">
         <form class="col-mr-5" enctype="multipart/form-data" method="POST"
               th:action="@{/ingredients/upload/{id}(id=${ingredient.id})}">
-            Выберите изображение: <input accept="image/*" multiple="multiple" name="file" type="file">
+            Выберите изображение: <input accept="image/png" multiple="multiple" name="file" type="file">
             <br/>
             <br/>
             <input type="submit" value="Добавить изображение">
