@@ -22,6 +22,10 @@ import java.util.List;
 public class QRService {
 
     private static final String KEY = "db7827cc775511e98f9e2a86e4085a59";
+    private static final String STANDARD_URL = "https://main.zabei.app/qr?t=";
+
+    private static final int WIDTH = 480;
+    private static final int HEIGHT = 480;
 
     @Autowired
     HallRepository hallRepository;
@@ -33,8 +37,8 @@ public class QRService {
         List<BitMatrix> bitMatrices = new ArrayList<>();
         for(Hall hall : hallRepository.findByRestaurantId(restaurantId)){
             for(Desk desk : deskRepository.findByHall(hall.getId())) {
-                QRCodeWriter qrCodeWriter = new QRCodeWriter();
-                bitMatrices.add(qrCodeWriter.encode(restaurantId + " " + hall.getId() + " " + desk.getId() + " " + getSSH1(restaurantId, hall.getId(), desk.getId()), BarcodeFormat.QR_CODE, 450, 450));
+                BitMatrix bitMatrix = createQRCode(restaurantId, hall.getId(), desk.getId());
+                bitMatrices.add(bitMatrix);
             }
         }
         return bitMatrices;
@@ -45,10 +49,17 @@ public class QRService {
         return getSSH1(restaurantId,hallId,deskId).equals(ssh1);
     }
 
+
     private String getSSH1(int restaurantId, long hallId, long deskId) throws NoSuchAlgorithmException {
         MessageDigest msg = MessageDigest.getInstance("SHA-1");
         String str = restaurantId+hallId+deskId+KEY;
         msg.update(str.getBytes(StandardCharsets.UTF_8), 0, str.length());
         return DatatypeConverter.printHexBinary(msg.digest());
+    }
+
+
+    private BitMatrix createQRCode(int restaurantId, long hallId, long deskId) throws NoSuchAlgorithmException, WriterException {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        return qrCodeWriter.encode( STANDARD_URL + restaurantId + "." + hallId + "." + deskId + "." + getSSH1(restaurantId, hallId, deskId), BarcodeFormat.QR_CODE, WIDTH, HEIGHT);
     }
 }
