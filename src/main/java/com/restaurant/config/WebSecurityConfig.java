@@ -46,6 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/**").hasAuthority(Role.Root.name())
                 .anyRequest().authenticated()
         ;
+                http
+                    .csrf().ignoringAntMatchers( "/internal/**");
         http
                 .formLogin()
                 .loginPage("/login")

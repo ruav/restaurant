@@ -191,7 +191,7 @@
 
             <div class="row">
                 <div th:each="action : ${restaurant.actions}">
-                    <div class="col-xs-4" style="width:180px;">
+                    <div class="col-xs-4" >
                         <div class="row no-gutters">
                             <img  th:src="@{'/image/' + ${action.url}}" class="img-thumbnail col-auto"/>
                             <a class="btn btn-primary-outline btn-sm col-auto h-25" href="#"

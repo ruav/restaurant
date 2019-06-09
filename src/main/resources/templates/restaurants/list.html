@@ -54,7 +54,7 @@
         </tr>
         </thead>
         <tbody class="table-striped">
-        <tr  th:each="restaurant : ${list}" >
+        <tr th:each="restaurant : ${list}" th:classappend= "${restaurant.isActive()} ? '' : table-dark">
             <td><a th:text="${restaurant.name}" th:href="@{/restaurants/info/{id}(id=${restaurant.id})}"></a></td>
             <td th:text="${towns.get(restaurant.city).name}"></td>
             <td th:text="${restaurant.address}"></td>

@@ -2,16 +2,19 @@ package com.restaurant.rest;
 
 import com.restaurant.dto.AllergenDto;
 import com.restaurant.dto.CategoryDto;
+import com.restaurant.dto.IngredientDto;
 import com.restaurant.dto.ProteinDto;
 import com.restaurant.dto.RestaurantDto;
 import com.restaurant.dto.RestaurantMenuModel;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
+import com.restaurant.entity.Ingredient;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.service.AllergenService;
 import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
+import com.restaurant.service.IngredientService;
 import com.restaurant.service.ProteinService;
 import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
@@ -22,6 +25,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +34,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -60,6 +67,11 @@ public class PublicEndpoint {
 
     @Autowired
     DtoConverter dtoConverter;
+
+    @Autowired
+    IngredientService ingredientService;
+
+    private static final int LIMIT = 30;
 
     /**
      * Возвращает данные по выбранному ресторану
@@ -156,6 +168,38 @@ public class PublicEndpoint {
     public List<RestaurantDto> findRestaurant() {
         return  restaurantService.findByCoordinate()
                     .stream().map(DtoConverter::getRestaurantDto).collect(Collectors.toList());
+    }
+
+    @ApiOperation(value ="/ingredients/search", response = String.class, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 401, message = "not authorized!"),
+            @ApiResponse(code = 403, message = "forbidden!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @GetMapping(value = "/ingredients/search", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Map<String, Object> findIngredients(@PathParam("search") String search, @PathParam("page") Integer page) {
+        Map<String, Object> objects = new HashMap<>();
+        if (page == null ) {
+            page = 0;
+        } else if (page > 0){
+            page--;
+        }
+
+        if (search == null) {
+            search = "";
+        }
+        Pageable pageable = new PageRequest(page, LIMIT);
+        List<Ingredient> ingredients = new ArrayList<>();
+        if (search == null || search.isEmpty()) {
+            ingredients = ingredientService.findAll(pageable);
+        } else {
+            ingredients = ingredientService.findByNameIsLike(search, pageable);
+        }
+        List<IngredientDto> result = ingredients.stream().map((Ingredient ingredient) -> DtoConverter.getIngredientDto(ingredient,"")).collect(Collectors.toList());
+        objects.put("results", result);
+        boolean more = (result.size() == LIMIT);
+        objects.put("more", more);
+        return objects;
     }
 
 }

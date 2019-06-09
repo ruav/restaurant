@@ -13,9 +13,6 @@
 
     <link href="/static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link href="/static/css/select2.min.css" rel="stylesheet"  th:href="@{/css/select2.min.css}">
-    <!--<link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"-->
-          <!--rel="stylesheet">-->
-    <!--<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">-->
     <script src="@{/static/js/jquery.min.js}" th:src="@{/js/jquery.min.js}"></script>
     <script src="/../../static/js/select2.full.min.js" th:src="@{/js/select2.full.min.js}" ></script>
     <script src="@{/static/js/bootstrap.bundle.min.js}" th:src="@{/js/bootstrap.bundle.min.js}"
@@ -24,8 +21,118 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $(".ingredients").select2({
+                // я хз, что тут надо делать, что бы тэги не писали на каждый чих в базу.
+                // Этот функционал не будет реализован.
+                // Кто шарит хорошо в js - пусть исправит эту либу.
+                // createTag, insertTag - на каждый ввод символа пишут в базу новый ингредиент.
                 templateResult: formatState,
-                templateSelection: formatState
+                templateSelection: formatState,
+                minimumInputLength: 3,
+                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                ajax: {
+                    url: '/rest/ingredients/search',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            page: params.page || 0
+                        }
+
+                        return query;
+                    }
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 0;
+
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: (params.page * 30) < data.count_filtered
+                        }
+                    };
+                },
+                tags: true,
+                createTag: function (params) {
+                    var term = $.trim(params.term);
+
+                    if (term === '') {
+                        return null;
+                    }
+                    var id = 0;
+                    // console.log("term new: " + term);
+                    // $.ajax({
+                    //     type: "POST",
+                    //     async: false,
+                    //     url: '/internal/createingredient',
+                    //     data: term,
+                    //     dataType: "json",
+                    //     contentType: "application/json; charset=utf-8",
+                    //     success: function (answ)
+                    //     {
+                    //         console.log('data: ' + answ);
+                    //         id = answ; }
+                    // });
+                    return {
+                        id: id,
+                        text: term,
+                        // icon: '/icon/0',
+                        newTag: true // add additional parameters
+                    }
+                },
+                insertTag: function (data, tag) {
+                    // Insert the tag at the end of the results
+                    var id = 0;
+                    console.log('insert tag: ' + tag.text + ' ' + tag.id);
+                    // $.ajax({
+                    //     type: "POST",
+                    //     async: false,
+                    //     url: '/internal/createingredient',
+                    //     data: tag.text,
+                    //     dataType: "json",
+                    //     contentType: "application/json; charset=utf-8",
+                    //     success: function (answ)
+                    //     {
+                    //         console.log('data: ' + answ);
+                    //         tag.id = answ; }
+                    // });
+                    data.push(tag);
+                }
+
+            }).on('select2:select', function (e) {
+            /*
+
+                if(e.params.data.newTag){
+                    // append the new option element prenamently:
+                    // var id = 0;
+                    // var term = {name: e.params.data.text};
+                    // $.ajax({
+                    //     type: "POST",
+                    //     async: false,
+                    //     url: '/internal/createingredient',
+                    //     data: e.params.data.text,
+                    //     dataType: "json",
+                    //     contentType: "application/json; charset=utf-8",
+                    //     success: function (data)
+                    //     {
+                    //         console.log('data: ' + data);
+                    //         id = data; }
+                    // });
+                    // e.params.data.id = id;
+                    // delete e.params.data.newTag;
+
+
+                    // e.params.data.icon = '/icon/0';
+                    // console.log('new id: ' + e.params.data.id);
+                    // var data = $(ingredients).select2('data');
+                    // console.log('data: ' + data);
+                    // data.push(e.params.data);
+                    // $(test).select2("data", data, true);
+                    // $(this).find('[value="'+e.params.data.text+'"]').replaceWith('[value="'+e.params.data.id+'"]');
+                    // $(this).find('[value="' + e.params.data.text + '"]').replaceWith('<option value="'+e.params.data.id+'">'+e.params.data.text+'</option>');
+                    // $("#ingredients [value='" + e.params.data.text + "']").val(e.params.data.id);
+                    // store the new tag:
+
+                }
+            //*/
             });
         });
 
@@ -34,27 +141,29 @@
                 return opt.text.toUpperCase();
             }
 
-            var optimage = $(opt.element).attr('data-image');
-            console.log(optimage)
+            // var optimage = opt['data-image'];
+            var optimage = opt['icon'];
+            var text = opt.text || opt.name;
             if(!optimage){
-                return opt.text.toUpperCase();
+                return text.toUpperCase();
             } else {
                 var $opt = $(
-                    '<span><img src="/icon/' + optimage + '" width="60px" /> ' + opt.text.toUpperCase() + '</span>'
+                    // '<span><img src="/icon/' + optimage + '" width="60px" /> ' + opt.text.toUpperCase() + '</span>'
+                    '<span><img src="' + optimage + '" width="60px" /> ' + text.toUpperCase() + '</span>'
                 );
                 return $opt;
             }
         };
         $(document).ready(function() {
             $(".allergens").select2({
-                templateResult: formatState,
-                templateSelection: formatState
+                // templateResult: formatState,
+                // templateSelection: formatState
             });
         });
         $(document).ready(function() {
             $(".proteins").select2({
-                templateResult: formatState,
-                templateSelection: formatState
+                // templateResult: formatState,
+                // templateSelection: formatState
             });
         });
     </script>
@@ -175,9 +284,9 @@
         <label for="ingredients">Ингредиенты</label>
         <br/>
         <select class="form-control ingredients" data-live-search="true" id="ingredients" multiple="multiple" th:field="*{ingredients}">
-            <option th:each="ingredient : ${ingredients}" th:attr="data-image=${ingredient.getLogo().getUrl()}" th:text="${ingredient.name}" th:value="${ingredient.id}">
-                Ингредиент
-            </option>
+            <!--<option th:each="ingredient : ${ingredients}" th:attr="data-image=${ingredient.getLogo().getUrl()}" th:text="${ingredient.name}" th:value="${ingredient.id}">-->
+                <!--Ингредиент-->
+            <!--</option>-->
         </select>
     </div>
     <div class="form-group col-md-4">
