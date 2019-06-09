@@ -77,7 +77,7 @@ public class DishController extends AbstractController<DishService, Dish> {
 //        model.addAttribute("categories", categories);
         model.addAttribute("subcategory", subCategoryService.findById(id).get());
         model.addAttribute("ingredients", ingredientService.findAll());
-//        model.addAttribute("restaurantId", id);
+        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
         model.addAttribute("allergens", allergenService.findAll());
         model.addAttribute("proteins", proteinService.findAll());
         model.addAttribute("linkEnable", restaurantService.findById((Long) getHttpSession().getAttribute("restaurant")).get().isVideoLink());

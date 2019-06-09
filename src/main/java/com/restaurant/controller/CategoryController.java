@@ -50,7 +50,7 @@ public class CategoryController extends AbstractController<CategoryService, Cate
                          BindingResult result, Model model) {
         if (result.hasErrors()) {
             entity.setId(id);
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+            model.addAttribute("restaurantId", entity.getRestaurantId());
             model.addAttribute("entity", entity);
             return prefix() + "/update";
         }
@@ -59,7 +59,7 @@ public class CategoryController extends AbstractController<CategoryService, Cate
             repository().save(entity);
         } catch (Exception e) {
             entity.setId(id);
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+            model.addAttribute("restaurantId", getRestaurant(id));
             model.addAttribute("entity", entity);
             result.addError(new ObjectError("error", "Ошибка сохранения. Такой элемент уже существует"));
             return prefix() + "/update";
@@ -70,7 +70,15 @@ public class CategoryController extends AbstractController<CategoryService, Cate
         return getHttpSession().getAttribute("back") != null ? "redirect:" + getHttpSession().getAttribute("back") : prefix() + "/list";
     }
 
+    private long getRestaurant(Long id) {
+        Long restaurant = (Long) getHttpSession().getAttribute("restaurant");
+        if (restaurant == null) {
+            restaurant = repository.findById(id).get().getRestaurantId();
+            getHttpSession().setAttribute("restaurant", restaurant);
+        }
 
+        return restaurant;
+    }
 
 
 }

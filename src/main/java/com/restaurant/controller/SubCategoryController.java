@@ -59,6 +59,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
     public String showSignUpForm(SubCategory entity, @PathParam(value ="id") long id, Model model) {
 //        model.addAttribute("category", id);
         entity.setCategoryId(id);
+        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
         model.addAttribute("subcategory", entity);
         model.addAttribute("category", categoryService.findById(id).get());
         return prefix() + "/add";
@@ -99,7 +100,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
     public String showUpdateForm(@PathVariable("id") long id, Model model) throws Throwable {
         SubCategory subCategory = repository().findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
-        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+        model.addAttribute("restaurantId", getRestaurant(id));
         model.addAttribute("categories", categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant")));
         model.addAttribute("subcategory", subCategory);
         return  prefix() + "/update";
@@ -111,7 +112,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
                          BindingResult result, Model model) {
         if (result.hasErrors()) {
             entity.setId(id);
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+            model.addAttribute("restaurantId", getRestaurant(id));
             model.addAttribute("categories", categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant")));
             model.addAttribute("entity", entity);
             return prefix() + "/update";
@@ -158,6 +159,17 @@ public class SubCategoryController extends AbstractController<SubCategoryService
     public String index(Model model) {
 
         return "redirect:" + getHttpSession().getAttribute("back");
+    }
+
+    private long getRestaurant(Long id) {
+        Long restaurant = (Long) getHttpSession().getAttribute("restaurant");
+        if (restaurant == null) {
+            long categoryId = subCategoryService.findById(id).get().getCategoryId();
+            restaurant = categoryService.findById(categoryId).get().getRestaurantId();
+            getHttpSession().setAttribute("restaurant", restaurant);
+        }
+
+        return restaurant;
     }
 
 }
