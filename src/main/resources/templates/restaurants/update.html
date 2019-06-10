@@ -134,8 +134,8 @@
                        enctype="multipart/form-data" method="POST" accept="image/*"
                       th:action="@{/restaurants/upload/{id}/logo(id=${restaurant.id})}" >
                     <div class="custom-file">
-                        <input name="file" type="file" class="custom-file-input form-control-sm"  accept="image/*">
-                        <label class="custom-file-label">Выберите лого</label>
+                        <input name="file" type="file" id="logo"  class="custom-file-input form-control-sm"  accept="image/jpeg">
+                        <label class="custom-file-label" for="logo">Выберите лого</label>
                     </div>
                     <div class="input-group-append">
                         <input type="submit" class="btn btn-outline-secondary" value="Загрузить">

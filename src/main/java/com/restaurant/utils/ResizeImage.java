@@ -2,11 +2,11 @@ package com.restaurant.utils;
 
 
 import org.springframework.http.MediaType;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -68,7 +68,10 @@ public class ResizeImage {
      */
     public static byte[] resize(InputStream inputStream, Size size, String type) throws IOException {
         BufferedImage inputImage = ImageIO.read(inputStream);
-        double percent = inputImage.getWidth() > size.getSize() ? (float)size.getSize()/inputImage.getWidth() : 1;
+        double percent = 1;
+        if (size != Size.FULL) {
+            percent = inputImage.getWidth() > size.getSize() ? (float) size.getSize() / inputImage.getWidth() : 1;
+        }
         int scaledWidth = (int) (inputImage.getWidth() * percent);
         int scaledHeight = (int) (inputImage.getHeight() * percent);
         return resize(inputImage, scaledWidth, scaledHeight, type);
@@ -80,7 +83,8 @@ public class ResizeImage {
     public enum Size {
 
         LOGO("", 400),
-        PHOTO("", 1000);
+        PHOTO("", 1000),
+        FULL("",0);
 
         private String description;
         private int size;

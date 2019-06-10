@@ -2,7 +2,6 @@ package com.restaurant.controller;
 
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Dish;
-import com.restaurant.entity.Photo;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.service.AllergenService;
 import com.restaurant.service.CategoryService;
@@ -11,6 +10,7 @@ import com.restaurant.service.IngredientService;
 import com.restaurant.service.ProteinService;
 import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
+import com.restaurant.utils.ResizeImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,9 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
+import static com.restaurant.utils.ManageFiles.createPhoto;
+import static com.restaurant.utils.ManageFiles.saveFile;
 
 @Controller
 @RequestMapping("/dishes")
@@ -171,7 +174,7 @@ public class DishController extends AbstractController<DishService, Dish> {
 
     @Override
     @PostMapping("/add")
-    public String add(@Valid Dish entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException {
+    public String add(@Valid Dish entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException, NoSuchAlgorithmException {
         if (result.hasErrors()) {
             List<Category> categories = categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant"));
             List<SubCategory> subCategories = new ArrayList<>();
@@ -186,10 +189,7 @@ public class DishController extends AbstractController<DishService, Dish> {
             return prefix() + "/add";
         }
         if (!file.isEmpty()) {
-            Photo photo = new Photo();
-            photo.setUrl(UUID.randomUUID().toString());
-            photo.setImage(file.getBytes());
-            entity.setLogo(photo);
+            entity.setLogo(createPhoto(saveFile(file, ResizeImage.Size.PHOTO)));
         }
         if (entity.getVideo() != null && entity.getVideo().isEmpty()) {
             entity.setVideo(null);

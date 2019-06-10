@@ -19,7 +19,10 @@ public class Photo implements Data, Serializable {
     private String url;
 
     @Column
-    private byte[] image;
+    private String path;
+
+//    @Column
+//    private byte[] image;
 
     public long getId() {
         return id;
@@ -38,11 +41,20 @@ public class Photo implements Data, Serializable {
         this.url = url;
     }
 
-    public byte[] getImage() {
-        return image;
+//    public byte[] getImage() {
+//        return image;
+//    }
+
+//    public void setImage(byte[] image) {
+//        this.image = image;
+//    }
+
+
+    public String getPath() {
+        return path;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setPath(String path) {
+        this.path = path;
     }
 }

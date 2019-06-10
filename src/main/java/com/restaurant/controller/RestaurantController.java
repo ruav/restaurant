@@ -17,6 +17,7 @@ import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
 import com.restaurant.service.TownService;
 import com.restaurant.service.UserService;
+import com.restaurant.utils.ResizeImage;
 import com.restaurant.vo.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,19 +32,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
+import static com.restaurant.utils.ManageFiles.createPhoto;
+import static com.restaurant.utils.ManageFiles.saveFile;
 
 @Controller
 @RequestMapping("/restaurants")
@@ -166,17 +168,13 @@ public class RestaurantController {
     }
 
     @PostMapping("/add")
-    public String add(@Valid Restaurant restaurant, @Valid MultipartFile file, BindingResult result, Model model) throws IOException {
+    public String add(@Valid Restaurant restaurant, @Valid MultipartFile file, BindingResult result, Model model) throws IOException, NoSuchAlgorithmException {
         if (result.hasErrors()) {
             return PREFIX + "/add";
         }
 
         if (!file.isEmpty()) {
-            Photo photo = null;
-            photo = new Photo();
-            photo.setUrl(UUID.randomUUID().toString());
-            photo.setImage(file.getBytes());
-            restaurant.setLogo(photo);
+            restaurant.setLogo(createPhoto(saveFile(file, ResizeImage.Size.LOGO)));
         }
 
         restaurant = restaurantService.save(restaurant);

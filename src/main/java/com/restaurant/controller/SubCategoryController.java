@@ -1,7 +1,6 @@
 package com.restaurant.controller;
 
 import com.restaurant.entity.Category;
-import com.restaurant.entity.Photo;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.SubCategory;
 import com.restaurant.service.CategoryService;
@@ -9,6 +8,7 @@ import com.restaurant.service.DishService;
 import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
 import com.restaurant.service.TownService;
+import com.restaurant.utils.ResizeImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
-import java.util.UUID;
+import java.security.NoSuchAlgorithmException;
+
+import static com.restaurant.utils.ManageFiles.createPhoto;
+import static com.restaurant.utils.ManageFiles.saveFile;
 
 @Controller
 @RequestMapping("/subcategories")
@@ -67,7 +70,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
 
     @Override
     @PostMapping("/add")
-    public String add(@Valid SubCategory entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException {
+    public String add(@Valid SubCategory entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException, NoSuchAlgorithmException {
         if (result.hasErrors() ) {
             model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
             model.addAttribute("subcategory", entity);
@@ -75,10 +78,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
             return prefix() + "/add";
         }
         if (!file.isEmpty()) {
-            Photo photo = new Photo();
-            photo.setUrl(UUID.randomUUID().toString());
-            photo.setImage(file.getBytes());
-            entity.setLogo(photo);
+            entity.setLogo(createPhoto(saveFile(file, ResizeImage.Size.LOGO)));
         }
         try {
             repository().save(entity);
