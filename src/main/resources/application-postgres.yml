@@ -6,7 +6,7 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:32768/restaurant
+    url: jdbc:postgresql://db:5432/restaurant
 #    url: jdbc:h2:file:./data/demo
     username: postgres
     password:

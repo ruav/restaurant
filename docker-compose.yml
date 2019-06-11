@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:11
+#    container_name: postgres_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=restaurant
+      - POSTGRES_PORT=5432
+    volumes:
+      - ./data.sql:/docker-entrypoint-initdb.d/init.sql
+#    environment:
+#      - MYSQL_ROOT_PASSWORD="":
+
+#      environment:
+#        KAFKA_ADVERTISED_PORT: 9092
+  restaurant:
+    image: restaurant
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+    links:
+      - db
+    depends_on:
+      - db
