@@ -138,18 +138,18 @@
 
         function formatState (opt) {
             if (!opt.id) {
-                return opt.text.toUpperCase();
+                return opt.text;
             }
 
             // var optimage = opt['data-image'];
             var optimage = opt['icon'];
             var text = opt.text || opt.name;
             if(!optimage){
-                return text.toUpperCase();
+                return text;
             } else {
                 var $opt = $(
                     // '<span><img src="/icon/' + optimage + '" width="60px" /> ' + opt.text.toUpperCase() + '</span>'
-                    '<span><img src="' + optimage + '" width="60px" /> ' + text.toUpperCase() + '</span>'
+                    '<span><img src="' + optimage + '" width="60px" /> ' + text + '</span>'
                 );
                 return $opt;
             }

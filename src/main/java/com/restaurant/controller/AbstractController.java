@@ -3,6 +3,7 @@ package com.restaurant.controller;
 import com.restaurant.entity.Data;
 import com.restaurant.entity.DataWithLogo;
 import com.restaurant.service.AbstractService;
+import com.restaurant.service.CheckAccess;
 import com.restaurant.utils.ResizeImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -31,9 +32,11 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
 
     abstract String prefix();
 
-
     @Autowired
     private HttpSession httpSession;
+
+    @Autowired
+    private CheckAccess checkAccess;
 
     @GetMapping("/add")
     public String showSignUpForm(V entity, @PathParam(value = "id") @Nullable long id, Model model) {
@@ -127,4 +130,7 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
         return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public CheckAccess getCheckAccess() {
+        return checkAccess;
+    }
 }

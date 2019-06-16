@@ -34,7 +34,7 @@ public class Event implements Data {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name="eventphoto",
+            name="event_photo",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )

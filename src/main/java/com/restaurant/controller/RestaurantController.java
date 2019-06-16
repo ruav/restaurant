@@ -1,6 +1,7 @@
 package com.restaurant.controller;
 
 import com.restaurant.Exception.ForbiddenException;
+import com.restaurant.Exception.NotFoundException;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Desk;
 import com.restaurant.entity.Dish;
@@ -275,6 +276,9 @@ public class RestaurantController {
     }
 
     private void checkAccess(long id) {
+        if (!restaurantService.findById(id).isPresent()) {
+            throw new NotFoundException();
+        }
         if (!getUser().getAuthorities().contains(new SimpleGrantedAuthority(Role.Root.name())) && !userService.findByEmail(getUser().getUsername()).getRestaurants().contains(restaurantService.findById(id).get())) {
             throw new ForbiddenException();
         }

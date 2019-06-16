@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantService extends AbstractService<RestaurantRepository, Restaurant>{
@@ -29,11 +30,12 @@ public class RestaurantService extends AbstractService<RestaurantRepository, Res
 
     public List<Restaurant> findByCoordinate(Float latitude1, Float longtitude1, Float lanitude2, Float longtitude2 ) {
         if (latitude1 == null || lanitude2 == null || longtitude1 == null || longtitude2 == null) {
-            return findAll();
+            return findAll().stream().filter(Restaurant::isActive).collect(Collectors.toList());
         }
         return repository
 //                .findByLatitudeIsGreaterThanEqualAndLongtitudeGreaterThanEqualAAndLatitudeLessThanEqualAndLongtitudeLessThanEqual(latitude1, longtitude1, lanitude2, longtitude2);
-                .findByLatitudeGreaterThanEqualAndLongtitudeGreaterThanEqualAndLatitudeLessThanEqualAndLongtitudeLessThanEqual(latitude1, longtitude1, lanitude2, longtitude2);
+                .findByLatitudeGreaterThanEqualAndLongtitudeGreaterThanEqualAndLatitudeLessThanEqualAndLongtitudeLessThanEqual(latitude1, longtitude1, lanitude2, longtitude2)
+                .stream().filter(Restaurant::isActive).collect(Collectors.toList());
     }
 
 }

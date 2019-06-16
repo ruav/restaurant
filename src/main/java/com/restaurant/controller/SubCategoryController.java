@@ -61,7 +61,9 @@ public class SubCategoryController extends AbstractController<SubCategoryService
     @GetMapping("/add")
     public String showSignUpForm(SubCategory entity, @PathParam(value ="id") long id, Model model) {
 //        model.addAttribute("category", id);
+        getCheckAccess().checkAccessCategory(getUser(), id);
         entity.setCategoryId(id);
+        entity.setActive(true);
         model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
         model.addAttribute("subcategory", entity);
         model.addAttribute("category", categoryService.findById(id).get());
@@ -71,6 +73,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
     @Override
     @PostMapping("/add")
     public String add(@Valid SubCategory entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException, NoSuchAlgorithmException {
+        getCheckAccess().checkAccessCategory(getUser(), entity.getCategoryId());
         if (result.hasErrors() ) {
             model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
             model.addAttribute("subcategory", entity);
@@ -100,6 +103,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
     public String showUpdateForm(@PathVariable("id") long id, Model model) throws Throwable {
         SubCategory subCategory = repository().findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
+        getCheckAccess().checkAccessCategory(getUser(), subCategory.getCategoryId());
         model.addAttribute("restaurantId", getRestaurant(id));
         model.addAttribute("categories", categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant")));
         model.addAttribute("subcategory", subCategory);
@@ -110,6 +114,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
     @PostMapping("/update/{id}")
     public String update(@PathVariable("id") long id, @Valid SubCategory entity,
                          BindingResult result, Model model) {
+        getCheckAccess().checkAccessCategory(getUser(), entity.getCategoryId());
         if (result.hasErrors()) {
             entity.setId(id);
             model.addAttribute("restaurantId", getRestaurant(id));
@@ -136,6 +141,7 @@ public class SubCategoryController extends AbstractController<SubCategoryService
 
     @GetMapping("/list/{id}")
     public String index(Model model, @PathVariable(name="id") long id ) {
+        getCheckAccess().checkAccessCategory(getUser(), id);
         Restaurant restaurant = restaurantService.findById((Long) getHttpSession().getAttribute("restaurant"))
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant Id:" + getHttpSession().getAttribute("restaurant")));
 
@@ -152,6 +158,13 @@ public class SubCategoryController extends AbstractController<SubCategoryService
         getHttpSession().setAttribute("back", prefix() + "/list/" + id);
 
         return prefix() + "/list";
+    }
+
+    @Override
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") long id, Model model) throws Throwable {
+        getCheckAccess().checkAccessSubCategory(getUser(), id);
+        return super.delete(id, model);
     }
 
     @Override

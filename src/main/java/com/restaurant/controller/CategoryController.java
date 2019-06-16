@@ -1,7 +1,6 @@
 package com.restaurant.controller;
 
 import com.restaurant.entity.Category;
-import com.restaurant.entity.Photo;
 import com.restaurant.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
-import java.util.UUID;
+import java.security.NoSuchAlgorithmException;
 
 @Controller
 @RequestMapping("/categories")
@@ -39,7 +38,9 @@ public class CategoryController extends AbstractController<CategoryService, Cate
     @Override
     @GetMapping("/add")
     public String showSignUpForm(Category entity, @PathParam(value ="id") long id, Model model) {
+        getCheckAccess().checkAccessRestaurant(getUser(), id);
         entity.setRestaurantId(id);
+        entity.setActive(true);
         model.addAttribute("restaurantId", id);
         return prefix() + "/add";
     }
@@ -48,6 +49,7 @@ public class CategoryController extends AbstractController<CategoryService, Cate
     @PostMapping("/update/{id}")
     public String update(@PathVariable("id") long id, @Valid Category entity,
                          BindingResult result, Model model) {
+        getCheckAccess().checkAccessCategory(getUser(), id);
         if (result.hasErrors()) {
             entity.setId(id);
             model.addAttribute("restaurantId", entity.getRestaurantId());
@@ -80,5 +82,24 @@ public class CategoryController extends AbstractController<CategoryService, Cate
         return restaurant;
     }
 
+    @Override
+    @PostMapping("/add")
+    public String add(@Valid Category entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException, NoSuchAlgorithmException {
+        getCheckAccess().checkAccessRestaurant(getUser(), entity.getRestaurantId());
+        return super.add(entity, file, result, model);
+    }
 
+    @Override
+    @GetMapping("/edit/{id}")
+    public String showUpdateForm(@PathVariable("id") long id, Model model) throws Throwable {
+        getCheckAccess().checkAccessCategory(getUser(), id);
+        return super.showUpdateForm(id, model);
+    }
+
+    @Override
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") long id, Model model) throws Throwable {
+        getCheckAccess().checkAccessCategory(getUser(), id);
+        return super.delete(id, model);
+    }
 }

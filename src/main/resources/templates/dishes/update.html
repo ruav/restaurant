@@ -152,7 +152,7 @@
                 </div>
                 <div class="form-group col-12">
                     <label for="proteins">Протеины</label>
-                    <select class="form-control" id="proteins" multiple="multiple"  th:field="*{proteins}">
+                    <select class="form-control proteins" id="proteins" multiple="multiple"  th:field="*{proteins}">
                         <option th:each="protein : ${proteins}" th:text="${protein.name}" th:value="${protein.id}">
                             Протеин
                         </option>
@@ -160,7 +160,7 @@
                 </div>
                 <div class="form-group col-12">
                     <label for="allergens">Аллергены</label>
-                    <select class="form-control" id="allergens" multiple="multiple"  th:field="*{allergens}">
+                    <select class="form-control allergens" id="allergens" multiple="multiple"  th:field="*{allergens}">
                         <option th:each="allergen : ${allergens}" th:text="${allergen.name}" th:value="${allergen.id}">
                             Аллерген
                         </option>
@@ -310,7 +310,7 @@
 
     function formatState (opt) {
         if (!opt.id) {
-            return opt.text.toUpperCase();
+            return opt.text;
         }
 
         // var optimage = opt['data-image'];
@@ -323,11 +323,11 @@
         // }
         var text = opt.text || opt.name;
         if(!optimage){
-            return text.toUpperCase();
+            return text;
         } else {
             var $opt = $(
                 // '<span><img src="/icon/' + optimage + '" width="60px" /> ' + opt.text.toUpperCase() + '</span>'
-                '<span><img src="' + optimage + '" width="60px" /> ' + text.toUpperCase() + '</span>'
+                '<span><img src="' + optimage + '" width="60px" /> ' + text + '</span>'
             );
             return $opt;
         }

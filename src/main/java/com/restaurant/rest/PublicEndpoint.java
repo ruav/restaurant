@@ -86,7 +86,12 @@ public class PublicEndpoint {
             @ApiResponse(code = 404, message = "not found!!!") })
     @GetMapping(value = "/menu/{restaurantId}")
     public RestaurantMenuModel menu(@ApiParam(value = "id ресторана.", example = "1", required = true) @PathVariable("restaurantId") long restaurantId, HttpServletRequest request) {
-        String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() ;
+        String url;
+        if (request.getServerName().equalsIgnoreCase("localhost") || request.getServerName().equalsIgnoreCase("127.0.0.1")) {
+            url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        } else {
+            url = "https://" + request.getServerName();
+        }
 
         RestaurantMenuModel restaurantMenuModel = new RestaurantMenuModel();
 
