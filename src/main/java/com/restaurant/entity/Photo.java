@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity
-public class Photo implements Data, Serializable {
+public class Photo implements Data, Serializable, Image {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -24,6 +24,7 @@ public class Photo implements Data, Serializable {
 //    @Column
 //    private byte[] image;
 
+    @Override
     public long getId() {
         return id;
     }
@@ -33,6 +34,7 @@ public class Photo implements Data, Serializable {
         this.id = id;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }

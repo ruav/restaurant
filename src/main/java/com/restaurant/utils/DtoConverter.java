@@ -4,16 +4,11 @@ import com.restaurant.dto.AllergenDto;
 import com.restaurant.dto.CategoryDto;
 import com.restaurant.dto.DishDto;
 import com.restaurant.dto.IngredientDto;
+import com.restaurant.dto.PhotoDto;
 import com.restaurant.dto.ProteinDto;
 import com.restaurant.dto.RestaurantDto;
 import com.restaurant.dto.SubCategoryDto;
-import com.restaurant.entity.Allergen;
-import com.restaurant.entity.Category;
-import com.restaurant.entity.Dish;
-import com.restaurant.entity.Ingredient;
-import com.restaurant.entity.Protein;
-import com.restaurant.entity.Restaurant;
-import com.restaurant.entity.SubCategory;
+import com.restaurant.entity.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -108,6 +103,13 @@ public class DtoConverter {
         dto.setLatitude(restaurant.getLatitude());
         dto.setLongtitude(restaurant.getLongtitude());
         return dto;
+    }
+
+    public static PhotoDto getPhotoDto(Image photo, String url) {
+        PhotoDto photoDto = new PhotoDto();
+        photoDto.setId(photo.getId());
+        photoDto.setUrl(url + "/" + photo.getClass().getSimpleName().toLowerCase() + "/" + photo.getUrl());
+        return photoDto;
     }
 
 }

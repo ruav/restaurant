@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "icon")
-public class Icon implements Data, Serializable {
+public class Icon implements Data, Serializable, Image {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,6 +26,7 @@ public class Icon implements Data, Serializable {
 //    @Column
 //    private byte[] image;
 
+    @Override
     public long getId() {
         return id;
     }
@@ -35,6 +36,7 @@ public class Icon implements Data, Serializable {
         this.id = id;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }

@@ -19,8 +19,8 @@ public class CheckAccess {
     private CategoryService categoryService;
     @Autowired
     private SubCategoryService subCategoryService;
-
-
+    @Autowired
+    private HallService hallService;
 
     public void checkAccessRestaurant(UserDetails userDetails, long id) {
         if (!restaurantService.findById(id).isPresent()) {
@@ -40,7 +40,6 @@ public class CheckAccess {
         } else if (userService.findByEmail(userDetails.getUsername()).getRestaurants().stream().noneMatch(r -> r.getId() == categoryService.findById(id).get().getRestaurantId())) {
             throw new ForbiddenException();
         }
-
     }
 
     public void checkAccessSubCategory(UserDetails userDetails, long id) {
@@ -52,8 +51,16 @@ public class CheckAccess {
         } else if (userService.findByEmail(userDetails.getUsername()).getRestaurants().stream().noneMatch(r -> r.getId() == categoryService.findById(subCategoryService.findById(id).get().getCategoryId()).get().getRestaurantId())) {
             throw new ForbiddenException();
         }
-
     }
 
+    public void checkAccessHall(UserDetails userDetails, long id) {
+        if (!hallService.findById(id).isPresent() || !restaurantService.findById(hallService.findById(id).get().getRestaurantId()).isPresent()) {
+            throw new NotFoundException();
+        }
+        if (!userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.Root.name())) && !userService.findByEmail(userDetails.getUsername())
+                .getRestaurants().contains(restaurantService.findById(hallService.findById(id).get().getRestaurantId()).get())) {
+            throw new ForbiddenException();
+        }
+    }
 
 }
