@@ -35,5 +35,5 @@ FROM java:8
 ARG VERSION
 EXPOSE 8090
 #ENV JAR_EXEC restaurant-${VERSION}.jar
-ADD /target/restaurant-0.0.1-SNAPSHOT.jar restaurant.jar
-ENTRYPOINT ["java","-Dspring.profiles.active=postgres","-jar","restaurant.jar"]
+ADD /target/zabei-server-0.0.1-SNAPSHOT.jar zabei.jar
+ENTRYPOINT ["java", "-jar","zabei.jar"]
