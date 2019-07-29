@@ -82,8 +82,8 @@ public class ResizeImage {
 
     public enum Size {
 
-        LOGO("", 400),
-        PHOTO("", 1000),
+        LOGO("", 800),
+        PHOTO("", 1680),
         FULL("",0);
 
         private String description;
