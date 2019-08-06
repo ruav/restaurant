@@ -2,8 +2,9 @@ package com.restaurant.vo;
 
 public enum Role {
 
-    Root(0, "Суперпользователь"),
-    system(1, "Представитель системы");
+    ROOT(0, "Суперпользователь"),
+    SYSTEM(1, "Представитель системы"),
+    RESTAURANT(2, "Учетная запись ресторана");
 
     private int num;
     private String name;

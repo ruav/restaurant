@@ -138,7 +138,7 @@ public class RestaurantController {
     public String index(Model model) {
 
         boolean root = getUser().getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals(Role.Root.toString()));
+                .anyMatch(authority -> authority.getAuthority().equals(Role.ROOT.toString()));
 
         if (root) {
             List<Restaurant> list = new ArrayList<>();
@@ -279,7 +279,7 @@ public class RestaurantController {
         if (!restaurantService.findById(id).isPresent()) {
             throw new NotFoundException();
         }
-        if (!getUser().getAuthorities().contains(new SimpleGrantedAuthority(Role.Root.name())) && !userService.findByEmail(getUser().getUsername()).getRestaurants().contains(restaurantService.findById(id).get())) {
+        if (!getUser().getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name())) && !userService.findByEmail(getUser().getUsername()).getRestaurants().contains(restaurantService.findById(id).get())) {
             throw new ForbiddenException();
         }
     }

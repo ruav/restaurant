@@ -38,7 +38,7 @@
     <li class="nav-item px-lg-1"><a class="nav-link active disabled" href="#"
                                     th:text="'Редактирование ресторана ' + ${restaurant.name}"></a></li>
 
-    <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('Root')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a>
+    <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('ROOT')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a>
     <li class="nav-item px-lg-1 ml-auto"><a class="nav-link" th:href="@{/logout}">Выйти</a>
     </li>
 </ul>
@@ -96,12 +96,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group form-check" th:if="${#authorization.expression('hasAuthority(''Root'')')}">
+                <div class="form-group form-check" th:if="${#authorization.expression('hasAuthority(''ROOT'')')}">
                     <input type="checkbox" name="videoLink" id="videoLink" class="form-check-input"
                            th:checked="*{videoLink}" th:field="*{videoLink}" />
                     <label for="videoLink" class="form-check-label">Добавление ссылки на видео для блюд</label>
                 </div>
-                <div class="form-group form-check" th:unless="${#authorization.expression('hasAuthority(''Root'')')}">
+                <div class="form-group form-check" th:unless="${#authorization.expression('hasAuthority(''ROOT'')')}">
                     <input type="checkbox" disabled name="videoLink" id="videoLink" class="form-check-input"
                            th:checked="*{videoLink}" th:field="*{videoLink}" />
                     <label for="videoLink" class="form-check-label">Добавление ссылки на видео для блюд</label>

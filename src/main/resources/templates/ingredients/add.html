@@ -34,7 +34,7 @@
         ресторан</a></li>
     <li class="nav-item px-lg-1"><a class="nav-link active disabled" href="#">Добавление ингредиента</a></li>
 
-    <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('Root')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a>
+    <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('ROOT')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a>
     <li class="nav-item px-lg-1 ml-auto"><a class="nav-link" th:href="@{/logout}">Выйти</a>
 
     </li>
@@ -75,7 +75,7 @@
             <label>Уже имеющиеся ингредиенты:</label>
             <div class="row">
                 <div th:each="ingredient : ${ingredients}"   class="col-auto border">
-                    <div th:if="${#authorization.expression('hasAuthority(''Root'')')}" class="media">
+                    <div th:if="${#authorization.expression('hasAuthority(''ROOT'')')}" class="media">
                         <div class="media-left media-top">
                             <img th:if="${ingredient.logo == null}" th:src="@{'/icon/0'}" class="media-object" style="width:60px">
                             <img th:unless="${ingredient.logo == null}" th:src="@{'/icon/' + ${ingredient.logo.url}}" class="media-object" style="width:60px">
@@ -85,7 +85,7 @@
                             role="button">
                         </a>
                     </div>
-                    <div th:unless="${#authorization.expression('hasAuthority(''Root'')')}" class="media">
+                    <div th:unless="${#authorization.expression('hasAuthority(''ROOT'')')}" class="media">
                         <div class="media-left media-top">
                             <img th:if="${ingredient.logo == null}" th:src="@{'/icon/0'}" class="media-object" style="width:60px">
                             <img th:unless="${ingredient.logo == null}" th:src="@{'/icon/' + ${ingredient.logo.url}}" class="media-object" style="width:60px">

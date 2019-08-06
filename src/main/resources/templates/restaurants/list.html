@@ -30,7 +30,7 @@
 <br/>
 <ul class="nav nav-tabs">
     <li class="nav-item px-lg-1"><a class="nav-link active" th:href="@{/restaurants/list}">Рестораны</a></li>
-    <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('Root')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a></li>
+    <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('ROOT')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a></li>
     <li class="nav-item px-lg-1 ml-auto"><a class="nav-link" th:href="@{/logout}">Выйти</a>
 
 </ul>
@@ -48,7 +48,7 @@
             <th>Адрес</th>
             <th>Средний чек</th>
             <th>Координаты</th>
-            <th sec:authorize="${hasAuthority('Root')}">Владелец</th>
+            <th sec:authorize="${hasAuthority('ROOT')}">Владелец</th>
             <th>Редактировать</th>
             <th>Удалить</th>
         </tr>
@@ -60,7 +60,7 @@
             <td th:text="${restaurant.address}"></td>
             <td th:text="${restaurant.avgPrice}"></td>
             <td th:text="${restaurant.latitude} + ',' + ${restaurant.longtitude}"></td>
-            <td sec:authorize="${hasAuthority('Root')}" th:text="${owners.get(restaurant.id)}"></td>
+            <td sec:authorize="${hasAuthority('ROOT')}" th:text="${owners.get(restaurant.id)}"></td>
             <td><a class="btn btn-secondary" th:href="@{/restaurants/edit/{id}(id=${restaurant.id})}">Редактировать</a></td>
             <td><a class="btn btn-secondary" th:href="@{/restaurants/delete/{id}(id=${restaurant.id})}">Удалить</a></td>
         </tr>

@@ -43,11 +43,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rest/**").permitAll()
                 .antMatchers("/image/**").permitAll()
                 .antMatchers("/qr", "qr2").permitAll()
-                .antMatchers("/users/**").hasAuthority(Role.Root.name())
-                .anyRequest().authenticated()
-        ;
+                .antMatchers("/users/**").hasAuthority(Role.ROOT.name())
+                .anyRequest().authenticated();
+
                 http
-                    .csrf().ignoringAntMatchers( "/internal/**");
+                    .csrf().ignoringAntMatchers( "/internal/**", "/rest/authority/**");
         http
                 .formLogin()
                 .loginPage("/login")
@@ -67,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AccessDeniedHandler accessDeniedHandler(){
+    public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
     }
 

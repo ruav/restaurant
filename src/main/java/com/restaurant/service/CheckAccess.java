@@ -26,7 +26,7 @@ public class CheckAccess {
         if (!restaurantService.findById(id).isPresent()) {
             throw new NotFoundException();
         }
-        if (!userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.Root.name())) && !userService.findByEmail(userDetails.getUsername()).getRestaurants().contains(restaurantService.findById(id).get())) {
+        if (!userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name())) && !userService.findByEmail(userDetails.getUsername()).getRestaurants().contains(restaurantService.findById(id).get())) {
             throw new ForbiddenException();
         }
     }
@@ -35,7 +35,7 @@ public class CheckAccess {
         if (!categoryService.findById(id).isPresent()) {
             throw new NotFoundException();
         }
-        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.Root.name()))) {
+        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name()))) {
             return;
         } else if (userService.findByEmail(userDetails.getUsername()).getRestaurants().stream().noneMatch(r -> r.getId() == categoryService.findById(id).get().getRestaurantId())) {
             throw new ForbiddenException();
@@ -46,7 +46,7 @@ public class CheckAccess {
         if (!subCategoryService.findById(id).isPresent() || !categoryService.findById(subCategoryService.findById(id).get().getCategoryId()).isPresent()) {
             throw new NotFoundException();
         }
-        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.Root.name()))) {
+        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name()))) {
             return;
         } else if (userService.findByEmail(userDetails.getUsername()).getRestaurants().stream().noneMatch(r -> r.getId() == categoryService.findById(subCategoryService.findById(id).get().getCategoryId()).get().getRestaurantId())) {
             throw new ForbiddenException();
@@ -57,7 +57,7 @@ public class CheckAccess {
         if (!hallService.findById(id).isPresent() || !restaurantService.findById(hallService.findById(id).get().getRestaurantId()).isPresent()) {
             throw new NotFoundException();
         }
-        if (!userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.Root.name())) && !userService.findByEmail(userDetails.getUsername())
+        if (!userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name())) && !userService.findByEmail(userDetails.getUsername())
                 .getRestaurants().contains(restaurantService.findById(hallService.findById(id).get().getRestaurantId()).get())) {
             throw new ForbiddenException();
         }

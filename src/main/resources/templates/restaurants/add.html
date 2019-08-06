@@ -32,7 +32,7 @@
     <li class="nav-item px-lg-1"><a class="nav-link " th:href="@{/restaurants/list}">Рестораны</a></li>
     <li class="nav-item px-lg-1"><a class="nav-link active disabled" href="#">Добавление ресторана</a></li>
 
-    <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('Root')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a>
+    <li class="nav-item px-lg-1" sec:authorize="${hasAuthority('ROOT')}"><a class="nav-link" th:href="@{/users/list}">Пользователи</a>
     <li class="nav-item px-lg-1 ml-auto"><a class="nav-link" th:href="@{/logout}">Выйти</a>
 
     </li>
@@ -73,7 +73,7 @@
         </div>
     </div>
     <div class="form-group form-check" >
-        <input type="checkbox" th:disabled="${#authorization.expression('!hasAuthority(''Root'')')}" name="videoLink" id="videoLink" class="form-check-input"
+        <input type="checkbox" th:disabled="${#authorization.expression('!hasAuthority(''ROOT'')')}" name="videoLink" id="videoLink" class="form-check-input"
                th:checked="*{videoLink}" th:field="*{videoLink}" />
         <label for="videoLink" class="form-check-label">Добавление ссылки на видео для блюд</label>
     </div>

@@ -37,10 +37,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         List<SimpleGrantedAuthority> authList = new ArrayList<>();
         if(userIn.getId() != 0) {
-            if (Role.Root == userIn.getRole()) {
-                authList.add(new SimpleGrantedAuthority(Role.Root.name()));
-            } else {
-                authList.add(new SimpleGrantedAuthority(Role.system.name()));
+            if (Role.ROOT == userIn.getRole()) {
+                authList.add(new SimpleGrantedAuthority(Role.ROOT.name()));
+            } else if (Role.SYSTEM == userIn.getRole()){
+                authList.add(new SimpleGrantedAuthority(Role.SYSTEM.name()));
             }
         }
         UserDetails user = new org.springframework.security.core.userdetails.User(username, userIn.getPass(), authList);

@@ -34,7 +34,7 @@
         <div class="col-md-3">
             <label for="role">Роль пользователя</label>
             <select class="form-control" id="role" th:field="*{role}" required>
-                <option selected="selected" value="">Select</option>
+                <option selected="selected" value="" disabled="disabled" >Select</option>
                 <option th:each="role : ${T(com.restaurant.vo.Role).values()}" th:text="${role.name}"
                         th:value="${role}">Role
                 </option>

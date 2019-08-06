@@ -26,3 +26,9 @@ mvn clean build package
 - `mailSender.setUsername(""); //почтовый адрес, с которого отправляем письма `
 
 - `mailSender.setPassword(""); // пароль для почтового ящика `
+
+# Получение jwt - токена
+ эндпоинт `/rest/authority/{restaurantId}` генерирует jwt - токен, и сохраняет его в куки. 
+ А также, дополнительно, возвращает строкой 
+ 
+ 

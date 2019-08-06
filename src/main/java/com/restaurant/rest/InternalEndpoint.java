@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/internal")
-@Api(value = "PublicEndpoint")
+@Api(value = "InternalEndpoint")
 public class InternalEndpoint {
 
     @Autowired

@@ -17,7 +17,7 @@
             Authenticated username: <div sec:authentication="name"></div>
         </div>
         <div>
-            <div sec:authorize="${hasAuthority('Root')}">
+            <div sec:authorize="${hasAuthority('ROOT')}">
                 <a th:href="@{/users/list}">Users</a>
             </div>
             <a th:href="@{/restaurants/list}">Restaurants</a>
