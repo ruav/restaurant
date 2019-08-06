@@ -19,7 +19,7 @@ public class Hostes implements Data {
     @Column
     private long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @OneToOne()

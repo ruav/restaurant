@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
 
                 http
-                    .csrf().ignoringAntMatchers( "/internal/**", "/rest/authority/**");
+                    .csrf().ignoringAntMatchers( "/internal/**", "/rest/**");
         http
                 .formLogin()
                 .loginPage("/login")

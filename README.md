@@ -31,4 +31,44 @@ mvn clean build package
  эндпоинт `/rest/authority/{restaurantId}` генерирует jwt - токен, и сохраняет его в куки. 
  А также, дополнительно, возвращает строкой 
  
+# Раздел синхронизации через sse
+Слушать по адресу `http://localhost:8090/rest/sync`
+
+Для создания записей необходимо пройти авторизацию (сейчас отключено)
+Пример создания хостес
+`curl -X POST \
+  http://localhost:8090/rest/create/hostes \
+  -H 'Accept: */*' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: multipart/form-data;' \
+  -F 'name=Маша'`
  
+ Пример обновления хостес
+ `curl -X POST \
+   http://localhost:8090/rest/update/hostes \
+   -H 'Accept: */*' \
+   -H 'Cache-Control: no-cache' \
+   -H 'Content-Type: multipart/form-data;' \
+   -F 'id=1' \
+   -F 'name=Маша'`
+ 
+ пример создания клиента
+ `curl -X POST \
+   http://localhost:8090/rest/create/client \
+   -H 'Accept: */*' \
+   -H 'Cache-Control: no-cache' \
+   -H 'Content-Type: multipart/form-data; ' \
+   -F 'name=Маша' \
+   -F 'phone=+12345678' \
+   -F vip=false`
+   
+пример обновления клиента
+`curl -X POST \
+  http://localhost:8090/rest/update/client \
+  -H 'Accept: */*' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: multipart/form-data; ' \
+  -F 'id=1' \
+  -F 'name=Маша' \
+  -F 'phone=+12345678' \
+  -F vip=false`
