@@ -43,7 +43,7 @@ import static com.restaurant.utils.ManageFiles.saveFile;
 @Controller
 public class FileUploadController {
 
-    private static final String FAILED_UPLOAD_MESSAGE = "You failed to upload [%s] because the file because %s";
+    public static final String FAILED_UPLOAD_MESSAGE = "You failed to upload [%s] because the file because %s";
 
     @Autowired
     RestaurantService restaurantService;

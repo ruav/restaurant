@@ -16,7 +16,6 @@ public class ResizeImage {
      * Resizes an image to a absolute width and height (the image may not be
      * proportional)
      * @param inputImage BufferedImage of the original image
-//     * @param outputImagePath Path to save the resized image
      * @param scaledWidth absolute width in pixels
      * @param scaledHeight absolute height in pixels
      * @throws IOException
@@ -24,10 +23,6 @@ public class ResizeImage {
     private static byte[] resize(BufferedImage inputImage,
                               int scaledWidth, int scaledHeight, String type)
             throws IOException {
-        // reads input image
-//        File inputFile = new File(inputImagePath);
-//        BufferedImage inputImage = ImageIO.read(inputFile);
-
         // creates output image
         BufferedImage outputImage = new BufferedImage(scaledWidth,
                 scaledHeight, inputImage.getType());
@@ -37,12 +32,7 @@ public class ResizeImage {
         g2d.drawImage(inputImage, 0, 0, scaledWidth, scaledHeight, null);
         g2d.dispose();
 
-        // extracts extension of output file
-//        String formatName = outputImagePath.substring(outputImagePath
-//                .lastIndexOf(".") + 1);
-
         // writes to output file
-//        ImageIO.write(outputImage, formatName, new File(outputImagePath));
         ByteArrayOutputStream baos=new ByteArrayOutputStream(1024 * 3);
         String formatName = "";
         switch (type) {
@@ -61,7 +51,6 @@ public class ResizeImage {
     /**
      * Resizes an image by a percentage of original size (proportional).
      * @param inputStream InputStream of the original image
-//     * @param outputImagePath Path to save the resized image
      * @param size a enum number specifies width of the output image
      * over the input image.
      * @throws IOException
@@ -76,9 +65,6 @@ public class ResizeImage {
         int scaledHeight = (int) (inputImage.getHeight() * percent);
         return resize(inputImage, scaledWidth, scaledHeight, type);
     }
-
-
-
 
     public enum Size {
 

@@ -19,9 +19,10 @@ public class HostesService extends AbstractService<HostesRepository, Hostes> {
     }
 
     public List<Hostes> findAllByLastChangeBetweenOrderByLastChangeAsc(long from, long to, long restaurantId, int limit, int offset) {
-        List<Hostes> list = repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to);
-        limit = (list.size() - offset) >= limit ? limit : list.size() - offset;
-        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to).subList(offset, limit);
+//        List<Hostes> list = repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to);
+//        limit = (list.size() - offset) >= limit ? limit : list.size() - offset;
+//        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to).subList(offset, limit);
+        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, offset, limit);
     }
 
 }

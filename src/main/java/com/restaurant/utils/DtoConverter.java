@@ -1,16 +1,10 @@
 package com.restaurant.utils;
 
-import com.restaurant.dto.AllergenDto;
-import com.restaurant.dto.CategoryDto;
-import com.restaurant.dto.DishDto;
-import com.restaurant.dto.IngredientDto;
-import com.restaurant.dto.PhotoDto;
-import com.restaurant.dto.ProteinDto;
-import com.restaurant.dto.RestaurantDto;
-import com.restaurant.dto.SubCategoryDto;
+import com.restaurant.dto.*;
 import com.restaurant.entity.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -110,6 +104,68 @@ public class DtoConverter {
         photoDto.setId(photo.getId());
         photoDto.setUrl(url + "/" + photo.getClass().getSimpleName().toLowerCase() + "/" + photo.getUrl());
         return photoDto;
+    }
+
+    public static ClientDto getClientDto(Client client) {
+        ClientDto clientDto = new ClientDto();
+        clientDto.setId(client.getId());
+        clientDto.setName(client.getName());
+        clientDto.setPhone(client.getPhone());
+        clientDto.setVip(client.isVip());
+        clientDto.setLastChange(client.getLastChange());
+        List<Long> list = client.getTags().stream().map(Tag::getId).collect(Collectors.toList());
+        clientDto.setTags(list);
+        return clientDto;
+    }
+
+    public static HostesDto getHostesDto(Hostes hostes, String url) {
+        HostesDto dto = new HostesDto();
+        dto.setId(hostes.getId());
+        dto.setLastChange(hostes.getLastChange());
+        dto.setName(hostes.getName());
+        dto.setWork(hostes.isWork());
+        dto.setPhoto(getPhotoDto(hostes.getPhoto(), url));
+        return dto;
+    }
+
+    public static TagDto getTagDto(Tag tag) {
+        TagDto dto = new TagDto();
+        dto.setId(tag.getId());
+        dto.setLastChange(tag.getLastChange());
+        dto.setName(tag.getName());
+        return dto;
+    }
+
+    public static HallDto getHallDto(Hall hall) {
+        HallDto dto = new HallDto();
+        dto.setId(hall.getId());
+        dto.setActive(hall.isActive());
+        dto.setName(hall.getName());
+        dto.setOnline(hall.isOnline());
+        dto.setLastChange(hall.getLastChange());
+        return dto;
+    }
+
+    public static DeskDto getDeskDto(Desk desk) {
+        DeskDto dto = new DeskDto();
+        dto.setId(desk.getId());
+        dto.setCapacity(desk.getCapacity());
+        dto.setHallId(desk.getHall());
+        dto.setNumber(desk.getNumber());
+        dto.setLastChange(desk.getLastChange());
+        return dto;
+    }
+
+    public static CardDto getCardDto(Card card) {
+        CardDto dto = new CardDto();
+        dto.setId(card.getId());
+        dto.setHallId(card.getHall());
+        dto.setMap(card.getMap());
+        dto.setRelevantFrom((card.getRelevantFrom().getYear() + 1900)
+                + "-" + (card.getRelevantFrom().getMonth() + 1)
+                + "-" + card.getRelevantFrom().getDate());
+        dto.setLastChange(card.getLastChange());
+        return dto;
     }
 
 }

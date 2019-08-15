@@ -75,6 +75,7 @@ public class SyncEndpoint {
 
     private static final int LIMIT = 30;
     private final static String AUTHORIZATION = "Authorization";
+    private final static String ISSUER = "auth0";
 
     private Queue<String> queue = new LinkedList<>();
 
@@ -84,13 +85,14 @@ public class SyncEndpoint {
     public List<Hostes> hostesList(@PathParam("from") int from,
                                    @PathParam("to") int to,
                                    @PathParam("limit") int limit,
-                                   @PathParam("offset")int offset,
+                                   @PathParam("offset") int offset,
+                                   @PathParam("restaurantId") int restaurantId,
                                    HttpServletRequest request) {
-        long restaurantId = getRestaurantId(request.getCookies());
+//        long restaurantId = getRestaurantId(request.getCookies());
 
-        if (!checkAuth(request.getCookies(), restaurantId)) {
-            return Collections.EMPTY_LIST;
-        }
+//        if (!checkAuth(request.getCookies(), restaurantId)) {
+//            return Collections.EMPTY_LIST;
+//        }
         return hostesService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
     }
 
@@ -99,12 +101,13 @@ public class SyncEndpoint {
                               @PathParam("to") int to,
                               @PathParam("limit") int limit,
                               @PathParam("offset")int offset,
+                              @PathParam("restaurantId")int restaurantId,
                               HttpServletRequest request) {
-        long restaurantId = getRestaurantId(request.getCookies());
-
-        if (!checkAuth(request.getCookies(), restaurantId)) {
-            return Collections.EMPTY_LIST;
-        }
+//        long restaurantId = getRestaurantId(request.getCookies());
+//
+//        if (!checkAuth(request.getCookies(), restaurantId)) {
+//            return Collections.EMPTY_LIST;
+//        }
         return tagService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
     }
 
@@ -113,12 +116,13 @@ public class SyncEndpoint {
                                    @PathParam("to") int to,
                                    @PathParam("limit") int limit,
                                    @PathParam("offset")int offset,
+                                   @PathParam("restaurantId")int restaurantId,
                                    HttpServletRequest request) {
-        long restaurantId = getRestaurantId(request.getCookies());
-
-        if (!checkAuth(request.getCookies(), restaurantId)) {
-            return Collections.EMPTY_LIST;
-        }
+//        long restaurantId = getRestaurantId(request.getCookies());
+//
+//        if (!checkAuth(request.getCookies(), restaurantId)) {
+//            return Collections.EMPTY_LIST;
+//        }
         return clientService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
     }
 
@@ -210,10 +214,10 @@ public class SyncEndpoint {
                 while (true) {
                     if (!queue.isEmpty()) {
                         String data = queue.poll();
-                        System.out.println(data);
                         SseEmitter.SseEventBuilder event = SseEmitter.event()
                                 .data(data)
                                 .id(String.valueOf(i))
+                                .reconnectTime(3 * 1_000)
                                 .name("event");
                         emitter.send(event);
                         i++;
@@ -231,7 +235,7 @@ public class SyncEndpoint {
         for (Cookie cookie : cookies) {
             if (AUTHORIZATION.equals(cookie.getName())) {
                 JWTVerifier verifier = JWT.require(ALGORITHM)
-                        .withIssuer("auth0")
+                        .withIssuer(ISSUER)
                         .build(); //Reusable verifier instance
                 DecodedJWT jwt = verifier.verify(cookie.getValue());
                 if (jwt.getClaim("id").asLong() != null) {
@@ -255,7 +259,7 @@ public class SyncEndpoint {
     private boolean checkAccess(Cookie cookie, long id) {
         if (AUTHORIZATION.equals(cookie.getName())) {
             JWTVerifier verifier = JWT.require(ALGORITHM)
-                    .withIssuer("auth0")
+                    .withIssuer(ISSUER)
                     .build(); //Reusable verifier instance
             DecodedJWT jwt = verifier.verify(cookie.getValue());
             if (id == jwt.getClaim("id").asLong() && jwt.getExpiresAt().after(Calendar.getInstance().getTime())) {

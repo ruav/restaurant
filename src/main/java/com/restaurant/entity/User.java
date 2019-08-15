@@ -29,7 +29,7 @@ public class User implements Data{
     private Role role;
 
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name="user_restaurants",
             joinColumns = @JoinColumn(name = "user_id"),

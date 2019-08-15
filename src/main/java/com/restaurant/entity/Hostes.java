@@ -31,6 +31,9 @@ public class Hostes implements Data {
     )
     private Photo photo;
 
+    @Column(name="restaurant_Id")
+    private long restaurantId;
+
     @Column
     private boolean work;
 
@@ -77,11 +80,21 @@ public class Hostes implements Data {
         this.lastChange = lastChange;
     }
 
+    public long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(long restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
     @Override
     public String toString() {
         return "Hostes{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", photo=" + photo +
+                ", restaurantId=" + restaurantId +
                 ", work=" + work +
                 ", lastChange=" + lastChange +
                 '}';

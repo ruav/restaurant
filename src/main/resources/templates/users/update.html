@@ -53,13 +53,25 @@
             <input class="form-control" id="email" placeholder="Email" th:field="*{email}" type="email">
             <div class="alert alert-warning" role="alert" th:errors="*{email}" th:if="${#fields.hasErrors('email')}"></div>
         </div>
-
     </div>
     <div class="form-row">
         <div class="col-md-3">
             <label for="pass">Пароль</label>
             <input class="form-control" id="pass" placeholder="Password" th:field="*{pass}" type="password">
             <span th:errors="*{pass}" th:if="${#fields.hasErrors('pass')}"></span>
+        </div>
+    </div>
+
+    <div class="form-row" th:if="${#strings.contains(user.role,'RESTAURANT')}">
+        <div class="col-md-3">
+            <label for="restaurants">Ресторан, которым пользователь управляет</label>
+            <select class="form-control" id="restaurants" th:field="*{restaurants}">
+                <option selected="selected" value=""  disabled="disabled" >Select</option>
+                <option th:each="restaurant : ${restaurants}" th:text="${restaurant.name}"
+                        th:value="${restaurant.id}">
+                </option>
+            </select>
+            <div class="alert alert-warning" role="alert" th:errors="*{role}" th:if="${#fields.hasErrors('role')}"></div>
         </div>
     </div>
 

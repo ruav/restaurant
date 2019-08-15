@@ -1,5 +1,7 @@
 package com.restaurant.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,6 +24,17 @@ public class Hall implements Data {
 
     @Column(name = "restaurant_id")
     private long restaurantId;
+
+    @ColumnDefault("true")
+    @Column
+    private boolean active;
+
+    @ColumnDefault("true")
+    @Column
+    private boolean online;
+
+    @Column(name = "last_change")
+    private long lastChange;
 
     public long getId() {
         return id;
@@ -47,11 +60,39 @@ public class Hall implements Data {
         this.restaurantId = restaurantId;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
+    public long getLastChange() {
+        return lastChange;
+    }
+
+    public void setLastChange(long lastChange) {
+        this.lastChange = lastChange;
+    }
+
     @Override
     public String toString() {
         return "Hall{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", restaurantId=" + restaurantId +
+                ", active=" + active +
+                ", online=" + online +
+                ", lastChange=" + lastChange +
                 '}';
     }
 }

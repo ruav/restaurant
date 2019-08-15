@@ -6,35 +6,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import java.util.Date;
 
-/**
- * Класс и таблица называется Desk, т.к. пересечения с
- * командами в бд и совпадения с аннотациями
- */
 @Entity
-@Table(name = "desk",uniqueConstraints=@UniqueConstraint(columnNames= {"number","hall"}))
-public class Desk implements Data {
+@Table(name="card")
+public class Card implements Data {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column
     private long id;
-
-    /**
-     * Номер стола в зале
-     */
-    @Column(nullable = false)
-    private int number;
 
     @Column
     private long hall;
 
-    /**
-     * Вместимость гостей
-     */
     @Column
-    private int capacity;
+    private String map;
+
+    @Column
+    private Date relevantFrom;
 
     @Column(name = "restaurant_id")
     private long restaurantId;
@@ -51,14 +41,6 @@ public class Desk implements Data {
         this.id = id;
     }
 
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
     public long getHall() {
         return hall;
     }
@@ -67,12 +49,20 @@ public class Desk implements Data {
         this.hall = hall;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public String getMap() {
+        return map;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setMap(String map) {
+        this.map = map;
+    }
+
+    public Date getRelevantFrom() {
+        return relevantFrom;
+    }
+
+    public void setRelevantFrom(Date relevantFrom) {
+        this.relevantFrom = relevantFrom;
     }
 
     public long getRestaurantId() {
@@ -93,11 +83,11 @@ public class Desk implements Data {
 
     @Override
     public String toString() {
-        return "Desk{" +
+        return "Card{" +
                 "id=" + id +
-                ", number=" + number +
                 ", hall=" + hall +
-                ", capacity=" + capacity +
+                ", map='" + map + '\'' +
+                ", relevantFrom=" + relevantFrom +
                 ", restaurantId=" + restaurantId +
                 ", lastChange=" + lastChange +
                 '}';

@@ -16,22 +16,19 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.thymeleaf.util.ArrayUtils;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/mobile")
 @Api(value = "AuthorityEndpoint")
 public class AuthorityEndpoint {
 
@@ -51,7 +48,6 @@ public class AuthorityEndpoint {
     /**
      * Возвращает jwt - токен в случае успешной авторизации.
      * Так же устанавливает куки.
-     * @param restaurantId id ресторана
      * @return jwt - токен.
      */
 
@@ -61,76 +57,73 @@ public class AuthorityEndpoint {
             @ApiResponse(code = 401, message = "Unauthorized"),
             @ApiResponse(code = 403, message = "forbidden!!!"),
             @ApiResponse(code = 404, message = "not found!!!") })
-    @PostMapping(value = "/authority/{restaurantId}")
+    @PostMapping(value = "/authority")
     @ResponseBody
-    public String authority(@ApiParam(value = "id ресторана.", example = "1", required = true) @PathVariable("restaurantId") long restaurantId,
-                            @ApiParam(value = "логин", example = "test@test.com", required = true) @RequestParam String login,
+    public String authority(@ApiParam(value = "логин", example = "test@test.com", required = true) @RequestParam String login,
                             @ApiParam(value = "пароль", example = "12345", required = true) @RequestParam String password,
                             HttpServletRequest request,
                             HttpServletResponse response) {
 
-        Cookie[] cookies = request.getCookies();
-        if (checkAuth(cookies, restaurantId)) {
-            response.setStatus(403);
+        Boolean access = checkAccess(request.getHeader(AUTHORIZATION));
+
+        if (access) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return "Already autorizated";
         }
 
         User user = userService.findByEmail(login);
         if (user == null) {
-            response.setStatus(401);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return "User not found";
         }
         if (user.getRole() != Role.RESTAURANT) {
-            response.setStatus(401);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return "User have not Restaurant role";
         }
         if (!passwordEncoder.matches(password, user.getPass())) {
-            response.setStatus(401);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return "Incorrect login + password";
         }
 
         String token = null;
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DAY_OF_YEAR, 1);
-
+        if (user.getRestaurants().isEmpty()) {
+            return "User haven't restaurant";
+        }
+        long restaurantId = user.getRestaurants().stream().findFirst().get().getId();
         try {
              token = JWT.create()
-                     .withSubject("restaurant")
-                     .withClaim("id", restaurantId)
-                     .withIssuer("auth0")
+                     .withSubject("user")
+                     .withClaim("id", user.getId())
+                     .withClaim("restaurant", restaurantId)
+                     .withIssuer("auth")
                      .withExpiresAt(calendar.getTime())
                     .sign(ALGORITHM);
-        } catch (JWTCreationException exception){
-            //Invalid Signing configuration / Couldn't convert Claims.
-        }
+        } catch (JWTCreationException e) {
 
-        Cookie cookie = new Cookie(AUTHORIZATION, token);
-        cookie.setMaxAge(TTL_HOURS * 3600);
-        response.addCookie(cookie);
+        }
 
         return token;
     }
 
-    private boolean checkAuth(Cookie[] cookies, long id) {
-        if (ArrayUtils.isEmpty(cookies)) return false;
-        for (Cookie cookie : cookies) {
-           if (checkAccess(cookie, id)) {
-               return true;
-           }
-        }
-        return false;
-    }
-
-    private boolean checkAccess(Cookie cookie, long id) {
-        if (AUTHORIZATION.equals(cookie.getName())) {
+    private Boolean checkAccess(String auth) {
             JWTVerifier verifier = JWT.require(ALGORITHM)
-                    .withIssuer("auth0")
-                    .build(); //Reusable verifier instance
-            DecodedJWT jwt = verifier.verify(cookie.getValue());
-            if (id == jwt.getClaim("id").asLong() && jwt.getExpiresAt().after(Calendar.getInstance().getTime())) {
+                    .withIssuer("auth")
+                    .build();
+            DecodedJWT jwt = verifier.verify(auth);
+
+            if (jwt.getClaim("id").isNull()) return false;
+            if (jwt.getClaim("restaurant").isNull()) return false;
+
+            if (jwt.getClaim("restaurant").asLong() != userService.findById(jwt.getClaim("id").asLong()).get().getRestaurants().stream().findFirst().get().getId()) {
                 return true;
             }
-        }
+
+            if (jwt.getExpiresAt().after(Calendar.getInstance().getTime())) {
+                return true;
+            }
+
         return false;
     }
 

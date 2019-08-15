@@ -6,6 +6,7 @@ import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
 import com.restaurant.service.PasswordResetService;
 import com.restaurant.service.PhotoService;
+import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
 import com.restaurant.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class UserController {
 
     @Autowired
     DishService dishService;
+
+    @Autowired
+    RestaurantService restaurantService;
 
     @GetMapping("/signup")
     public String showSignUpForm(User user) {
@@ -86,6 +90,7 @@ public class UserController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 
         model.addAttribute("user", user);
+        model.addAttribute("restaurants", restaurantService.findAll());
         return prefix() + "/update";
     }
 

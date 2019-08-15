@@ -20,9 +20,10 @@ public class TagService extends AbstractService<TagRepository, Tag> {
 
 
     public List<Tag> findAllByLastChangeBetweenOrderByLastChangeAsc(long from, long to, long restaurantId, int limit, int offset) {
-        List<Tag> list = repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to);
-        limit = (list.size() - offset) >= limit ? limit : list.size() - offset;
-        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to).subList(offset, limit);
+//        List<Tag> list = repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to);
+//        limit = (list.size() - offset) >= limit ? limit : list.size() - offset;
+//        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to).subList(offset, limit);
+        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, offset, limit);
     }
 
 }

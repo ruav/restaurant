@@ -1,45 +1,29 @@
-package com.restaurant.entity;
+package com.restaurant.dto;
 
-import javax.persistence.*;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.List;
 import java.util.Set;
 
-@Entity
-@Table(name="client")
-public class Client implements Data {
+public class ClientDto {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column
+    @ApiModelProperty
     private long id;
-
-    @Column(unique = true, nullable = false)
+    @ApiModelProperty
     private String name;
-
-    @Column
+    @ApiModelProperty
     private String phone;
-
-    @OneToMany()
-    @JoinTable(
-            name="client_tag",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags;
-
-    @Column
+    @ApiModelProperty
+    private List<Long> tags;
+    @ApiModelProperty
     private boolean vip;
-
-    @Column
+    @ApiModelProperty
     private long lastChange;
-
-    @Column(name = "restaurant_id")
-    private long restaurantId;
 
     public long getId() {
         return id;
     }
 
-    @Override
     public void setId(long id) {
         this.id = id;
     }
@@ -60,11 +44,11 @@ public class Client implements Data {
         this.phone = phone;
     }
 
-    public Set<Tag> getTags() {
+    public List<Long> getTags() {
         return tags;
     }
 
-    public void setTags(Set<Tag> tags) {
+    public void setTags(List<Long> tags) {
         this.tags = tags;
     }
 
@@ -84,14 +68,6 @@ public class Client implements Data {
         this.lastChange = lastChange;
     }
 
-    public long getRestaurantId() {
-        return restaurantId;
-    }
-
-    public void setRestaurantId(long restaurantId) {
-        this.restaurantId = restaurantId;
-    }
-
     @Override
     public String toString() {
         return "Client{" +
@@ -99,9 +75,8 @@ public class Client implements Data {
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", tags=" + tags +
-                ", vip=" + vip +
+                ", work=" + vip +
                 ", lastChange=" + lastChange +
-                ", restaurantId=" + restaurantId +
                 '}';
     }
 }

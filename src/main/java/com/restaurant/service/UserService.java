@@ -59,7 +59,9 @@ public class UserService extends AbstractService<UserRepository, User> {
         } else {
             user.setPass(passwordEncoder.encode(user.getPass()));
         }
-        user.setRestaurants(findByEmail(user.getEmail()).getRestaurants());
+        if (user.getRestaurants().isEmpty()) {
+            user.setRestaurants(findByEmail(user.getEmail()).getRestaurants());
+        }
         repository.save(user);
     }
 }
