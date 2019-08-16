@@ -1,10 +1,10 @@
 package com.restaurant.service;
 
-import com.restaurant.utils.CustomSseEmitter;
+public interface NotificationService<T, N> {
 
-public interface NotificationService {
-
-    void addEmitter(final CustomSseEmitter emitter);
-    void removeEmitter(final CustomSseEmitter emitter);
+    void addEmitter(final T emitter);
+    void removeEmitter(final T emitter);
     void doNotify();
+    String getElement(long restaurantId);
+    void addElement(long restaurantId, N element);
 }

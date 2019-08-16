@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.thymeleaf.util.ArrayUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.Queue;
 
 import static com.restaurant.rest.AuthorityEndpoint.ALGORITHM;
-import static com.restaurant.rest.MobileEndpoint.addElement;
 import static com.restaurant.utils.DtoConverter.getClientDto;
 import static com.restaurant.utils.DtoConverter.getHostesDto;
 
@@ -75,7 +73,7 @@ public class SyncEndpoint {
     ClientService clientService;
 
     @Autowired
-    NotificationServiceImpl notificationService;
+    NotificationService notificationService;
 
     private final static long RESTAURANT = 1l; // only for test.
 
@@ -148,7 +146,7 @@ public class SyncEndpoint {
         client.setPhone(phone);
         client.setVip(vip);
         long id = clientService.save(client).getId();
-        addElement(RESTAURANT,
+        notificationService.addElement(RESTAURANT,
                 mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
         return id;
     }
@@ -170,7 +168,7 @@ public class SyncEndpoint {
         client.setPhone(phone);
         client.setVip(vip);
         clientService.save(client);
-        addElement(RESTAURANT,
+        notificationService.addElement(RESTAURANT,
                 mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
         return id;
     }
@@ -188,7 +186,7 @@ public class SyncEndpoint {
         Hostes hostes = new Hostes();
         hostes.setName(name);
         long id = hostesService.save(hostes).getId();
-        addElement(RESTAURANT,
+        notificationService.addElement(RESTAURANT,
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), "")));
         return id;
     }
@@ -207,14 +205,14 @@ public class SyncEndpoint {
         hostes.setId(id);
         hostes.setName(name);
         hostesService.save(hostes);
-        addElement(RESTAURANT,
+        notificationService.addElement(RESTAURANT,
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), "")));
         return id;
     }
 
     @GetMapping("/sync")
     public SseEmitter streamSseMvc() {
-        SseEmitter emitter = new SseEmitter(1_000 * 1_000L);
+        SseEmitter emitter = new SseEmitter(1_000_000L);
 
         notificationService.addEmitter(new CustomSseEmitter(emitter, RESTAURANT, notificationService));
 

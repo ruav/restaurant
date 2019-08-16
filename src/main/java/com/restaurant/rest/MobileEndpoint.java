@@ -96,13 +96,11 @@ public class MobileEndpoint {
     @Autowired
     ReservationService reservationService;
     @Autowired
-    NotificationServiceImpl notificationService;
+    NotificationService notificationService;
 
     private static final int LIMIT = 30;
     private final static String AUTHORIZATION = "Authorization";
     private final static String ISSUER = "auth";
-
-    private static Map<Long, Queue<String>> map = new ConcurrentHashMap<>();
 
     private static ObjectMapper mapper = new ObjectMapper();
     private static Logger logger = LoggerFactory.getLogger(MobileEndpoint.class);
@@ -223,7 +221,7 @@ public class MobileEndpoint {
             client.setLastChange(getTimeStamp());
             client.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
             long id = clientService.save(client).getId();
-            addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+            notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                     mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
             return id;
         }
@@ -249,7 +247,7 @@ public class MobileEndpoint {
         client.setLastChange(getTimeStamp());
         client.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         clientService.save(client);
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
         return id;
     }
@@ -275,7 +273,7 @@ public class MobileEndpoint {
         hostes.setLastChange(getTimeStamp());
         hostes.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = hostesService.save(hostes).getId();
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), url)));
         return id;
     }
@@ -299,7 +297,7 @@ public class MobileEndpoint {
         hostes.setLastChange(getTimeStamp());
         hostes.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         hostesService.save(hostes);
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), url)));
         return id;
     }
@@ -317,7 +315,7 @@ public class MobileEndpoint {
         tag.setLastChange(getTimeStamp());
         tag.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = tagService.save(tag).getId();
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getTagDto(tagService.findById(id).get())));
         return id;
     }
@@ -336,7 +334,7 @@ public class MobileEndpoint {
         tag.setLastChange(getTimeStamp());
         tag.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         tagService.save(tag);
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getTagDto(tagService.findById(id).get())));
         return id;
     }
@@ -356,7 +354,7 @@ public class MobileEndpoint {
         hall.setLastChange(getTimeStamp());
         hall.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = hallService.save(hall).getId();
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getHallDto(hallService.findById(id).get())));
         return id;
     }
@@ -377,7 +375,7 @@ public class MobileEndpoint {
         hall.setLastChange(getTimeStamp());
         hall.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         hallService.save(hall);
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getHallDto(hallService.findById(id).get())));
         return id;
     }
@@ -397,7 +395,7 @@ public class MobileEndpoint {
         desk.setLastChange(getTimeStamp());
         desk.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = deskService.save(desk).getId();
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getDeskDto(deskService.findById(id).get())));
         return id;
     }
@@ -418,7 +416,7 @@ public class MobileEndpoint {
         desk.setLastChange(getTimeStamp());
         desk.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         deskService.save(desk);
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getDeskDto(deskService.findById(id).get())));
         return id;
     }
@@ -438,7 +436,7 @@ public class MobileEndpoint {
         card.setLastChange(getTimeStamp());
         card.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = cardService.save(card).getId();
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getCardDto(cardService.findById(id).get())));
         return id;
     }
@@ -459,7 +457,7 @@ public class MobileEndpoint {
         card.setLastChange(getTimeStamp());
         card.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         cardService.save(card).getId();
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getCardDto(cardService.findById(id).get())));
         return id;
     }
@@ -478,7 +476,7 @@ public class MobileEndpoint {
         tag.setLastChange(getTimeStamp());
         tag.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = tagService.save(tag).getId();
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getTagDto(tagService.findById(id).get())));
         return id;
     }
@@ -497,7 +495,7 @@ public class MobileEndpoint {
         tag.setLastChange(getTimeStamp());
         tag.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         tagService.save(tag);
-        addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getTagDto(tagService.findById(id).get())));
         return id;
     }
@@ -557,20 +555,6 @@ public class MobileEndpoint {
     private long getTimeStamp() {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         return calendar.getTimeInMillis();
-    }
-
-    public static String getElement(long restaurantId) {
-        if (map.get(restaurantId) != null) {
-            return map.get(restaurantId).poll();
-        }
-        return null;
-    }
-
-    public static void addElement(long restaurantId, String element) {
-        if (map.get(restaurantId) == null) {
-            map.put(restaurantId, new LinkedList<>());
-        }
-        map.get(restaurantId).add(element);
     }
 
     private String getUrl(HttpServletRequest request) {

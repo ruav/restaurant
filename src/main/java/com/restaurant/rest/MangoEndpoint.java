@@ -6,6 +6,7 @@ import com.restaurant.service.AllergenService;
 import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
 import com.restaurant.service.IngredientService;
+import com.restaurant.service.NotificationService;
 import com.restaurant.service.ProteinService;
 import com.restaurant.service.RestaurantService;
 import com.restaurant.service.SubCategoryService;
@@ -21,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static com.restaurant.rest.MobileEndpoint.addElement;
 
 @RestController
 @RequestMapping("/mango")
@@ -52,6 +51,8 @@ public class MangoEndpoint {
 
     @Autowired
     IngredientService ingredientService;
+    @Autowired
+    NotificationService notificationService;
 
     private static final int LIMIT = 30;
 
@@ -84,7 +85,7 @@ public class MangoEndpoint {
             callDto.setPhone(fromNumber);
             Restaurant restaurant = restaurantService.findByPhone(fromNumber);
             if (restaurant != null) {
-                addElement(restaurant.getId(), new JSONObject(callDto).toString());
+                notificationService.addElement(restaurant.getId(), new JSONObject(callDto).toString());
             }
         }
 
@@ -173,7 +174,7 @@ public class MangoEndpoint {
             callDto.setPhone(fromNumber);
             Restaurant restaurant = restaurantService.findByPhone(fromNumber);
             if (restaurant != null) {
-                addElement(restaurant.getId(), new JSONObject(callDto).toString());
+                notificationService.addElement(restaurant.getId(), new JSONObject(callDto).toString());
             }
         }
 
