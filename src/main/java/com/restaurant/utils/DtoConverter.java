@@ -103,8 +103,10 @@ public class DtoConverter {
 
     public static PhotoDto getPhotoDto(Image photo, String url) {
         PhotoDto photoDto = new PhotoDto();
-        photoDto.setId(photo.getId());
-        photoDto.setUrl(url + "/" + photo.getClass().getSimpleName().toLowerCase() + "/" + photo.getUrl());
+        if (photo != null) {
+            photoDto.setId(photo.getId());
+            photoDto.setUrl(url + "/" + photo.getClass().getSimpleName().toLowerCase() + "/" + photo.getUrl());
+        }
         return photoDto;
     }
 
@@ -126,7 +128,9 @@ public class DtoConverter {
         dto.setLastChange(hostes.getLastChange());
         dto.setName(hostes.getName());
         dto.setWork(hostes.isWork());
-        dto.setPhoto(getPhotoDto(hostes.getPhoto(), url));
+        if (hostes.getPhoto() != null) {
+            dto.setPhoto(getPhotoDto(hostes.getPhoto(), url));
+        }
         return dto;
     }
 

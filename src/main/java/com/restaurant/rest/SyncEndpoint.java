@@ -9,6 +9,7 @@ import com.restaurant.entity.Client;
 import com.restaurant.entity.Hostes;
 import com.restaurant.entity.Tag;
 import com.restaurant.service.*;
+import com.restaurant.utils.CustomSseEmitter;
 import com.restaurant.utils.DtoConverter;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,14 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.websocket.server.PathParam;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static com.restaurant.rest.AuthorityEndpoint.ALGORITHM;
+import static com.restaurant.rest.MobileEndpoint.addElement;
+import static com.restaurant.utils.DtoConverter.getClientDto;
+import static com.restaurant.utils.DtoConverter.getHostesDto;
 
 @RestController
 @RequestMapping("/rest")
@@ -72,6 +73,11 @@ public class SyncEndpoint {
 
     @Autowired
     ClientService clientService;
+
+    @Autowired
+    NotificationServiceImpl notificationService;
+
+    private final static long RESTAURANT = 1l; // only for test.
 
     private static final int LIMIT = 30;
     private final static String AUTHORIZATION = "Authorization";
@@ -132,7 +138,6 @@ public class SyncEndpoint {
                              @RequestParam boolean vip,
                              HttpServletRequest request
                              ) throws JsonProcessingException {
-        long restaurantId = getRestaurantId(request.getCookies());
 
 //        if (!checkAuth(request.getCookies(), restaurantId)) {
 //            return -1;
@@ -143,7 +148,8 @@ public class SyncEndpoint {
         client.setPhone(phone);
         client.setVip(vip);
         long id = clientService.save(client).getId();
-        queue.add(mapper.writeValueAsString(clientService.findById(id).get()));
+        addElement(RESTAURANT,
+                mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
         return id;
     }
 
@@ -154,7 +160,6 @@ public class SyncEndpoint {
                              @RequestParam boolean vip,
                              HttpServletRequest request
     ) throws JsonProcessingException {
-        long restaurantId = getRestaurantId(request.getCookies());
 
 //        if (!checkAuth(request.getCookies(), restaurantId)) {
 //            return -1;
@@ -165,7 +170,8 @@ public class SyncEndpoint {
         client.setPhone(phone);
         client.setVip(vip);
         clientService.save(client);
-        queue.add(mapper.writeValueAsString(clientService.findById(id).get()));
+        addElement(RESTAURANT,
+                mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
         return id;
     }
 
@@ -182,7 +188,8 @@ public class SyncEndpoint {
         Hostes hostes = new Hostes();
         hostes.setName(name);
         long id = hostesService.save(hostes).getId();
-        queue.add(mapper.writeValueAsString(hostesService.findById(id).get()));
+        addElement(RESTAURANT,
+                mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), "")));
         return id;
     }
 
@@ -200,34 +207,17 @@ public class SyncEndpoint {
         hostes.setId(id);
         hostes.setName(name);
         hostesService.save(hostes);
-        queue.add(mapper.writeValueAsString(hostesService.findById(id).get()));
+        addElement(RESTAURANT,
+                mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), "")));
         return id;
     }
 
     @GetMapping("/sync")
     public SseEmitter streamSseMvc() {
-        SseEmitter emitter = new SseEmitter();
-        ExecutorService sseMvcExecutor = Executors.newSingleThreadExecutor();
-        sseMvcExecutor.execute(() -> {
-            try {
-                int i = 0;
-                while (true) {
-                    if (!queue.isEmpty()) {
-                        String data = queue.poll();
-                        SseEmitter.SseEventBuilder event = SseEmitter.event()
-                                .data(data)
-                                .id(String.valueOf(i))
-                                .reconnectTime(3 * 1_000)
-                                .name("event");
-                        emitter.send(event);
-                        i++;
-                    }
-                    Thread.sleep(1000);
-                }
-            } catch (Exception ex) {
-                emitter.completeWithError(ex);
-            }
-        });
+        SseEmitter emitter = new SseEmitter(1_000 * 1_000L);
+
+        notificationService.addEmitter(new CustomSseEmitter(emitter, RESTAURANT, notificationService));
+
         return emitter;
     }
 
@@ -244,16 +234,6 @@ public class SyncEndpoint {
             }
         }
         return 0;
-    }
-
-    private boolean checkAuth(Cookie[] cookies, long id) {
-        if (ArrayUtils.isEmpty(cookies)) return false;
-        for (Cookie cookie : cookies) {
-            if (checkAccess(cookie, id)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private boolean checkAccess(Cookie cookie, long id) {

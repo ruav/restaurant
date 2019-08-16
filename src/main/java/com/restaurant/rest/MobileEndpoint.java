@@ -19,6 +19,7 @@ import com.restaurant.entity.Hall;
 import com.restaurant.entity.Hostes;
 import com.restaurant.entity.Tag;
 import com.restaurant.service.*;
+import com.restaurant.utils.CustomSseEmitter;
 import com.restaurant.utils.DtoConverter;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
@@ -94,6 +95,8 @@ public class MobileEndpoint {
     CardService cardService;
     @Autowired
     ReservationService reservationService;
+    @Autowired
+    NotificationServiceImpl notificationService;
 
     private static final int LIMIT = 30;
     private final static String AUTHORIZATION = "Authorization";
@@ -506,29 +509,11 @@ public class MobileEndpoint {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }
-        SseEmitter emitter = new SseEmitter();
-        ExecutorService sseMvcExecutor = Executors.newSingleThreadExecutor();
+        SseEmitter emitter = new SseEmitter(1_000 * 1_000L);
         long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-        sseMvcExecutor.execute(() -> {
-            try {
-                int i = 0;
-                while (true) {
-                    String data = getElement(restaurantId);
-                    if (!data.isEmpty()) {
-                        SseEmitter.SseEventBuilder event = SseEmitter.event()
-                                .data(data)
-                                .id(String.valueOf(i))
-                                .reconnectTime(3 * 1_000)
-                                .name("event");
-                        emitter.send(event);
-                        i++;
-                    }
-                    Thread.sleep(1000);
-                }
-            } catch (Exception ex) {
-                emitter.completeWithError(ex);
-            }
-        });
+
+        notificationService.addEmitter(new CustomSseEmitter(emitter, restaurantId, notificationService));
+
         return emitter;
     }
 
@@ -574,7 +559,7 @@ public class MobileEndpoint {
         return calendar.getTimeInMillis();
     }
 
-    private String getElement(long restaurantId) {
+    public static String getElement(long restaurantId) {
         if (map.get(restaurantId) != null) {
             return map.get(restaurantId).poll();
         }
@@ -582,7 +567,7 @@ public class MobileEndpoint {
     }
 
     public static void addElement(long restaurantId, String element) {
-        if (map.get(restaurantId) != null) {
+        if (map.get(restaurantId) == null) {
             map.put(restaurantId, new LinkedList<>());
         }
         map.get(restaurantId).add(element);

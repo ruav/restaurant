@@ -41,6 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/reset-password**").permitAll()
                 .antMatchers("/js/**", "/css/**", "/img/**", "/icon/*").permitAll()
                 .antMatchers("/rest/**").permitAll()
+                .antMatchers("/mobile/**").permitAll()
+                .antMatchers("/web/**").permitAll()
                 .antMatchers("/image/**").permitAll()
                 .antMatchers("/qr", "qr2").permitAll()
                 .antMatchers("/users/**").hasAuthority(Role.ROOT.name())

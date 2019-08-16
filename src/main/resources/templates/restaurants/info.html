@@ -53,7 +53,9 @@
                 <span th:errors="*{address}" th:if="${#fields.hasErrors('address')}"></span>
                 <label for="city">Город</label>
                 <input id="city" placeholder="Город" readonly th:value="${towns.get(restaurant.city).name}" type="text">
-                <span th:errors="*{city}" th:if="${#fields.hasErrors('city')}"></span>
+                <label for="phone">Номер телефона</label>
+                <input id="phone" placeholder="Номер телефона" readonly th:value="*{phone}" type="text">
+                <span th:errors="*{phone}" th:if="${#fields.hasErrors('phone')}"></span>
                 <label for="avgPrice">Средний чек</label>
                 <input id="avgPrice" placeholder="Средний чек" readonly th:field="*{avgPrice}" type="text">
                 <span th:errors="*{avgPrice}" th:if="${#fields.hasErrors('avgPrice')}"></span>
