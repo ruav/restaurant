@@ -72,6 +72,8 @@ public class Restaurant implements DataWithLogo<Photo>{
     )
     private Set<Event> events;
 
+    private String phone;
+
     public long getId() {
         return id;
     }
@@ -152,6 +154,22 @@ public class Restaurant implements DataWithLogo<Photo>{
         this.active = active;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
+
     @Override
     public Photo getLogo() {
         return logo;
@@ -177,9 +195,16 @@ public class Restaurant implements DataWithLogo<Photo>{
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", city=" + city +
+                ", photos=" + photos +
+                ", logo=" + logo +
                 ", avgPrice=" + avgPrice +
                 ", latitude=" + latitude +
                 ", longtitude=" + longtitude +
+                ", active=" + active +
+                ", videoLink=" + videoLink +
+                ", actions=" + actions +
+                ", events=" + events +
+                ", phone='" + phone + '\'' +
                 '}';
     }
 }

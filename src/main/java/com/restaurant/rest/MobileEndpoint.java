@@ -5,6 +5,13 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.restaurant.dto.CardDto;
+import com.restaurant.dto.ClientDto;
+import com.restaurant.dto.DeskDto;
+import com.restaurant.dto.HallDto;
+import com.restaurant.dto.HostesDto;
+import com.restaurant.dto.ReservationDto;
+import com.restaurant.dto.TagDto;
 import com.restaurant.entity.Card;
 import com.restaurant.entity.Client;
 import com.restaurant.entity.Desk;
@@ -32,7 +39,6 @@ import javax.websocket.server.PathParam;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +47,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import static com.restaurant.rest.AuthorityEndpoint.ALGORITHM;
 import static com.restaurant.utils.DtoConverter.getCardDto;
@@ -85,6 +92,8 @@ public class MobileEndpoint {
     DeskService deskService;
     @Autowired
     CardService cardService;
+    @Autowired
+    ReservationService reservationService;
 
     private static final int LIMIT = 30;
     private final static String AUTHORIZATION = "Authorization";
@@ -96,80 +105,100 @@ public class MobileEndpoint {
     private static Logger logger = LoggerFactory.getLogger(MobileEndpoint.class);
 
     @GetMapping("/hostes")
-    public List<Hostes> hostesList(@PathParam("from") int from,
-                                   @PathParam("to") int to,
-                                   @PathParam("limit") int limit,
-                                   @PathParam("offset") int offset,
-                                   @PathParam("restaurantId") int restaurantId,
-                                   HttpServletRequest request) {
+    public List<HostesDto> hostesList(@PathParam("from") int from,
+                                      @PathParam("to") int to,
+                                      @PathParam("limit") int limit,
+                                      @PathParam("offset") int offset,
+                                      @PathParam("restaurantId") int restaurantId,
+                                      HttpServletRequest request) {
         if (!checkTocken(request.getHeader(AUTHORIZATION))) {
-            return hostesService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+            return hostesService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+                    .stream().map(h -> getHostesDto(h, getUrl(request))).collect(Collectors.toList());
         }
         return Collections.EMPTY_LIST;
 
     }
 
     @GetMapping("/tags")
-    public List<Tag> tagsList(@PathParam("from") int from,
-                              @PathParam("to") int to,
-                              @PathParam("limit") int limit,
-                              @PathParam("offset")int offset,
-                              @PathParam("restaurantId")int restaurantId,
-                              HttpServletRequest request) {
+    public List<TagDto> tagsList(@PathParam("from") int from,
+                                 @PathParam("to") int to,
+                                 @PathParam("limit") int limit,
+                                 @PathParam("offset")int offset,
+                                 @PathParam("restaurantId")int restaurantId,
+                                 HttpServletRequest request) {
         if (!checkTocken(request.getHeader(AUTHORIZATION))) {
-            return tagService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+            return tagService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+                    .stream().map(DtoConverter::getTagDto).collect(Collectors.toList());
         }
         return Collections.EMPTY_LIST;
     }
 
     @GetMapping("/clients")
-    public List<Client> clientList(@PathParam("from") int from,
-                                   @PathParam("to") int to,
-                                   @PathParam("limit") int limit,
-                                   @PathParam("offset")int offset,
-                                   @PathParam("restaurantId")int restaurantId,
-                                   HttpServletRequest request) {
+    public List<ClientDto> clientList(@PathParam("from") int from,
+                                      @PathParam("to") int to,
+                                      @PathParam("limit") int limit,
+                                      @PathParam("offset")int offset,
+                                      @PathParam("restaurantId")int restaurantId,
+                                      HttpServletRequest request) {
         if (!checkTocken(request.getHeader(AUTHORIZATION))) {
-            return clientService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+            return clientService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+                    .stream().map(DtoConverter::getClientDto).collect(Collectors.toList());
         }
         return Collections.EMPTY_LIST;
     }
 
     @GetMapping("/halls")
-    public List<Hall> hallList(@PathParam("from") int from,
-                                   @PathParam("to") int to,
-                                   @PathParam("limit") int limit,
-                                   @PathParam("offset")int offset,
-                                   @PathParam("restaurantId")int restaurantId,
-                                   HttpServletRequest request) {
+    public List<HallDto> hallList(@PathParam("from") int from,
+                                  @PathParam("to") int to,
+                                  @PathParam("limit") int limit,
+                                  @PathParam("offset")int offset,
+                                  @PathParam("restaurantId")int restaurantId,
+                                  HttpServletRequest request) {
         if (!checkTocken(request.getHeader(AUTHORIZATION))) {
-            return hallService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+            return hallService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+                    .stream().map(DtoConverter::getHallDto).collect(Collectors.toList());
         }
         return Collections.EMPTY_LIST;
     }
 
     @GetMapping("/desks")
-    public List<Desk> deskList(@PathParam("from") int from,
-                               @PathParam("to") int to,
-                               @PathParam("limit") int limit,
-                               @PathParam("offset")int offset,
-                               @PathParam("restaurantId")int restaurantId,
-                               HttpServletRequest request) {
+    public List<DeskDto> deskList(@PathParam("from") int from,
+                                  @PathParam("to") int to,
+                                  @PathParam("limit") int limit,
+                                  @PathParam("offset")int offset,
+                                  @PathParam("restaurantId")int restaurantId,
+                                  HttpServletRequest request) {
         if (!checkTocken(request.getHeader(AUTHORIZATION))) {
-            return deskService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+            return deskService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+                    .stream().map(DtoConverter::getDeskDto).collect(Collectors.toList());
         }
         return Collections.EMPTY_LIST;
     }
 
     @GetMapping("/cards")
-    public List<Card> cardList(@PathParam("from") int from,
-                               @PathParam("to") int to,
-                               @PathParam("limit") int limit,
-                               @PathParam("offset")int offset,
-                               @PathParam("restaurantId")int restaurantId,
-                               HttpServletRequest request) {
+    public List<CardDto> cardList(@PathParam("from") int from,
+                                  @PathParam("to") int to,
+                                  @PathParam("limit") int limit,
+                                  @PathParam("offset")int offset,
+                                  @PathParam("restaurantId")int restaurantId,
+                                  HttpServletRequest request) {
         if (!checkTocken(request.getHeader(AUTHORIZATION))) {
-            return cardService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+            return cardService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+                    .stream().map(DtoConverter::getCardDto).collect(Collectors.toList());
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    @GetMapping("/reservations")
+    public List<ReservationDto> reservationList(@PathParam("from") int from,
+                                                @PathParam("to") int to,
+                                                @PathParam("limit") int limit,
+                                                @PathParam("offset")int offset,
+                                                @PathParam("restaurantId")int restaurantId,
+                                                HttpServletRequest request) {
+        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+            return reservationService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+                    .stream().map(DtoConverter::getReservationDto).collect(Collectors.toList());
         }
         return Collections.EMPTY_LIST;
     }
@@ -557,5 +586,15 @@ public class MobileEndpoint {
             map.put(restaurantId, new LinkedList<>());
         }
         map.get(restaurantId).add(element);
+    }
+
+    private String getUrl(HttpServletRequest request) {
+        String url;
+        if (request.getServerName().equalsIgnoreCase("localhost") || request.getServerName().equalsIgnoreCase("127.0.0.1")) {
+            url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        } else {
+            url = "https://" + request.getServerName();
+        }
+        return url;
     }
 }

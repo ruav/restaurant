@@ -38,4 +38,9 @@ public class RestaurantService extends AbstractService<RestaurantRepository, Res
                 .stream().filter(Restaurant::isActive).collect(Collectors.toList());
     }
 
+    public Restaurant findByPhone(String phone) {
+        return repository.findByPhone(phone);
+    }
+
+
 }

@@ -73,6 +73,9 @@ public class Reservation implements Data {
     @Column
     private long lastChange;
 
+    @Column(name = "client_id")
+    private long clientId;
+
     public long getId() {
         return id;
     }
@@ -162,6 +165,14 @@ public class Reservation implements Data {
         this.lastChange = lastChange;
     }
 
+    public long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(long clientId) {
+        this.clientId = clientId;
+    }
+
     @Override
     public String toString() {
         return "Reservation{" +
@@ -176,6 +187,7 @@ public class Reservation implements Data {
                 ", tags=" + tags +
                 ", statuses=" + statuses +
                 ", lastChange=" + lastChange +
+                ", clientId=" + clientId +
                 '}';
     }
 }

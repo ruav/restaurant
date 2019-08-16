@@ -4,7 +4,9 @@ import com.restaurant.dto.*;
 import com.restaurant.entity.*;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -161,11 +163,32 @@ public class DtoConverter {
         dto.setId(card.getId());
         dto.setHallId(card.getHall());
         dto.setMap(card.getMap());
-        dto.setRelevantFrom((card.getRelevantFrom().getYear() + 1900)
-                + "-" + (card.getRelevantFrom().getMonth() + 1)
-                + "-" + card.getRelevantFrom().getDate());
+        dto.setRelevantFrom(getDate(card.getRelevantFrom()));
         dto.setLastChange(card.getLastChange());
         return dto;
     }
 
+    public static ReservationDto getReservationDto(Reservation reservation) {
+        ReservationDto dto = new ReservationDto();
+        dto.setDate(getDate(reservation.getDate()));
+        dto.setId(reservation.getId());
+        dto.setClient(reservation.getClientId());
+        dto.setGuests(reservation.getGuests());
+        dto.setLastchange(reservation.getLastChange());
+        dto.setTags(reservation.getTags().stream().map(DtoConverter::getTagDto).collect(Collectors.toList()));
+        dto.setTables(reservation.getDesks().stream().map(DtoConverter::getDeskDto).collect(Collectors.toList()));
+        dto.setTimeFrom(getTime(reservation.getTimeFrom()));
+        dto.setTimeTo(getTime(reservation.getTimeTo()));
+        return dto;
+    }
+
+    private static String getDate(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        return simpleDateFormat.format(date);
+    }
+
+    private static String getTime(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH-mm-ss");
+        return simpleDateFormat.format(date);
+    }
 }

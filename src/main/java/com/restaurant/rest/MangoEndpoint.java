@@ -1,6 +1,7 @@
 package com.restaurant.rest;
 
 import com.restaurant.dto.CallDto;
+import com.restaurant.entity.Restaurant;
 import com.restaurant.service.AllergenService;
 import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
@@ -81,8 +82,10 @@ public class MangoEndpoint {
             CallDto callDto = new CallDto();
             callDto.setCall(true);
             callDto.setPhone(fromNumber);
-            // хз, как тут брать ресторан
-            addElement(1, new JSONObject(callDto).toString());
+            Restaurant restaurant = restaurantService.findByPhone(fromNumber);
+            if (restaurant != null) {
+                addElement(restaurant.getId(), new JSONObject(callDto).toString());
+            }
         }
 
     }
@@ -168,10 +171,11 @@ public class MangoEndpoint {
             CallDto callDto = new CallDto();
             callDto.setCall(true);
             callDto.setPhone(fromNumber);
-            // хз, как тут брать ресторан
-            addElement(1, new JSONObject(callDto).toString());
+            Restaurant restaurant = restaurantService.findByPhone(fromNumber);
+            if (restaurant != null) {
+                addElement(restaurant.getId(), new JSONObject(callDto).toString());
+            }
         }
-
 
     }
 

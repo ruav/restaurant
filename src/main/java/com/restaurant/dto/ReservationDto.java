@@ -24,7 +24,7 @@ public class ReservationDto {
     @ApiModelProperty
     private List<TagDto> tags;
     @ApiModelProperty
-    private ClientDto client;
+    private long client;
     @ApiModelProperty
     private List<StatusDto> status;
     @ApiModelProperty
@@ -86,11 +86,11 @@ public class ReservationDto {
         this.tags = tags;
     }
 
-    public ClientDto getClient() {
+    public long getClient() {
         return client;
     }
 
-    public void setClient(ClientDto client) {
+    public void setClient(long client) {
         this.client = client;
     }
 
