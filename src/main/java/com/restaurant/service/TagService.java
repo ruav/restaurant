@@ -11,19 +11,16 @@ import java.util.List;
 public class TagService extends AbstractService<TagRepository, Tag> {
 
     @Autowired
-    TagRepository repository;
+    TagRepository tagRepository;
 
     @Override
     TagRepository repository() {
-        return repository;
+        return tagRepository;
     }
 
 
     public List<Tag> findAllByLastChangeBetweenOrderByLastChangeAsc(long from, long to, long restaurantId, int limit, int offset) {
-//        List<Tag> list = repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to);
-//        limit = (list.size() - offset) >= limit ? limit : list.size() - offset;
-//        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to).subList(offset, limit);
-        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, offset, limit);
+        return repository().findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, offset, limit);
     }
 
 }

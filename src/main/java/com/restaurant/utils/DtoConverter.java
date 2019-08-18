@@ -1,11 +1,11 @@
 package com.restaurant.utils;
 
 import com.restaurant.dto.*;
+import com.restaurant.dto.Event.ReservationEventDto;
 import com.restaurant.entity.*;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -180,14 +180,46 @@ public class DtoConverter {
         dto.setGuests(reservation.getGuests());
         dto.setLastchange(reservation.getLastChange());
         dto.setTags(reservation.getTags().stream().map(DtoConverter::getTagDto).collect(Collectors.toList()));
-        dto.setTables(reservation.getDesks().stream().map(DtoConverter::getDeskDto).collect(Collectors.toList()));
+        dto.setTables(reservation.getTables().stream().map(DtoConverter::getDeskDto).collect(Collectors.toList()));
         dto.setTimeFrom(getTime(reservation.getTimeFrom()));
         dto.setTimeTo(getTime(reservation.getTimeTo()));
         return dto;
     }
 
+    public static ReservationEventDto getReservationEventDto(Reservation reservation, Client client) {
+        ReservationEventDto dto = new ReservationEventDto();
+        dto.setId(reservation.getId());
+        dto.setLastchange(reservation.getLastChange());
+        if (client != null) {
+            dto.setClient(getClientDto(client));
+        }
+        dto.setDate(getDate(reservation.getDate()));
+        dto.setTimeFrom(getTime(reservation.getTimeFrom()));
+        dto.setTimeTo(getTime(reservation.getTimeTo()));
+        dto.setGuests(reservation.getGuests());
+        dto.setTables(reservation.getTables().stream().map(DtoConverter::getDeskDto).collect(Collectors.toList()));
+        dto.setTags(reservation.getTags().stream().map(DtoConverter::getTagDto).collect(Collectors.toList()));
+        return dto;
+    }
+
+    public static StatusDto getStatusDto(Status status) {
+        StatusDto dto = new StatusDto();
+        dto.setDatetime(status.getDateTime().toString());
+        dto.setHostes(status.getHostess());
+        dto.setStatus(status.getStatus().getNum());
+        return dto;
+    }
+
+    public static ReplacementDto getReplacementDto(Replacement replacement) {
+        ReplacementDto dto = new ReplacementDto();
+        dto.setTableFrom(replacement.getDeskFrom());
+        dto.setTableTo(replacement.getDeskTo());
+        dto.setWhen(replacement.getTime());
+        return dto;
+    }
+
     private static String getDate(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return simpleDateFormat.format(date);
     }
 

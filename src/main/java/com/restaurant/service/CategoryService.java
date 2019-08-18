@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 public class CategoryService extends AbstractService<CategoryRepository, Category> {
 
     @Autowired
-    CategoryRepository repository;
+    CategoryRepository categoryRepository;
 
     @Override
     CategoryRepository repository() {
-        return repository;
+        return categoryRepository;
     }
 
     public List<Category> findByRestaurant(long restaurantId) {
-        return repository.findByRestaurantId(restaurantId);
+        return repository().findByRestaurantId(restaurantId);
     }
 
     public List<Category> findActiveByRestaurant(long restaurantId) {

@@ -1,6 +1,7 @@
 package com.restaurant.rest;
 
 import com.restaurant.dto.PhotoDto;
+import com.restaurant.entity.Icon;
 import com.restaurant.entity.Ingredient;
 import com.restaurant.service.IconService;
 import com.restaurant.service.IngredientService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,7 +39,10 @@ public class InternalEndpoint {
         if (ingredient == null) {
             ingredient = new Ingredient();
             ingredient.setName(name);
-            ingredient.setLogo(iconService.findById(iconId).get());
+            Optional<Icon> icon = iconService.findById(iconId);
+            if (icon.isPresent()) {
+                ingredient.setLogo(icon.get());
+            }
             return ingredientService.save(ingredient).getId();
         }
         return null;

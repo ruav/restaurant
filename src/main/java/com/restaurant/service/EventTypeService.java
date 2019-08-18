@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 public class EventTypeService extends AbstractService<EventTypeRepository, EventType> {
 
     @Autowired
-    EventTypeRepository repository;
+    EventTypeRepository eventTypeRepository;
 
     @Override
     EventTypeRepository repository() {
-        return repository;
+        return eventTypeRepository;
     }
 
 }

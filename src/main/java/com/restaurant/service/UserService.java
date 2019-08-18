@@ -7,50 +7,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class UserService extends AbstractService<UserRepository, User> {
 
     @Autowired
-    UserRepository repository;
+    UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     UserRepository repository() {
-        return repository;
+        return userRepository;
     }
 
     public Set<Restaurant> findRestaurant(long id) {
-        return repository.findById(id).get().getRestaurants();
+        Optional<User> user = repository().findById(id);
+        if (user.isPresent()) {
+            return user.get().getRestaurants();
+        }
+        return Collections.emptySet();
     }
 
     public User addRestaurant(User user, Restaurant restaurant) {
         user.getRestaurants().add(restaurant);
-        return repository.save(user);
+        return repository().save(user);
     }
 
     public User findByEmail(String email) {
-        return repository.findByEmail(email);
+        return repository().findByEmail(email);
     }
 
     public User add(User user) {
         user.setPass(passwordEncoder.encode(user.getPass()));
-        return repository.save(user);
+        return repository().save(user);
     }
 
     @Override
     public User save(User user){
-        return repository.save(user);
+        return repository().save(user);
     }
 
     public void updatePassword(String password, long userId) {
-        User user = repository.findById(userId).get();
-        user.setPass(passwordEncoder.encode(password));
-        user.setRestaurants(findByEmail(user.getEmail()).getRestaurants());
-        save(user);
+        Optional<User> user = repository().findById(userId);
+        if (user.isPresent()) {
+            user.get().setPass(passwordEncoder.encode(password));
+            user.get().setRestaurants(findByEmail(user.get().getEmail()).getRestaurants());
+            save(user.get());
+        }
     }
 
     public void update(User user) {
@@ -62,6 +70,6 @@ public class UserService extends AbstractService<UserRepository, User> {
         if (user.getRestaurants().isEmpty()) {
             user.setRestaurants(findByEmail(user.getEmail()).getRestaurants());
         }
-        repository.save(user);
+        repository().save(user);
     }
 }

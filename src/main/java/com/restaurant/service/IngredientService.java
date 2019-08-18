@@ -12,23 +12,23 @@ import java.util.List;
 public class IngredientService extends AbstractService<IngredientRepository, Ingredient> {
 
     @Autowired
-    IngredientRepository repository;
+    IngredientRepository ingredientRepository;
 
     @Override
     IngredientRepository repository() {
-        return repository;
+        return ingredientRepository;
     }
 
     public List<Ingredient> findByNameIsLike (String name, Pageable pageable) {
-        return repository.findByNameIgnoreCaseContaining(name , pageable);
+        return repository().findByNameIgnoreCaseContaining(name , pageable);
     }
 
     public List<Ingredient> findAll(Pageable pageable) {
-        return  repository.findAll(pageable).getContent();
+        return  repository().findAll(pageable).getContent();
     }
 
     public Ingredient findByName(String name) {
-        return repository.findByNameIgnoreCase(name);
+        return repository().findByNameIgnoreCase(name);
     }
 
 }

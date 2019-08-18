@@ -20,6 +20,8 @@ public class ManageFiles {
 
     private static final String IMAGE_PATH = "/img/";
 
+    private ManageFiles() {}
+
     public static Photo createPhoto(String url) {
         Photo photo = new Photo();
         photo.setUrl(url.substring(url.lastIndexOf("/")+1));
@@ -51,8 +53,6 @@ public class ManageFiles {
         String path = IMAGE_PATH + hash.substring(0,2) + "/" + hash.substring(2,4) + "/" + hash.substring(4,6);
         File file = new File(path);
         file.mkdirs();
-//        file.createNewFile();
-//        System.out.println(file.getPath());
         String uuid = UUID.randomUUID().toString();
         Files.write(Paths.get(path + "/" + uuid), ResizeImage.resize(inputFile.getInputStream(), size, inputFile.getContentType()));
         return path + "/" + uuid;

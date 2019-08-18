@@ -1,6 +1,5 @@
 package com.restaurant.repository;
 
-import com.restaurant.entity.Client;
 import com.restaurant.entity.Hall;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

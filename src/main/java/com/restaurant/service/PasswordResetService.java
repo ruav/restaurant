@@ -11,19 +11,19 @@ import java.util.List;
 public class PasswordResetService extends AbstractService<PasswordResetTokenRepository, PasswordResetToken> {
 
     @Autowired
-    PasswordResetTokenRepository repository;
+    PasswordResetTokenRepository passwordResetTokenRepositoryry;
 
     @Override
     PasswordResetTokenRepository repository() {
-        return repository;
+        return passwordResetTokenRepositoryry;
     }
 
     public PasswordResetToken findByToken(String token) {
-        return repository.findByToken(token);
+        return repository().findByToken(token);
     }
 
     public List<PasswordResetToken> findByUserId(long userId) {
-        return repository.findByUserId(userId);
+        return repository().findByUserId(userId);
     }
 
 }

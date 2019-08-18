@@ -12,11 +12,11 @@ import java.util.Map;
 public class TownService extends AbstractService<TownRepository, Town> {
 
     @Autowired
-    TownRepository repository;
+    TownRepository townRepository;
 
     @Override
     TownRepository repository() {
-        return repository;
+        return townRepository;
     }
 
     public Map<Long, Town> findMapAll() {

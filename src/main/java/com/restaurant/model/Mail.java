@@ -8,9 +8,6 @@ public class Mail {
     private String subject;
     private Map<String, Object> model;
 
-    public Mail() {
-    }
-
     public String getFrom() {
         return from;
     }

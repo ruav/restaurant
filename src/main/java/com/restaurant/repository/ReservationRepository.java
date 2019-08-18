@@ -1,7 +1,6 @@
 package com.restaurant.repository;
 
 import com.restaurant.entity.Reservation;
-import com.restaurant.entity.Tag;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

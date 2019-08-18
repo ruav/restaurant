@@ -9,8 +9,6 @@ import java.util.List;
 @Repository
 public interface RestaurantRepository extends CrudRepository<Restaurant, Long> {
 
-//    List<Restaurant> findByLatitudeIsGreaterThanEqualAndLongtitudeGreaterThanEqualAAndLatitudeLessThanEqualAndLongtitudeLessThanEqual(Float latitude1, Float longtitude1, Float lanitude2, Float longtitude2);
     List<Restaurant> findByLatitudeGreaterThanEqualAndLongtitudeGreaterThanEqualAndLatitudeLessThanEqualAndLongtitudeLessThanEqual(Float latitude1, Float longtitude1, Float lanitude2, Float longtitude2);
-//    List<Restaurant> findByLatitudeIsGreaterThanEqualAndLongtitudeGreaterThanEqualAAndLatitudeLessThanEqualAndLongtitudeLessThanEqual(Float latitude1, Float longtitude1, Float lanitude2, Float longtitude2);
     Restaurant findByPhone(String phone);
 }

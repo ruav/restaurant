@@ -3,6 +3,7 @@ package com.restaurant.controller;
 import com.restaurant.entity.Category;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.SubCategory;
+import com.restaurant.entity.Town;
 import com.restaurant.service.CategoryService;
 import com.restaurant.service.DishService;
 import com.restaurant.service.RestaurantService;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 import static com.restaurant.utils.ManageFiles.createPhoto;
 import static com.restaurant.utils.ManageFiles.saveFile;
@@ -60,13 +62,15 @@ public class SubCategoryController extends AbstractController<SubCategoryService
     @Override
     @GetMapping("/add")
     public String showSignUpForm(SubCategory entity, @PathParam(value ="id") long id, Model model) {
-//        model.addAttribute("category", id);
         getCheckAccess().checkAccessCategory(getUser(), id);
         entity.setCategoryId(id);
         entity.setActive(true);
         model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
         model.addAttribute("subcategory", entity);
-        model.addAttribute("category", categoryService.findById(id).get());
+        Optional<Category> category = categoryService.findById(id);
+        if (category.isPresent()) {
+            model.addAttribute("category", category.get());
+        }
         return prefix() + "/add";
     }
 
@@ -92,9 +96,6 @@ public class SubCategoryController extends AbstractController<SubCategoryService
             model.addAttribute("categories", categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant")));
             return prefix() + "/add";
         }
-//        if(getHttpSession().getAttribute("back") == null) {
-//            model.addAttribute("list", repository().findAll());
-//        }
         return getHttpSession().getAttribute("back") != null ? "redirect:" + getHttpSession().getAttribute("back") : prefix() + "/list";
     }
 
@@ -122,7 +123,10 @@ public class SubCategoryController extends AbstractController<SubCategoryService
             model.addAttribute("entity", entity);
             return prefix() + "/update";
         }
-        entity.setLogo(repository().findById(entity.getId()).get().getLogo());
+        Optional<SubCategory> subCategory = repository().findById(entity.getId());
+        if (subCategory.isPresent()) {
+            entity.setLogo(subCategory.get().getLogo());
+        }
         try {
             repository().save(entity);
         } catch (Exception e) {
@@ -145,16 +149,20 @@ public class SubCategoryController extends AbstractController<SubCategoryService
         Restaurant restaurant = restaurantService.findById((Long) getHttpSession().getAttribute("restaurant"))
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant Id:" + getHttpSession().getAttribute("restaurant")));
 
-        Category category = categoryService.findById(id).get();
+        Optional<Category> category = categoryService.findById(id);
         model.addAttribute("restaurant", restaurant);
-        model.addAttribute("category", category);
-
-        model.addAttribute("subcategories", subCategoryService.findByCategoryId(category.getId()));
-        model.addAttribute("town", townService.findById(restaurant.getCity()).get());
+        if (category.isPresent()) {
+            model.addAttribute("category", category);
+            model.addAttribute("subcategories", subCategoryService.findByCategoryId(category.get().getId()));
+            getHttpSession().setAttribute("category", category);
+        }
+        Optional<Town> town = townService.findById(restaurant.getCity());
+        if (town.isPresent()) {
+            model.addAttribute("town", town.get());
+        }
         model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
 
         getHttpSession().setAttribute("restaurantName", restaurant.getName());
-        getHttpSession().setAttribute("category", category);
         getHttpSession().setAttribute("back", prefix() + "/list/" + id);
 
         return prefix() + "/list";

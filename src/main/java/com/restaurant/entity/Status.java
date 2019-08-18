@@ -1,7 +1,11 @@
 package com.restaurant.entity;
 
+import com.restaurant.vo.StatusEnum;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,13 +22,17 @@ public class Status implements Data {
     private long id;
 
     @Column(unique = true, nullable = false)
-    private int status;
+    @Enumerated(EnumType.ORDINAL)
+    private StatusEnum status;
 
     @Column
     private long hostess;
 
     @Column(name = "date_time")
     private Date dateTime;
+
+    @Column
+    private long reservation;
 
     @Column
     private long lastChange;
@@ -38,11 +46,11 @@ public class Status implements Data {
         this.id = id;
     }
 
-    public int getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 
@@ -70,6 +78,14 @@ public class Status implements Data {
         this.lastChange = lastChange;
     }
 
+    public long getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(long reservation) {
+        this.reservation = reservation;
+    }
+
     @Override
     public String toString() {
         return "Status{" +
@@ -77,6 +93,7 @@ public class Status implements Data {
                 ", status=" + status +
                 ", hostess=" + hostess +
                 ", dateTime=" + dateTime +
+                ", reservation=" + reservation +
                 ", lastChange=" + lastChange +
                 '}';
     }

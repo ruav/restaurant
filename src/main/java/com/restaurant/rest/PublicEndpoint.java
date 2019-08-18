@@ -191,7 +191,7 @@ public class PublicEndpoint {
         if (search == null) {
             search = "";
         }
-        Pageable pageable = new PageRequest(page, LIMIT);
+        Pageable pageable = PageRequest.of(page, LIMIT);
         List<Ingredient> ingredients = new ArrayList<>();
         if (search == null || search.isEmpty()) {
             ingredients = ingredientService.findAll(pageable);

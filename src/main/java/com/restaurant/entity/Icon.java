@@ -23,9 +23,6 @@ public class Icon implements Data, Serializable, Image {
     @Column
     private String path;
 
-//    @Column
-//    private byte[] image;
-
     @Override
     public long getId() {
         return id;
@@ -44,14 +41,6 @@ public class Icon implements Data, Serializable, Image {
     public void setUrl(String url) {
         this.url = url;
     }
-
-//    public byte[] getImage() {
-//        return image;
-//    }
-//
-//    public void setImage(byte[] image) {
-//        this.image = image;
-//    }
 
     public String getPath() {
         return path;

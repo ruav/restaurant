@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 public class AllergenService extends AbstractService<AllergenRepository, Allergen> {
 
     @Autowired
-    AllergenRepository repository;
+    AllergenRepository allergenRepository;
 
     @Override
     AllergenRepository repository() {
-        return repository;
+        return allergenRepository;
     }
 
 }

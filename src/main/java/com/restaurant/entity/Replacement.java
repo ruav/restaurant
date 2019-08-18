@@ -26,6 +26,9 @@ public class Replacement implements Data {
     @Column
     private int deskTo;
 
+    @Column
+    private long reservation;
+
     public long getId() {
         return id;
     }
@@ -59,13 +62,22 @@ public class Replacement implements Data {
         this.deskTo = deskTo;
     }
 
+    public long getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(long reservation) {
+        this.reservation = reservation;
+    }
+
     @Override
     public String toString() {
         return "Replacement{" +
                 "id=" + id +
-                ", when=" + time +
+                ", time=" + time +
                 ", deskFrom=" + deskFrom +
                 ", deskTo=" + deskTo +
+                ", reservation=" + reservation +
                 '}';
     }
 }

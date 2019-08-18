@@ -12,18 +12,18 @@ import java.util.stream.Collectors;
 public class SubCategoryService extends AbstractService<SubCategoryRepository, SubCategory> {
 
     @Autowired
-    SubCategoryRepository repository;
+    SubCategoryRepository subCategoryRepository;
 
     @Override
     SubCategoryRepository repository() {
-        return repository;
+        return subCategoryRepository;
     }
 
     public List<SubCategory> findByCategoryId(long categoryId) {
-        return repository.findByCategoryId(categoryId);
+        return repository().findByCategoryId(categoryId);
     }
 
     public List<SubCategory> findActiveByCategoryId(long categoryId) {
-        return repository.findByCategoryId(categoryId).stream().filter(SubCategory::isActive).collect(Collectors.toList());
+        return repository().findByCategoryId(categoryId).stream().filter(SubCategory::isActive).collect(Collectors.toList());
     }
 }

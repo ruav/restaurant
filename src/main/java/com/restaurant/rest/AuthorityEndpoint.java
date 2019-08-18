@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.restaurant.entity.Restaurant;
 import com.restaurant.entity.User;
 import com.restaurant.service.UserService;
 import com.restaurant.vo.Role;
@@ -13,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/mobile")
@@ -38,12 +42,12 @@ public class AuthorityEndpoint {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private final static int TTL_HOURS = 24;
-    private final static String AUTHORIZATION = "Authorization";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String SECRET_WORD = "secret";
+    private static final String RESTAURANT = "restaurant";
+    public static final Algorithm ALGORITHM = Algorithm.HMAC256(SECRET_WORD);
 
-    private final static String SECRET_WORD = "secret";
-
-    public final static Algorithm ALGORITHM = Algorithm.HMAC256(SECRET_WORD);
+    private static Logger logger = LoggerFactory.getLogger(AuthorityEndpoint.class);
 
     /**
      * Возвращает jwt - токен в случае успешной авторизации.
@@ -84,6 +88,11 @@ public class AuthorityEndpoint {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return "Incorrect login + password";
         }
+        Optional<Restaurant> restaurant = user.getRestaurants().stream().findFirst();
+        if (!restaurant.isPresent()) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return "User haven't restaurant";
+        }
 
         String token = null;
         Calendar calendar = new GregorianCalendar();
@@ -91,38 +100,43 @@ public class AuthorityEndpoint {
         if (user.getRestaurants().isEmpty()) {
             return "User haven't restaurant";
         }
-        long restaurantId = user.getRestaurants().stream().findFirst().get().getId();
+        long restaurantId = restaurant.get().getId();
         try {
-             token = JWT.create()
-                     .withSubject("user")
-                     .withClaim("id", user.getId())
-                     .withClaim("restaurant", restaurantId)
-                     .withIssuer("auth")
-                     .withExpiresAt(calendar.getTime())
+            token = JWT.create()
+                    .withSubject("user")
+                    .withClaim("id", user.getId())
+                    .withClaim(RESTAURANT, restaurantId)
+                    .withIssuer("auth")
+                    .withExpiresAt(calendar.getTime())
                     .sign(ALGORITHM);
         } catch (JWTCreationException e) {
-
+            logger.warn("Token didn't create", e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return "Token didn't create";
         }
-
         return token;
     }
 
     private Boolean checkAccess(String auth) {
-            JWTVerifier verifier = JWT.require(ALGORITHM)
-                    .withIssuer("auth")
-                    .build();
-            DecodedJWT jwt = verifier.verify(auth);
+        if (auth == null) return false;
+        JWTVerifier verifier = JWT.require(ALGORITHM)
+                .withIssuer("auth")
+                .build();
+        DecodedJWT jwt = verifier.verify(auth);
 
-            if (jwt.getClaim("id").isNull()) return false;
-            if (jwt.getClaim("restaurant").isNull()) return false;
+        if (jwt.getClaim("id").isNull()) return false;
+        if (jwt.getClaim(RESTAURANT).isNull()) return false;
+        Optional<User> user = userService.findById(jwt.getClaim("id").asLong());
+        if (!user.isPresent()) return false;
+        Optional<Restaurant> restaurant = user.get().getRestaurants().stream().findFirst();
+        if (!restaurant.isPresent()) return false;
+        if (jwt.getClaim(RESTAURANT).asLong() != restaurant.get().getId()) {
+            return true;
+        }
 
-            if (jwt.getClaim("restaurant").asLong() != userService.findById(jwt.getClaim("id").asLong()).get().getRestaurants().stream().findFirst().get().getId()) {
-                return true;
-            }
-
-            if (jwt.getExpiresAt().after(Calendar.getInstance().getTime())) {
-                return true;
-            }
+        if (jwt.getExpiresAt().after(Calendar.getInstance().getTime())) {
+            return true;
+        }
 
         return false;
     }

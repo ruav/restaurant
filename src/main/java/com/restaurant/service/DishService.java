@@ -12,18 +12,18 @@ import java.util.stream.Collectors;
 public class DishService extends AbstractService<DishRepository, Dish> {
 
     @Autowired
-    DishRepository repository;
+    DishRepository dishRepository;
 
     @Override
     DishRepository repository() {
-        return repository;
+        return dishRepository;
     }
 
     public List<Dish> findBySubCategoryId(long subCategoryId) {
-        return repository.findBySubCategoryId(subCategoryId);
+        return repository().findBySubCategoryId(subCategoryId);
     }
 
     public List<Dish> findActiveBySubCategoryId(long subCategoryId) {
-        return repository.findBySubCategoryId(subCategoryId).stream().filter(Dish::isActive).collect(Collectors.toList());
+        return repository().findBySubCategoryId(subCategoryId).stream().filter(Dish::isActive).collect(Collectors.toList());
     }
 }

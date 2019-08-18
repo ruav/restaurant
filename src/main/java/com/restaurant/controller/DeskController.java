@@ -23,7 +23,7 @@ import javax.websocket.server.PathParam;
 public class DeskController extends AbstractController<DeskService, Desk> {
 
     @Autowired
-    DeskService repository;
+    DeskService deskService;
 
     @Autowired
     HallService hallService;
@@ -38,7 +38,7 @@ public class DeskController extends AbstractController<DeskService, Desk> {
 
     @Override
     DeskService repository() {
-        return repository;
+        return deskService;
     }
 
     @Override

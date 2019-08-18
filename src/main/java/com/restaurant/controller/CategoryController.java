@@ -17,17 +17,18 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/categories")
 public class CategoryController extends AbstractController<CategoryService, Category>{
 
     @Autowired
-    CategoryService repository;
+    CategoryService categoryService;
 
     @Override
     CategoryService repository() {
-        return repository;
+        return categoryService;
     }
 
     @Override
@@ -56,7 +57,10 @@ public class CategoryController extends AbstractController<CategoryService, Cate
             model.addAttribute("entity", entity);
             return prefix() + "/update";
         }
-        entity.setLogo(repository().findById(entity.getId()).get().getLogo());
+        Optional<Category> category = repository().findById(entity.getId());
+        if (category.isPresent()) {
+            entity.setLogo(category.get().getLogo());
+        }
         try {
             repository().save(entity);
         } catch (Exception e) {
@@ -75,7 +79,7 @@ public class CategoryController extends AbstractController<CategoryService, Cate
     private long getRestaurant(Long id) {
         Long restaurant = (Long) getHttpSession().getAttribute("restaurant");
         if (restaurant == null) {
-            restaurant = repository.findById(id).get().getRestaurantId();
+            restaurant = repository().findById(id).get().getRestaurantId();
             getHttpSession().setAttribute("restaurant", restaurant);
         }
 

@@ -11,18 +11,15 @@ import java.util.List;
 public class ClientService extends AbstractService<ClientRepository, Client> {
 
     @Autowired
-    ClientRepository repository;
+    ClientRepository clientRepository;
 
     @Override
     ClientRepository repository() {
-        return repository;
+        return clientRepository;
     }
 
     public List<Client> findAllByLastChangeBetweenOrderByLastChangeAsc(long from, long to, long restaurantId, int limit, int offset) {
-//        List<Client> list = repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to);
-//        limit = (list.size() - offset) >= limit ? limit : list.size() - offset;
-//        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to).subList(offset, limit);
-        return repository.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, offset, limit);
+        return repository().findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, offset, limit);
     }
 
 

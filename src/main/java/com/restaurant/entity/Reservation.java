@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,11 +42,11 @@ public class Reservation implements Data {
 
     @OneToMany()
     @JoinTable(
-            name="reservation_desk",
+            name="reservation_tables",
             joinColumns = @JoinColumn(name = "reservation_id"),
             inverseJoinColumns = @JoinColumn(name = "desk_id")
     )
-    private Set<Desk> desks;
+    private Set<Desk> tables;
 
     @OneToMany()
     @JoinTable(
@@ -69,7 +70,8 @@ public class Reservation implements Data {
             joinColumns = @JoinColumn(name = "reservation_id"),
             inverseJoinColumns = @JoinColumn(name = "status_id")
     )
-    private Set<Status> statuses;
+    private List<Status> statuses;
+
     @Column
     private long lastChange;
 
@@ -125,12 +127,12 @@ public class Reservation implements Data {
         this.guests = guests;
     }
 
-    public Set<Desk> getDesks() {
-        return desks;
+    public Set<Desk> getTables() {
+        return tables;
     }
 
-    public void setDesks(Set<Desk> desks) {
-        this.desks = desks;
+    public void setTables(Set<Desk> tables) {
+        this.tables = tables;
     }
 
     public Set<Replacement> getReplacements() {
@@ -149,11 +151,11 @@ public class Reservation implements Data {
         this.tags = tags;
     }
 
-    public Set<Status> getStatuses() {
+    public List<Status> getStatuses() {
         return statuses;
     }
 
-    public void setStatuses(Set<Status> statuses) {
+    public void setStatuses(List<Status> statuses) {
         this.statuses = statuses;
     }
 
@@ -182,7 +184,7 @@ public class Reservation implements Data {
                 ", timeTo=" + timeTo +
                 ", restaurantId=" + restaurantId +
                 ", guests=" + guests +
-                ", desks=" + desks +
+                ", tables=" + tables +
                 ", replacements=" + replacements +
                 ", tags=" + tags +
                 ", statuses=" + statuses +

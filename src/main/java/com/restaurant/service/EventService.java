@@ -11,15 +11,15 @@ import java.util.List;
 public class EventService extends AbstractService<EventRepository, Event> {
 
     @Autowired
-    EventRepository repository;
+    EventRepository eventRepository;
 
     @Override
     EventRepository repository() {
-        return repository;
+        return eventRepository;
     }
 
     public List<Event> findByRestaurantId (long restaurantId) {
-        return repository.findByRestaurantId(restaurantId);
+        return repository().findByRestaurantId(restaurantId);
     }
 
 

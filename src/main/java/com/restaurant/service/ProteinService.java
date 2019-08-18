@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 public class ProteinService extends AbstractService<ProteinRepository, Protein> {
 
     @Autowired
-    ProteinRepository repository;
+    ProteinRepository proteinRepository;
 
     @Override
     ProteinRepository repository() {
-        return repository;
+        return proteinRepository;
     }
 
 }

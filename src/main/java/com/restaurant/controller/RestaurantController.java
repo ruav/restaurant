@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.restaurant.utils.ManageFiles.createPhoto;
 import static com.restaurant.utils.ManageFiles.saveFile;
@@ -80,7 +81,7 @@ public class RestaurantController {
     @Autowired
     private HttpSession httpSession;
 
-    private final static String PREFIX = "/restaurants";
+    private static final String PREFIX = "/restaurants";
 
     @GetMapping("/add")
     public String showSignUpForm(Restaurant restaurant, MultipartFile file,  Model model) {
@@ -113,17 +114,17 @@ public class RestaurantController {
                 }
 
                 @Override
-                public byte[] getBytes() throws IOException {
+                public byte[] getBytes() {
                     return new byte[0];
                 }
 
                 @Override
-                public InputStream getInputStream() throws IOException {
+                public InputStream getInputStream() {
                     return null;
                 }
 
                 @Override
-                public void transferTo(File file) throws IOException, IllegalStateException {
+                public void transferTo(File file) {
 
                 }
             };
@@ -241,8 +242,11 @@ public class RestaurantController {
             restaurant.setId(id);
             return PREFIX + "/update";
         }
-        restaurant.setLogo(restaurantService.findById(restaurant.getId()).get().getLogo());
-        restaurant.setPhotos(restaurantService.findById(restaurant.getId()).get().getPhotos());
+        Optional<Restaurant> oldRestaurant = restaurantService.findById(restaurant.getId());
+        if (oldRestaurant.isPresent()) {
+            restaurant.setLogo(oldRestaurant.get().getLogo());
+            restaurant.setPhotos(oldRestaurant.get().getPhotos());
+        }
         try {
             restaurantService.save(restaurant);
         } catch (Exception e) {
@@ -279,7 +283,14 @@ public class RestaurantController {
         if (!restaurantService.findById(id).isPresent()) {
             throw new NotFoundException();
         }
-        if (!getUser().getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name())) && !userService.findByEmail(getUser().getUsername()).getRestaurants().contains(restaurantService.findById(id).get())) {
+
+        User user = userService.findByEmail(getUser().getUsername());
+        Optional<Restaurant> restaurant = restaurantService.findById(id);
+        if (!restaurant.isPresent()) {
+            throw new NotFoundException();
+        }
+
+        if (!getUser().getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name())) && !user.getRestaurants().contains(restaurant.get())) {
             throw new ForbiddenException();
         }
     }

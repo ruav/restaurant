@@ -1,12 +1,9 @@
 package com.restaurant.controller;
 
-import com.restaurant.entity.Category;
 import com.restaurant.entity.Event;
 import com.restaurant.entity.EventType;
-import com.restaurant.entity.SubCategory;
 import com.restaurant.service.EventService;
 import com.restaurant.service.EventTypeService;
-import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -132,11 +129,11 @@ public class EventController extends AbstractController<EventService, Event> {
         if (getHttpSession().getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
-//        return getHttpSession().getAttribute("back") != null ? "redirect:" + getHttpSession().getAttribute("back") : "redirect:" + prefix() + "/list/" + entity.getSubCategoryId();
         return  "redirect:" + prefix() + "/list/" + entity.getRestaurantId();
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id, Model model) throws Throwable {
         Event entity =  repository().findById(id)

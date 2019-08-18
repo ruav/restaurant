@@ -3,7 +3,6 @@ package com.restaurant.dto;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-import java.util.Set;
 
 public class ClientDto {
 

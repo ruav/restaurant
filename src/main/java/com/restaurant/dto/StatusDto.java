@@ -9,7 +9,7 @@ public class StatusDto {
     @ApiModelProperty
     private Integer status;
     @ApiModelProperty
-    private Integer hostes;
+    private Long hostes;
 
     public String getDatetime() {
         return datetime;
@@ -27,11 +27,11 @@ public class StatusDto {
         this.status = status;
     }
 
-    public Integer getHostes() {
+    public Long getHostes() {
         return hostes;
     }
 
-    public void setHostes(Integer hostes) {
+    public void setHostes(Long hostes) {
         this.hostes = hostes;
     }
 

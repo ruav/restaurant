@@ -18,19 +18,21 @@ public class Event implements Data {
     @Column(nullable = false)
     private String name;
 
+    @Column(name = "start_date")
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date start_date;
+    private Date startDate;
 
+    @Column(name = "start_hour")
     @Temporal(TemporalType.TIME)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm")
-    private Date start_hour;
+    private Date startHour;
 
     @Column()
     private long type;
 
     @Column
-    private String Description;
+    private String description;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -62,28 +64,28 @@ public class Event implements Data {
         this.name = name;
     }
 
-    public Date getStart_date() {
-        return start_date;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setStart_date(Date start_date) {
-        this.start_date = start_date;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public Date getStart_hour() {
-        return start_hour;
+    public Date getStartHour() {
+        return startHour;
     }
 
-    public void setStart_hour(Date start_hour) {
-        this.start_hour = start_hour;
+    public void setStartHour(Date startHour) {
+        this.startHour = startHour;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public Set<Photo> getPhotos() {
@@ -124,7 +126,7 @@ public class Event implements Data {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", type=" + type +
-                ", Description='" + Description + '\'' +
+                ", description='" + description + '\'' +
                 ", photos=" + photos +
                 ", restaurantId=" + restaurantId +
                 ", link='" + link + '\'' +

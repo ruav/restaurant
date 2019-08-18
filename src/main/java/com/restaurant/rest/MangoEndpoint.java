@@ -54,8 +54,6 @@ public class MangoEndpoint {
     @Autowired
     NotificationService notificationService;
 
-    private static final int LIMIT = 30;
-
     Map<String, String> map = new ConcurrentHashMap<>();
 
 

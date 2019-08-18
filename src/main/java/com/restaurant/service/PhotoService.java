@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 public class PhotoService extends AbstractService<PhotoRepository, Photo> {
 
     @Autowired
-    PhotoRepository repository;
+    PhotoRepository photoRepository;
 
     @Override
     PhotoRepository repository() {
-        return repository;
+        return photoRepository;
     }
 
     public Photo getPhotoByUrl(String url) {
-        return repository.getPhotoByUrl(url);
+        return repository().getPhotoByUrl(url);
     }
 
 }

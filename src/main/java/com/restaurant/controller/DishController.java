@@ -73,12 +73,6 @@ public class DishController extends AbstractController<DishService, Dish> {
         getCheckAccess().checkAccessSubCategory(getUser(), id);
         dish.setSubCategoryId(id);
         dish.setActive(true);
-//        List<Category> categories = categoryService.findByRestaurant(id);
-//        List<SubCategory> subCategories = new ArrayList<>();
-//        categories.forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
-
-//        model.addAttribute("subcategories", subCategories);
-//        model.addAttribute("categories", categories);
         model.addAttribute("subcategory", subCategoryService.findById(id).get());
         model.addAttribute("ingredients", ingredientService.findAll());
         model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
@@ -217,11 +211,11 @@ public class DishController extends AbstractController<DishService, Dish> {
         if (getHttpSession().getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
-//        return getHttpSession().getAttribute("back") != null ? "redirect:" + getHttpSession().getAttribute("back") : "redirect:" + prefix() + "/list/" + entity.getSubCategoryId();
         return  "redirect:" + prefix() + "/list/" + entity.getSubCategoryId();
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id, Model model) throws Throwable {
         Dish entity =  repository().findById(id)

@@ -57,10 +57,8 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
             return prefix() + "/add";
         }
 
-        if (entity instanceof DataWithLogo) {
-            if (!file.isEmpty()) {
-                ((DataWithLogo) entity).setLogo(createPhoto(saveFile(file, ResizeImage.Size.LOGO)));
-            }
+        if (entity instanceof DataWithLogo && !file.isEmpty()) {
+            ((DataWithLogo) entity).setLogo(createPhoto(saveFile(file, ResizeImage.Size.LOGO)));
         }
         try {
             repository().save(entity);

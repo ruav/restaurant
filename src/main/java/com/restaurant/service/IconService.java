@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 public class IconService extends AbstractService<IconRepository, Icon> {
 
     @Autowired
-    IconRepository repository;
+    IconRepository iconRepository;
 
     @Override
     IconRepository repository() {
-        return repository;
+        return iconRepository;
     }
 
     public Icon getPhotoByUrl(String url) {
-        return repository.getIconByUrl(url);
+        return repository().getIconByUrl(url);
     }
 
 }

@@ -1,8 +1,5 @@
 package com.restaurant.rest;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurant.entity.Client;
@@ -20,17 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.websocket.server.PathParam;
-import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
-import static com.restaurant.rest.AuthorityEndpoint.ALGORITHM;
 import static com.restaurant.utils.DtoConverter.getClientDto;
 import static com.restaurant.utils.DtoConverter.getHostesDto;
 
@@ -75,13 +67,7 @@ public class SyncEndpoint {
     @Autowired
     NotificationService notificationService;
 
-    private final static long RESTAURANT = 1l; // only for test.
-
-    private static final int LIMIT = 30;
-    private final static String AUTHORIZATION = "Authorization";
-    private final static String ISSUER = "auth0";
-
-    private Queue<String> queue = new LinkedList<>();
+    private static final long RESTAURANT = 1l; // only for test.
 
     private static ObjectMapper mapper = new ObjectMapper();
 
@@ -217,34 +203,6 @@ public class SyncEndpoint {
         notificationService.addEmitter(new CustomSseEmitter(emitter, RESTAURANT, notificationService));
 
         return emitter;
-    }
-
-    private long getRestaurantId(Cookie[] cookies) {
-        for (Cookie cookie : cookies) {
-            if (AUTHORIZATION.equals(cookie.getName())) {
-                JWTVerifier verifier = JWT.require(ALGORITHM)
-                        .withIssuer(ISSUER)
-                        .build(); //Reusable verifier instance
-                DecodedJWT jwt = verifier.verify(cookie.getValue());
-                if (jwt.getClaim("id").asLong() != null) {
-                    return jwt.getClaim("id").asLong();
-                }
-            }
-        }
-        return 0;
-    }
-
-    private boolean checkAccess(Cookie cookie, long id) {
-        if (AUTHORIZATION.equals(cookie.getName())) {
-            JWTVerifier verifier = JWT.require(ALGORITHM)
-                    .withIssuer(ISSUER)
-                    .build(); //Reusable verifier instance
-            DecodedJWT jwt = verifier.verify(cookie.getValue());
-            if (id == jwt.getClaim("id").asLong() && jwt.getExpiresAt().after(Calendar.getInstance().getTime())) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }
