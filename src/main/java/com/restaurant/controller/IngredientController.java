@@ -63,7 +63,7 @@ public class IngredientController extends AbstractController<IngredientService, 
             return prefix() + "/add";
         }
         if (file != null) {
-            iconService.save(createIcon(saveFile(file, ResizeImage.Size.FULL)));
+            entity.setLogo(iconService.save(createIcon(saveFile(file, ResizeImage.Size.FULL))));
         }
 
         try {
