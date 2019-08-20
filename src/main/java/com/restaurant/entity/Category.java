@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "category",uniqueConstraints=@UniqueConstraint(columnNames= {"restaurant_Id","name"}))
+@Table(name = "category", uniqueConstraints=@UniqueConstraint(columnNames= {"restaurant_Id","name"}))
 public class Category implements DataWithLogo<Photo>, Serializable {
 
     @Id

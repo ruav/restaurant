@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name="client")
+@Table(name="client", uniqueConstraints=@UniqueConstraint(columnNames= {"restaurant_Id","phone"}))
 public class Client implements Data {
 
     @Id
@@ -12,7 +12,7 @@ public class Client implements Data {
     @Column
     private long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @Column
