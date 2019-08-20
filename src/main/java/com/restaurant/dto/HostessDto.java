@@ -2,7 +2,7 @@ package com.restaurant.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class HostesDto {
+public class HostessDto {
 
     @ApiModelProperty
     private long id;
@@ -57,7 +57,7 @@ public class HostesDto {
 
     @Override
     public String toString() {
-        return "Hostes{" +
+        return "Hostess{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", work=" + work +

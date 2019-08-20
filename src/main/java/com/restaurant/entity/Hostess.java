@@ -11,8 +11,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="hostes")
-public class Hostes implements Data {
+@Table(name="hostess")
+public class Hostess implements Data {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -24,8 +24,8 @@ public class Hostes implements Data {
 
     @OneToOne()
     @JoinTable(
-            name="hostes_photo",
-            joinColumns = @JoinColumn(name = "hostes_id"),
+            name="hostess_photo",
+            joinColumns = @JoinColumn(name = "hostess_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
 
     )
@@ -90,7 +90,7 @@ public class Hostes implements Data {
 
     @Override
     public String toString() {
-        return "Hostes{" +
+        return "Hostess{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", photo=" + photo +

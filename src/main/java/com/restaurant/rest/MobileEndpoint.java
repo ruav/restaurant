@@ -12,12 +12,10 @@ import com.restaurant.utils.CustomSseEmitter;
 import com.restaurant.utils.DtoConverter;
 import com.restaurant.vo.StatusEnum;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +32,6 @@ import java.util.stream.Collectors;
 
 import static com.restaurant.rest.AuthorityEndpoint.ALGORITHM;
 import static com.restaurant.utils.DtoConverter.*;
-import static com.restaurant.utils.DtoConverter.getReservationDto;
 
 @RestController
 @RequestMapping("/mobile")
@@ -90,12 +87,12 @@ public class MobileEndpoint {
     private static Logger logger = LoggerFactory.getLogger(MobileEndpoint.class);
 
     @GetMapping("/hostes")
-    public List<HostesDto> hostesList(@PathParam("from") int from,
-                                      @PathParam("to") int to,
-                                      @PathParam("limit") int limit,
-                                      @PathParam("offset") int offset,
-                                      @PathParam("restaurantId") int restaurantId,
-                                      HttpServletRequest request) {
+    public List<HostessDto> hostesList(@PathParam("from") int from,
+                                       @PathParam("to") int to,
+                                       @PathParam("limit") int limit,
+                                       @PathParam("offset") int offset,
+                                       @PathParam("restaurantId") int restaurantId,
+                                       HttpServletRequest request) {
         if (!checkTocken(request.getHeader(AUTHORIZATION))) {
             return hostesService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(h -> getHostesDto(h, getUrl(request))).collect(Collectors.toList());
@@ -308,11 +305,11 @@ public class MobileEndpoint {
             url = "https://" + request.getServerName();
         }
 
-        Hostes hostes = new Hostes();
-        hostes.setName(name);
-        hostes.setLastChange(getTimeStamp());
-        hostes.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
-        long id = hostesService.save(hostes).getId();
+        Hostess hostess = new Hostess();
+        hostess.setName(name);
+        hostess.setLastChange(getTimeStamp());
+        hostess.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
+        long id = hostesService.save(hostess).getId();
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), url)));
         return id;
@@ -332,11 +329,11 @@ public class MobileEndpoint {
         } else {
             url = "https://" + request.getServerName();
         }
-        Hostes hostes = hostesService.findById(id).get();
-        hostes.setName(name);
-        hostes.setLastChange(getTimeStamp());
-        hostes.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
-        hostesService.save(hostes);
+        Hostess hostess = hostesService.findById(id).get();
+        hostess.setName(name);
+        hostess.setLastChange(getTimeStamp());
+        hostess.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
+        hostesService.save(hostess);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), url)));
         return id;

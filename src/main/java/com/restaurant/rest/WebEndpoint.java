@@ -5,15 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.restaurant.entity.Card;
-import com.restaurant.entity.Client;
-import com.restaurant.entity.Desk;
-import com.restaurant.entity.Hall;
-import com.restaurant.entity.Hostes;
-import com.restaurant.entity.Replacement;
-import com.restaurant.entity.Reservation;
-import com.restaurant.entity.Status;
-import com.restaurant.entity.Tag;
+import com.restaurant.entity.*;
 import com.restaurant.service.*;
 import com.restaurant.utils.DtoConverter;
 import com.restaurant.utils.ResizeImage;
@@ -22,7 +14,6 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +31,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.restaurant.controller.FileUploadController.FAILED_UPLOAD_MESSAGE;
 import static com.restaurant.rest.AuthorityEndpoint.ALGORITHM;
 import static com.restaurant.utils.DtoConverter.*;
 import static com.restaurant.utils.ManageFiles.createPhoto;
@@ -98,12 +88,12 @@ public class WebEndpoint {
     private static Logger logger = LoggerFactory.getLogger(WebEndpoint.class);
 
     @GetMapping("/hostes")
-    public List<Hostes> hostesList(@PathParam("from") int from,
-                                   @PathParam("to") int to,
-                                   @PathParam("limit") int limit,
-                                   @PathParam("offset") int offset,
-                                   @PathParam("restaurantId") int restaurantId,
-                                   HttpServletRequest request) {
+    public List<Hostess> hostesList(@PathParam("from") int from,
+                                    @PathParam("to") int to,
+                                    @PathParam("limit") int limit,
+                                    @PathParam("offset") int offset,
+                                    @PathParam("restaurantId") int restaurantId,
+                                    HttpServletRequest request) {
         if (!checkTocken(request.getHeader(AUTHORIZATION))) {
             return hostesService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
         }
@@ -270,11 +260,11 @@ public class WebEndpoint {
             url = "https://" + request.getServerName();
         }
 
-        Hostes hostes = new Hostes();
-        hostes.setName(name);
-        hostes.setLastChange(getTimeStamp());
-        hostes.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
-        long id = hostesService.save(hostes).getId();
+        Hostess hostess = new Hostess();
+        hostess.setName(name);
+        hostess.setLastChange(getTimeStamp());
+        hostess.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
+        long id = hostesService.save(hostess).getId();
         addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), url)));
         return id;
@@ -294,11 +284,11 @@ public class WebEndpoint {
         } else {
             url = "https://" + request.getServerName();
         }
-        Hostes hostes = hostesService.findById(id).get();
-        hostes.setName(name);
-        hostes.setLastChange(getTimeStamp());
-        hostes.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
-        hostesService.save(hostes);
+        Hostess hostess = hostesService.findById(id).get();
+        hostess.setName(name);
+        hostess.setLastChange(getTimeStamp());
+        hostess.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
+        hostesService.save(hostess);
         addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), url)));
         return id;
@@ -307,18 +297,24 @@ public class WebEndpoint {
     @PostMapping(value = "/upload/hostes")
     public String uploadRestaurantHandler(@RequestParam("file") MultipartFile file,
                                           @PathVariable("id") long id,
-                                          Model model) throws IOException, NoSuchAlgorithmException {
-        if (file.isEmpty()) {
-            model.addAttribute("message", String.format(FAILED_UPLOAD_MESSAGE, file.getName(), "file is empty"));
-        } else {
-            Optional<Hostes> hostes = hostesService.findById(id);
-            if (hostes.isPresent()) {
-                hostes.get().setPhoto(createPhoto(saveFile(file, ResizeImage.Size.PHOTO)));
-                hostesService.save(hostes.get());
-            }
+                                          HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+
+        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+            return "Unauthorizated";
         }
 
-        return "redirect:/restaurants/edit/" + id;
+        if (file.isEmpty()) {
+            return  "file is empty";
+        } else {
+            Optional<Hostess> hostes = hostesService.findById(id);
+            if (hostes.isPresent()) {
+                Photo photo = createPhoto(saveFile(file, ResizeImage.Size.PHOTO));
+                hostes.get().setPhoto(photo);
+                hostesService.save(hostes.get());
+                return photo.getUrl();
+            }
+        }
+        return "";
     }
 
     @PostMapping("/create/clientTag")
@@ -761,6 +757,46 @@ public class WebEndpoint {
                 mapper.writeValueAsString(getReplacementDto(replacement)));
         return id;
     }
+
+    @GetMapping("/create/category")
+    public long createCategory(@RequestParam boolean active,
+                               @RequestParam String name,
+                               HttpServletRequest request) {
+        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+            return -1;
+        }
+
+        Category category = new Category();
+        category.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
+        category.setActive(active);
+        category.setName(name);
+        return categoryService.save(category).getId();
+    }
+
+    @GetMapping("/create/subcategory")
+    public long createSubcategory(@RequestParam long categoryId,
+                                  @RequestParam boolean active,
+                                  @RequestParam String name,
+                                  HttpServletRequest request) {
+
+        SubCategory subCategory = new SubCategory();
+        subCategory.setCategoryId(categoryId);
+        subCategory.setName(name);
+        subCategory.setActive(active);
+
+        return subCategoryService.save(subCategory).getId();
+
+    }
+
+//    @GetMapping("/create/dish")
+//    public long createDish() {
+//        Dish dish = new Dish();
+//        dish.setActive();
+//        dish.setVideo();
+//        dish.setProteins();
+//        dish.setSubCategoryId();
+//        dish.set
+//    }
 
     private boolean checkTocken(String auth, boolean checkAccess) {
         JWTVerifier verifier = JWT.require(ALGORITHM)

@@ -3,7 +3,7 @@ package com.restaurant.rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurant.entity.Client;
-import com.restaurant.entity.Hostes;
+import com.restaurant.entity.Hostess;
 import com.restaurant.entity.Tag;
 import com.restaurant.service.*;
 import com.restaurant.utils.CustomSseEmitter;
@@ -72,12 +72,12 @@ public class SyncEndpoint {
     private static ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping("/hostes")
-    public List<Hostes> hostesList(@PathParam("from") int from,
-                                   @PathParam("to") int to,
-                                   @PathParam("limit") int limit,
-                                   @PathParam("offset") int offset,
-                                   @PathParam("restaurantId") int restaurantId,
-                                   HttpServletRequest request) {
+    public List<Hostess> hostesList(@PathParam("from") int from,
+                                    @PathParam("to") int to,
+                                    @PathParam("limit") int limit,
+                                    @PathParam("offset") int offset,
+                                    @PathParam("restaurantId") int restaurantId,
+                                    HttpServletRequest request) {
 //        long restaurantId = getRestaurantId(request.getCookies());
 
 //        if (!checkAuth(request.getCookies(), restaurantId)) {
@@ -169,9 +169,9 @@ public class SyncEndpoint {
 //        if (!checkAuth(request.getCookies(), restaurantId)) {
 //            return -1;
 //        }
-        Hostes hostes = new Hostes();
-        hostes.setName(name);
-        long id = hostesService.save(hostes).getId();
+        Hostess hostess = new Hostess();
+        hostess.setName(name);
+        long id = hostesService.save(hostess).getId();
         notificationService.addElement(RESTAURANT,
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), "")));
         return id;
@@ -187,10 +187,10 @@ public class SyncEndpoint {
 //        if (!checkAuth(request.getCookies(), restaurantId)) {
 //            return -1;
 //        }
-        Hostes hostes = new Hostes();
-        hostes.setId(id);
-        hostes.setName(name);
-        hostesService.save(hostes);
+        Hostess hostess = new Hostess();
+        hostess.setId(id);
+        hostess.setName(name);
+        hostesService.save(hostess);
         notificationService.addElement(RESTAURANT,
                 mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), "")));
         return id;

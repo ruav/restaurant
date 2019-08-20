@@ -122,14 +122,14 @@ public class DtoConverter {
         return clientDto;
     }
 
-    public static HostesDto getHostesDto(Hostes hostes, String url) {
-        HostesDto dto = new HostesDto();
-        dto.setId(hostes.getId());
-        dto.setLastChange(hostes.getLastChange());
-        dto.setName(hostes.getName());
-        dto.setWork(hostes.isWork());
-        if (hostes.getPhoto() != null) {
-            dto.setPhoto(getPhotoDto(hostes.getPhoto(), url));
+    public static HostessDto getHostesDto(Hostess hostess, String url) {
+        HostessDto dto = new HostessDto();
+        dto.setId(hostess.getId());
+        dto.setLastChange(hostess.getLastChange());
+        dto.setName(hostess.getName());
+        dto.setWork(hostess.isWork());
+        if (hostess.getPhoto() != null) {
+            dto.setPhoto(getPhotoDto(hostess.getPhoto(), url));
         }
         return dto;
     }
