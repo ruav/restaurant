@@ -1,7 +1,6 @@
 package com.restaurant.service;
 
 import com.restaurant.entity.Card;
-import com.restaurant.entity.Client;
 import com.restaurant.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

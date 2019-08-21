@@ -45,8 +45,8 @@ public class DeskController extends AbstractController<DeskService, Desk> {
     @GetMapping("/add")
     public String showSignUpForm(Desk desk, @PathParam("id") long id, Model model) {
         checkAccess.checkAccessRestaurant(getUser(), id);
-        model.addAttribute("restaurantId", id);
-        model.addAttribute("halls", hallService.findByRestaurantId((Long) getHttpSession().getAttribute("restaurant")));
+        model.addAttribute(RESTAURANTID_STRING, id);
+        model.addAttribute(HALLS_STRING, hallService.findByRestaurantId((Long) getHttpSession().getAttribute(RESTAURANT_STRING)));
         return prefix() + "/add";
     }
 
@@ -55,16 +55,16 @@ public class DeskController extends AbstractController<DeskService, Desk> {
     public String add(@Valid Desk entity, @Valid MultipartFile file, BindingResult result, Model model) {
         checkAccess.checkAccessHall(getUser(), entity.getHall());
         if (result.hasErrors() ) {
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-            model.addAttribute("halls", hallService.findByRestaurantId((Long) getHttpSession().getAttribute("restaurant")));
+            model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
+            model.addAttribute(HALLS_STRING, hallService.findByRestaurantId((Long) getHttpSession().getAttribute(RESTAURANT_STRING)));
             model.addAttribute("desk", entity);
             return prefix() + "/add";
         }
         try {
             repository().save(entity);
         } catch (Exception e) {
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-            model.addAttribute("halls", hallService.findByRestaurantId((Long) getHttpSession().getAttribute("restaurant")));
+            model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
+            model.addAttribute(HALLS_STRING, hallService.findByRestaurantId((Long) getHttpSession().getAttribute(RESTAURANT_STRING)));
             model.addAttribute("desk", entity);
             result.addError(new ObjectError("Error", "Такой элемент уже существует"));
             return prefix() + "/add";
@@ -81,10 +81,10 @@ public class DeskController extends AbstractController<DeskService, Desk> {
         Desk desk =  repository().findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
         checkAccess.checkAccessHall(getUser(), desk.getHall());
-        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-        model.addAttribute("halls", hallService.findByRestaurantId((Long) getHttpSession().getAttribute("restaurant")));
+        model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
+        model.addAttribute(HALLS_STRING, hallService.findByRestaurantId((Long) getHttpSession().getAttribute(RESTAURANT_STRING)));
         model.addAttribute("desk", desk);
-        return  prefix() + "/update";
+        return  prefix() + UPDATE_STRING;
     }
 
     @Override
@@ -94,20 +94,20 @@ public class DeskController extends AbstractController<DeskService, Desk> {
         checkAccess.checkAccessHall(getUser(), entity.getHall());
         if (result.hasErrors()) {
             entity.setId(id);
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-            model.addAttribute("halls", hallService.findByRestaurantId((Long) getHttpSession().getAttribute("restaurant")));
+            model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
+            model.addAttribute(HALLS_STRING, hallService.findByRestaurantId((Long) getHttpSession().getAttribute(RESTAURANT_STRING)));
             model.addAttribute("desk", entity);
-            return prefix() + "/update";
+            return prefix() + UPDATE_STRING;
         }
         try {
             repository().save(entity);
         } catch (Exception e) {
             entity.setId(id);
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-            model.addAttribute("halls", hallService.findByRestaurantId((Long) getHttpSession().getAttribute("restaurant")));
+            model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
+            model.addAttribute(HALLS_STRING, hallService.findByRestaurantId((Long) getHttpSession().getAttribute(RESTAURANT_STRING)));
             model.addAttribute("desk", entity);
             result.addError(new ObjectError("error", "Ошибка сохранения. Такой элемент уже существует"));
-            return prefix() + "/update";
+            return prefix() + UPDATE_STRING;
         }
         if(getHttpSession().getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());

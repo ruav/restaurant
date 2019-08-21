@@ -16,8 +16,8 @@ public class StatusService extends AbstractService<StatusRepository, Status> {
         return statusRepository;
     }
 
-    public Status findFirstByReservationOOrderByLastChangeDesc(long reservationId) {
-        return repository().findFirstByReservationOOrderByLastChangeDesc(reservationId);
+    public Status findFirstByReservationOrderByLastChangeDesc(long reservationId) {
+        return repository().findFirstByReservationOrderByLastChangeDesc(reservationId);
     }
 
 }

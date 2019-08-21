@@ -32,23 +32,25 @@ public class CheckAccess {
     }
 
     public void checkAccessCategory(UserDetails userDetails, long id) {
+        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name()))) {
+            return;
+        }
         if (!categoryService.findById(id).isPresent()) {
             throw new NotFoundException();
         }
-        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name()))) {
-            return;
-        } else if (userService.findByEmail(userDetails.getUsername()).getRestaurants().stream().noneMatch(r -> r.getId() == categoryService.findById(id).get().getRestaurantId())) {
+        if (userService.findByEmail(userDetails.getUsername()).getRestaurants().stream().noneMatch(r -> r.getId() == categoryService.findById(id).get().getRestaurantId())) {
             throw new ForbiddenException();
         }
     }
 
     public void checkAccessSubCategory(UserDetails userDetails, long id) {
+        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name()))) {
+            return;
+        }
         if (!subCategoryService.findById(id).isPresent() || !categoryService.findById(subCategoryService.findById(id).get().getCategoryId()).isPresent()) {
             throw new NotFoundException();
         }
-        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROOT.name()))) {
-            return;
-        } else if (userService.findByEmail(userDetails.getUsername()).getRestaurants().stream().noneMatch(r -> r.getId() == categoryService.findById(subCategoryService.findById(id).get().getCategoryId()).get().getRestaurantId())) {
+        if (userService.findByEmail(userDetails.getUsername()).getRestaurants().stream().noneMatch(r -> r.getId() == categoryService.findById(subCategoryService.findById(id).get().getCategoryId()).get().getRestaurantId())) {
             throw new ForbiddenException();
         }
     }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StatusRepository extends CrudRepository<Status, Long> {
 
-    Status findFirstByReservationOOrderByLastChangeDesc(long reservationId);
+    Status findFirstByReservationOrderByLastChangeDesc(long reservationId);
 
 }

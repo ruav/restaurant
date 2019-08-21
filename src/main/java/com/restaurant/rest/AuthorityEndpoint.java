@@ -68,7 +68,7 @@ public class AuthorityEndpoint {
                             HttpServletRequest request,
                             HttpServletResponse response) {
 
-        Boolean access = checkAccess(request.getHeader(AUTHORIZATION));
+        boolean access = checkAccess(request.getHeader(AUTHORIZATION));
 
         if (access) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -129,16 +129,10 @@ public class AuthorityEndpoint {
         Optional<User> user = userService.findById(jwt.getClaim("id").asLong());
         if (!user.isPresent()) return false;
         Optional<Restaurant> restaurant = user.get().getRestaurants().stream().findFirst();
-        if (!restaurant.isPresent()) return false;
-        if (jwt.getClaim(RESTAURANT).asLong() != restaurant.get().getId()) {
-            return true;
-        }
+        return restaurant.filter(restaurant1 -> (jwt.getClaim(RESTAURANT).asLong() != restaurant1.getId()
+                || jwt.getExpiresAt().after(Calendar.getInstance().getTime())
+        )).isPresent();
 
-        if (jwt.getExpiresAt().after(Calendar.getInstance().getTime())) {
-            return true;
-        }
-
-        return false;
     }
 
 }

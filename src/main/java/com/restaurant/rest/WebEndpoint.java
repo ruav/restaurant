@@ -669,7 +669,7 @@ public class WebEndpoint {
             return -1;
         }
 
-        Status oldStatus = statusService.findFirstByReservationOOrderByLastChangeDesc(id);
+        Status oldStatus = statusService.findFirstByReservationOrderByLastChangeDesc(id);
         Status newStatus = new Status();
         Optional<StatusEnum> newStatusEnum = Arrays.stream(StatusEnum.values()).filter(e -> e.getNum() == status).findFirst();
         if (!newStatusEnum.isPresent()) return -1;
@@ -976,8 +976,8 @@ public class WebEndpoint {
         return mapper.writeValueAsString(DtoConverter.getDishDto(dish.get(), getUrl(request)));
     }
 
-    @PostMapping("/update/subcategory")
-    public long updateSubcategory(@RequestParam long id,
+    @PostMapping("/update/dish")
+    public long updateDish(@RequestParam long id,
                                   @RequestParam boolean active,
                                   @RequestParam String name,
                                   @RequestParam String description,

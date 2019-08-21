@@ -12,9 +12,9 @@ public class CustomSseEmitter {
 
     public CustomSseEmitter(SseEmitter emitter, long restaurant, NotificationService service) {
         this.emitter = emitter;
-        this.emitter.onError(e -> {
-            service.removeEmitter(this);
-        });
+        this.emitter.onError(e ->
+            service.removeEmitter(this)
+        );
         this.emitter.onCompletion(() -> service.removeEmitter(this));
         this.emitter.onTimeout(() -> service.removeEmitter(this));
         this.restaurant = restaurant;

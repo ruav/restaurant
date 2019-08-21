@@ -75,10 +75,10 @@ public class DishController extends AbstractController<DishService, Dish> {
         dish.setActive(true);
         model.addAttribute("subcategory", subCategoryService.findById(id).get());
         model.addAttribute("ingredients", ingredientService.findAll());
-        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
+        model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
         model.addAttribute("allergens", allergenService.findAll());
         model.addAttribute("proteins", proteinService.findAll());
-        model.addAttribute("linkEnable", restaurantService.findById((Long) getHttpSession().getAttribute("restaurant")).get().isVideoLink());
+        model.addAttribute("linkEnable", restaurantService.findById((Long) getHttpSession().getAttribute(RESTAURANT_STRING)).get().isVideoLink());
         return prefix() + "/add";
     }
 
@@ -89,17 +89,17 @@ public class DishController extends AbstractController<DishService, Dish> {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
         getCheckAccess().checkAccessSubCategory(getUser(), entity.getSubCategoryId());
 
-        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-        model.addAttribute("entity", entity);
+        model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
+        model.addAttribute(ENTITY_STRING, entity);
         List<SubCategory> subCategories = new ArrayList<>();
-        categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant")).forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
-        model.addAttribute("linkEnable", restaurantService.findById((Long) getHttpSession().getAttribute("restaurant")).get().isVideoLink());
+        categoryService.findByRestaurant((Long) getHttpSession().getAttribute(RESTAURANT_STRING)).forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
+        model.addAttribute("linkEnable", restaurantService.findById((Long) getHttpSession().getAttribute(RESTAURANT_STRING)).get().isVideoLink());
         model.addAttribute("subcategories", subCategories);
         model.addAttribute("ingredients", entity.getIngredients());
         model.addAttribute("allergens", allergenService.findAll());
         model.addAttribute("proteins", proteinService.findAll());
 
-        return prefix() + "/update";
+        return prefix() + UPDATE_STRING;
     }
 
     @Override
@@ -107,21 +107,21 @@ public class DishController extends AbstractController<DishService, Dish> {
     public String update(@PathVariable("id") long id, @Valid Dish entity,
                              BindingResult result, Model model) {
         getCheckAccess().checkAccessSubCategory(getUser(), entity.getSubCategoryId());
-        Long restaurantId = (Long) getHttpSession().getAttribute("restaurant");
+        Long restaurantId = (Long) getHttpSession().getAttribute(RESTAURANT_STRING);
         SubCategory subCategory = subCategoryService.findById(entity.getSubCategoryId()).get();
         if (restaurantId == null) {
             Category category = categoryService.findById(subCategory.getCategoryId()).get();
             restaurantId = category.getRestaurantId();
-            getHttpSession().setAttribute("restaurant", restaurantId);
+            getHttpSession().setAttribute(RESTAURANT_STRING, restaurantId);
         }
 
         if (result.hasErrors()) {
             entity.setId(id);
-            model.addAttribute("restaurantId", restaurantId);
-            model.addAttribute("entity", entity);
+            model.addAttribute(RESTAURANTID_STRING, restaurantId);
+            model.addAttribute(ENTITY_STRING, entity);
             model.addAttribute("categories", categoryService.findAll());
             model.addAttribute("ingredients", ingredientService.findAll());
-            return prefix() + "/update";
+            return prefix() + UPDATE_STRING;
         }
         entity.setLogo(dishService.findById(entity.getId()).get().getLogo());
         if (entity.getVideo() != null && entity.getVideo().isEmpty()) {
@@ -131,12 +131,12 @@ public class DishController extends AbstractController<DishService, Dish> {
             repository().save(entity);
         } catch (Exception e) {
             entity.setId(id);
-            model.addAttribute("restaurantId", restaurantId);
-            model.addAttribute("entity", entity);
+            model.addAttribute(RESTAURANTID_STRING, restaurantId);
+            model.addAttribute(ENTITY_STRING, entity);
             model.addAttribute("categories", categoryService.findAll());
             model.addAttribute("ingredients", ingredientService.findAll());
             result.addError(new ObjectError("error", "Ошибка сохранения. Такой элемент уже существует"));
-            return prefix() + "/update";
+            return prefix() + UPDATE_STRING;
         }
         if(getHttpSession().getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
@@ -151,7 +151,7 @@ public class DishController extends AbstractController<DishService, Dish> {
     @GetMapping("/list/{id}")
     public String index(@PathVariable("id") long id, Model model) {
         getCheckAccess().checkAccessSubCategory(getUser(), id);
-        Long restaurantId = (Long) getHttpSession().getAttribute("restaurant");
+        Long restaurantId = (Long) getHttpSession().getAttribute(RESTAURANT_STRING);
         SubCategory subCategory = subCategoryService.findById(id).get();
         if (restaurantId == null) {
             Category category = categoryService.findById(subCategory.getCategoryId()).get();
@@ -161,7 +161,7 @@ public class DishController extends AbstractController<DishService, Dish> {
         if (restaurantName == null) {
             restaurantName = restaurantService.findById(restaurantId).get().getName();
         }
-        model.addAttribute("restaurantId", restaurantId);
+        model.addAttribute(RESTAURANTID_STRING, restaurantId);
         model.addAttribute("restaurantName", restaurantName);
 
         model.addAttribute("subcategory", subCategoryService.findById(id).get());
@@ -174,7 +174,7 @@ public class DishController extends AbstractController<DishService, Dish> {
     public String add(@Valid Dish entity, @Valid MultipartFile file, BindingResult result, Model model) throws IOException, NoSuchAlgorithmException {
         getCheckAccess().checkAccessSubCategory(getUser(), entity.getSubCategoryId());
         if (result.hasErrors()) {
-            List<Category> categories = categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant"));
+            List<Category> categories = categoryService.findByRestaurant((Long) getHttpSession().getAttribute(RESTAURANT_STRING));
             List<SubCategory> subCategories = new ArrayList<>();
             categories.forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
 
@@ -183,7 +183,7 @@ public class DishController extends AbstractController<DishService, Dish> {
             model.addAttribute("ingredients", ingredientService.findAll());
             model.addAttribute("allergens", allergenService.findAll());
             model.addAttribute("proteins", proteinService.findAll());
-            model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
+            model.addAttribute(RESTAURANTID_STRING, (Long) getHttpSession().getAttribute(RESTAURANT_STRING));
             return prefix() + "/add";
         }
         if (!file.isEmpty()) {
@@ -196,7 +196,7 @@ public class DishController extends AbstractController<DishService, Dish> {
             entity = repository().save(entity);
         } catch (Exception e) {
             result.addError(new ObjectError("Error", "Такой элемент уже существует"));
-            List<Category> categories = categoryService.findByRestaurant((Long) getHttpSession().getAttribute("restaurant"));
+            List<Category> categories = categoryService.findByRestaurant((Long) getHttpSession().getAttribute(RESTAURANT_STRING));
             List<SubCategory> subCategories = new ArrayList<>();
             categories.forEach(c -> subCategories.addAll(subCategoryService.findByCategoryId(c.getId())));
 
@@ -205,7 +205,7 @@ public class DishController extends AbstractController<DishService, Dish> {
             model.addAttribute("ingredients", ingredientService.findAll());
             model.addAttribute("allergens", allergenService.findAll());
             model.addAttribute("proteins", proteinService.findAll());
-            model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
+            model.addAttribute(RESTAURANTID_STRING, (Long) getHttpSession().getAttribute(RESTAURANT_STRING));
             return prefix() + "/add";
         }
         if (getHttpSession().getAttribute("back") == null) {

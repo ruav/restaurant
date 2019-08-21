@@ -32,6 +32,14 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
 
     abstract String prefix();
 
+    protected static final String LIST_STRING = "/list";
+    protected static final String ENTITY_STRING = "entity";
+    protected static final String UPDATE_STRING = "/update";
+    protected static final String RESTAURANT_STRING = "restaurant";
+    protected static final String REDIRECT_STRING = "redirect:";
+    protected static final String RESTAURANTID_STRING = "restaurantId";
+    protected static final String HALLS_STRING = "halls";
+
     @Autowired
     private HttpSession httpSession;
 
@@ -40,7 +48,7 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
 
     @GetMapping("/add")
     public String showSignUpForm(V entity, @PathParam(value = "id") @Nullable long id, Model model) {
-        model.addAttribute("restaurantId", id);
+        model.addAttribute(RESTAURANTID_STRING, id);
 
         return prefix() + "/add";
     }
@@ -48,7 +56,7 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
     @GetMapping("/list")
     public String index(Model model) {
         model.addAttribute("list", repository().findAll());
-        return prefix() + "/list";
+        return prefix() + LIST_STRING;
     }
 
     @PostMapping("/add")
@@ -64,13 +72,13 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
             repository().save(entity);
         } catch (Exception e) {
             result.addError(new ObjectError("Error", "Такой элемент уже существует"));
-            model.addAttribute("restaurantId", (Long) getHttpSession().getAttribute("restaurant"));
+            model.addAttribute(RESTAURANTID_STRING, (Long) getHttpSession().getAttribute(RESTAURANT_STRING));
             return prefix() + "/add";
         }
         if (httpSession.getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
-        return httpSession.getAttribute("back") != null ? "redirect:" + httpSession.getAttribute("back") : prefix() + "/list";
+        return httpSession.getAttribute("back") != null ? REDIRECT_STRING + httpSession.getAttribute("back") : prefix() + LIST_STRING;
     }
 
     @SuppressWarnings("unchecked")
@@ -78,9 +86,9 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
     public String showUpdateForm(@PathVariable("id") long id, Model model) throws Throwable {
         V entity = (V) repository().findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
-        model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-        model.addAttribute("entity", entity);
-        return prefix() + "/update";
+        model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
+        model.addAttribute(ENTITY_STRING, entity);
+        return prefix() + UPDATE_STRING;
     }
 
     @PostMapping("/update/{id}")
@@ -88,23 +96,23 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
                          BindingResult result, Model model) {
         if (result.hasErrors()) {
             entity.setId(id);
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-            model.addAttribute("entity", entity);
-            return prefix() + "/update";
+            model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
+            model.addAttribute(ENTITY_STRING, entity);
+            return prefix() + UPDATE_STRING;
         }
         try {
             repository().save(entity);
         } catch (Exception e) {
             entity.setId(id);
-            model.addAttribute("restaurantId", getHttpSession().getAttribute("restaurant"));
-            model.addAttribute("entity", entity);
+            model.addAttribute(RESTAURANTID_STRING, getHttpSession().getAttribute(RESTAURANT_STRING));
+            model.addAttribute(ENTITY_STRING, entity);
             result.addError(new ObjectError("error", "Ошибка сохранения. Такой элемент уже существует"));
-            return prefix() + "/update";
+            return prefix() + UPDATE_STRING;
         }
         if (httpSession.getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
-        return httpSession.getAttribute("back") != null ? "redirect:" + httpSession.getAttribute("back") : prefix() + "/list";
+        return httpSession.getAttribute("back") != null ? REDIRECT_STRING + httpSession.getAttribute("back") : prefix() + LIST_STRING;
     }
 
     @SuppressWarnings("unchecked")
@@ -116,7 +124,7 @@ public abstract class AbstractController<T extends AbstractService, V extends Da
         if (httpSession.getAttribute("back") == null) {
             model.addAttribute("list", repository().findAll());
         }
-        return httpSession.getAttribute("back") != null ? "redirect:" + httpSession.getAttribute("back") : prefix() + "/list";
+        return httpSession.getAttribute("back") != null ? REDIRECT_STRING + httpSession.getAttribute("back") : prefix() + LIST_STRING;
     }
 
 

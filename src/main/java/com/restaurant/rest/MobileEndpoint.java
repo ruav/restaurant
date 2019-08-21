@@ -684,7 +684,7 @@ public class MobileEndpoint {
             return -1;
         }
 
-        Status oldStatus = statusService.findFirstByReservationOOrderByLastChangeDesc(id);
+        Status oldStatus = statusService.findFirstByReservationOrderByLastChangeDesc(id);
         Status newStatus = new Status();
         Optional<StatusEnum> newStatusEnum = Arrays.stream(StatusEnum.values()).filter(e -> e.getNum() == status).findFirst();
         if (!newStatusEnum.isPresent()) return -1;

@@ -24,14 +24,14 @@ public class ManageFiles {
 
     public static Photo createPhoto(String url) {
         Photo photo = new Photo();
-        photo.setUrl(url.substring(url.lastIndexOf("/")+1));
+        photo.setUrl(url.substring(url.lastIndexOf('/')+1));
         photo.setPath(url);
         return photo;
     }
 
     public static Icon createIcon(String url) {
         Icon icon = new Icon();
-        icon.setUrl(url.substring(url.lastIndexOf("/")+1));
+        icon.setUrl(url.substring(url.lastIndexOf('/')+1));
         icon.setPath(url);
         return icon;
     }
