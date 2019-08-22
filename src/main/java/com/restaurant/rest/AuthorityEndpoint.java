@@ -33,7 +33,7 @@ import java.util.GregorianCalendar;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/mobile")
+@RequestMapping("/rest")
 @Api(value = "AuthorityEndpoint")
 public class AuthorityEndpoint {
 
