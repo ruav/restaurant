@@ -37,7 +37,7 @@ mvn clean build package
 Для создания записей необходимо пройти авторизацию (сейчас отключено)
 Пример создания хостес
 `curl -X POST \
-  http://localhost:8090/rest/create/hostes \
+  http://localhost:8090/rest/create/hostess \
   -H 'Accept: */*' \
   -H 'Cache-Control: no-cache' \
   -H 'Content-Type: multipart/form-data;' \
@@ -45,7 +45,7 @@ mvn clean build package
  
  Пример обновления хостес
  `curl -X POST \
-   http://localhost:8090/rest/update/hostes \
+   http://localhost:8090/rest/update/hostess \
    -H 'Accept: */*' \
    -H 'Cache-Control: no-cache' \
    -H 'Content-Type: multipart/form-data;' \

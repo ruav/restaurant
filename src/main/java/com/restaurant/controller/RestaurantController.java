@@ -143,13 +143,15 @@ public class RestaurantController {
 
         if (root) {
             List<Restaurant> list = new ArrayList<>();
-            userService.findAll().forEach(u -> list.addAll(u.getRestaurants()));
+            userService.findAll().stream().
+                    filter(u -> !Role.RESTAURANT.equals(u.getRole())).forEach(u -> list.addAll(u.getRestaurants()));
 
             Map<Long, String> restaunrantsOwner = new HashMap<>();
-            for (User x : userService.findAll()) {
-                for (Restaurant r : x.getRestaurants()) {
+            for (User u : userService.findAll()) {
+                if (Role.RESTAURANT.equals(u.getRole())) continue;
+                for (Restaurant r : u.getRestaurants()) {
                     if (list.contains(r)) {
-                        restaunrantsOwner.put(r.getId(), x.getEmail());
+                        restaunrantsOwner.put(r.getId(), u.getEmail());
                     }
                 }
             }

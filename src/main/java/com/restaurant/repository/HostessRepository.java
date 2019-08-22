@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface HostesRepository extends CrudRepository<Hostess, Long> {
+public interface HostessRepository extends CrudRepository<Hostess, Long> {
 
-    @Query(value = "select * from Hostes " +
+    @Query(value = "select * from Hostess " +
             "where last_change between :from and :to " +
             "and restaurant_id = :restaurantId " +
             "order by last_change asc " +

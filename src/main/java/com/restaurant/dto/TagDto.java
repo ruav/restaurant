@@ -38,7 +38,7 @@ public class TagDto implements Data {
 
     @Override
     public String toString() {
-        return "Hostes{" +
+        return "TagDto{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", lastChange=" + lastChange +

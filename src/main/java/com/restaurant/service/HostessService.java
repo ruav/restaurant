@@ -1,21 +1,21 @@
 package com.restaurant.service;
 
 import com.restaurant.entity.Hostess;
-import com.restaurant.repository.HostesRepository;
+import com.restaurant.repository.HostessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class HostesService extends AbstractService<HostesRepository, Hostess> {
+public class HostessService extends AbstractService<HostessRepository, Hostess> {
 
     @Autowired
-    HostesRepository hostesRepository;
+    HostessRepository hostessRepository;
 
     @Override
-    HostesRepository repository() {
-        return hostesRepository;
+    HostessRepository repository() {
+        return hostessRepository;
     }
 
     public List<Hostess> findAllByLastChangeBetweenOrderByLastChangeAsc(long from, long to, long restaurantId, int limit, int offset) {

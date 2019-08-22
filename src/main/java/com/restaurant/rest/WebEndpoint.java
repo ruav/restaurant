@@ -60,7 +60,7 @@ public class WebEndpoint {
     @Autowired
     IngredientService ingredientService;
     @Autowired
-    HostesService hostesService;
+    HostessService hostessService;
     @Autowired
     TagService tagService;
     @Autowired
@@ -98,8 +98,8 @@ public class WebEndpoint {
                                     @PathParam("offset") int offset,
                                     @PathParam("restaurantId") int restaurantId,
                                     HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
-            return hostesService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+        if (checkTocken(request.getHeader(AUTHORIZATION))) {
+            return hostessService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
         }
         return Collections.emptyList();
 
@@ -112,7 +112,7 @@ public class WebEndpoint {
                               @PathParam("offset")int offset,
                               @PathParam("restaurantId")int restaurantId,
                               HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkTocken(request.getHeader(AUTHORIZATION))) {
             return tagService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
         }
         return Collections.emptyList();
@@ -125,7 +125,7 @@ public class WebEndpoint {
                                    @PathParam("offset")int offset,
                                    @PathParam("restaurantId")int restaurantId,
                                    HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkTocken(request.getHeader(AUTHORIZATION))) {
             return clientService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
         }
         return Collections.emptyList();
@@ -138,7 +138,7 @@ public class WebEndpoint {
                                    @PathParam("offset")int offset,
                                    @PathParam("restaurantId")int restaurantId,
                                    HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkTocken(request.getHeader(AUTHORIZATION))) {
             return hallService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
         }
         return Collections.emptyList();
@@ -151,7 +151,7 @@ public class WebEndpoint {
                                @PathParam("offset")int offset,
                                @PathParam("restaurantId")int restaurantId,
                                HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkTocken(request.getHeader(AUTHORIZATION))) {
             return deskService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
         }
         return Collections.emptyList();
@@ -164,7 +164,7 @@ public class WebEndpoint {
                                @PathParam("offset")int offset,
                                @PathParam("restaurantId")int restaurantId,
                                HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkTocken(request.getHeader(AUTHORIZATION))) {
             return cardService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
         }
         return Collections.emptyList();
@@ -177,7 +177,7 @@ public class WebEndpoint {
                                              @PathParam("offset")int offset,
                                              @PathParam("restaurantId")int restaurantId,
                                              HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkTocken(request.getHeader(AUTHORIZATION))) {
             return reservationService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
         }
         return Collections.emptyList();
@@ -192,7 +192,7 @@ public class WebEndpoint {
                              HttpServletRequest request
     ) throws JsonProcessingException {
 
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkTocken(request.getHeader(AUTHORIZATION))) {
 
             Client client = new Client();
 
@@ -268,9 +268,9 @@ public class WebEndpoint {
         hostess.setName(name);
         hostess.setLastChange(getTimeStamp());
         hostess.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
-        long id = hostesService.save(hostess).getId();
+        long id = hostessService.save(hostess).getId();
         addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), url)));
+                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), url)));
         return id;
     }
 
@@ -288,13 +288,13 @@ public class WebEndpoint {
         } else {
             url = "https://" + request.getServerName();
         }
-        Hostess hostess = hostesService.findById(id).get();
+        Hostess hostess = hostessService.findById(id).get();
         hostess.setName(name);
         hostess.setLastChange(getTimeStamp());
         hostess.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
-        hostesService.save(hostess);
+        hostessService.save(hostess);
         addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), url)));
+                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), url)));
         return id;
     }
 
@@ -310,11 +310,11 @@ public class WebEndpoint {
         if (file.isEmpty()) {
             return  "file is empty";
         } else {
-            Optional<Hostess> hostes = hostesService.findById(id);
+            Optional<Hostess> hostes = hostessService.findById(id);
             if (hostes.isPresent()) {
                 Photo photo = createPhoto(saveFile(file, ResizeImage.Size.PHOTO));
                 hostes.get().setPhoto(photo);
-                hostesService.save(hostes.get());
+                hostessService.save(hostes.get());
                 return photo.getUrl();
             }
         }

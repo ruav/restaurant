@@ -152,9 +152,9 @@ public class SubCategoryController extends AbstractController<SubCategoryService
         Optional<Category> category = categoryService.findById(id);
         model.addAttribute("restaurant", restaurant);
         if (category.isPresent()) {
-            model.addAttribute("category", category);
+            model.addAttribute("category", category.get());
             model.addAttribute("subcategories", subCategoryService.findByCategoryId(category.get().getId()));
-            getHttpSession().setAttribute("category", category);
+            getHttpSession().setAttribute("category", category.get());
         }
         Optional<Town> town = townService.findById(restaurant.getCity());
         if (town.isPresent()) {

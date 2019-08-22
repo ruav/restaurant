@@ -122,7 +122,7 @@ public class DtoConverter {
         return clientDto;
     }
 
-    public static HostessDto getHostesDto(Hostess hostess, String url) {
+    public static HostessDto getHostessDto(Hostess hostess, String url) {
         HostessDto dto = new HostessDto();
         dto.setId(hostess.getId());
         dto.setLastChange(hostess.getLastChange());
@@ -205,7 +205,7 @@ public class DtoConverter {
     public static StatusDto getStatusDto(Status status) {
         StatusDto dto = new StatusDto();
         dto.setDatetime(status.getDateTime().toString());
-        dto.setHostes(status.getHostess());
+        dto.setHostess(status.getHostess());
         dto.setStatus(status.getStatus().getNum());
         return dto;
     }

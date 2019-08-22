@@ -24,7 +24,7 @@ import javax.websocket.server.PathParam;
 import java.util.List;
 
 import static com.restaurant.utils.DtoConverter.getClientDto;
-import static com.restaurant.utils.DtoConverter.getHostesDto;
+import static com.restaurant.utils.DtoConverter.getHostessDto;
 
 @RestController
 @RequestMapping("/rest")
@@ -56,7 +56,7 @@ public class SyncEndpoint {
     IngredientService ingredientService;
 
     @Autowired
-    HostesService hostesService;
+    HostessService hostessService;
 
     @Autowired
     TagService tagService;
@@ -71,8 +71,8 @@ public class SyncEndpoint {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
-    @GetMapping("/hostes")
-    public List<Hostess> hostesList(@PathParam("from") int from,
+    @GetMapping("/hostess")
+    public List<Hostess> hostessList(@PathParam("from") int from,
                                     @PathParam("to") int to,
                                     @PathParam("limit") int limit,
                                     @PathParam("offset") int offset,
@@ -83,7 +83,7 @@ public class SyncEndpoint {
 //        if (!checkAuth(request.getCookies(), restaurantId)) {
 //            return Collections.EMPTY_LIST;
 //        }
-        return hostesService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+        return hostessService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
     }
 
     @GetMapping("/tags")
@@ -160,8 +160,8 @@ public class SyncEndpoint {
     }
 
 
-    @PostMapping("/create/hostes")
-    public long createHostes(@RequestParam String name,
+    @PostMapping("/create/hostess")
+    public long createHostess(@RequestParam String name,
                              HttpServletRequest request) throws JsonProcessingException {
 
 //        long restaurantId = getRestaurantId(request.getCookies());
@@ -171,14 +171,14 @@ public class SyncEndpoint {
 //        }
         Hostess hostess = new Hostess();
         hostess.setName(name);
-        long id = hostesService.save(hostess).getId();
+        long id = hostessService.save(hostess).getId();
         notificationService.addElement(RESTAURANT,
-                mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), "")));
+                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), "")));
         return id;
     }
 
-    @PostMapping("/update/hostes")
-    public long updateHostes(@RequestParam long id,
+    @PostMapping("/update/hostess")
+    public long updateHostess(@RequestParam long id,
                              @RequestParam @NotEmpty String name,
                              HttpServletRequest request) throws JsonProcessingException {
 
@@ -190,9 +190,9 @@ public class SyncEndpoint {
         Hostess hostess = new Hostess();
         hostess.setId(id);
         hostess.setName(name);
-        hostesService.save(hostess);
+        hostessService.save(hostess);
         notificationService.addElement(RESTAURANT,
-                mapper.writeValueAsString(getHostesDto(hostesService.findById(id).get(), "")));
+                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), "")));
         return id;
     }
 
