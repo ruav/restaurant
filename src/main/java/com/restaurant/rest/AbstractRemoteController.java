@@ -847,7 +847,7 @@ public abstract class AbstractRemoteController {
 
     protected long getTimeStamp() {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        return calendar.getTimeInMillis();
+        return calendar.getTimeInMillis()/1000;
     }
 
     protected String getUrl(HttpServletRequest request) {
