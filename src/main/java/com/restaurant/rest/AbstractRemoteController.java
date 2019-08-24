@@ -75,6 +75,8 @@ public abstract class AbstractRemoteController {
     protected static final String LOCALHOST = "localhost";
     protected static final String RESTAURANT = "restaurant";
 
+    protected static final String BEARER = "Bearer";
+
     protected static ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping("/hostess")
@@ -801,10 +803,13 @@ public abstract class AbstractRemoteController {
 
     protected boolean checkTocken(String auth, boolean checkAccess) {
         if (auth == null) return false;
+        if (!auth.startsWith(BEARER)) return false;
+        String[] authArray = auth.split(" ");
+        if (authArray.length != 2) return false;
         JWTVerifier verifier = JWT.require(ALGORITHM)
                 .withIssuer(ISSUER)
                 .build();
-        DecodedJWT jwt = verifier.verify(auth);
+        DecodedJWT jwt = verifier.verify(authArray[1]);
 
         if (jwt.getClaim("id").isNull()) return false;
         if (jwt.getClaim(RESTAURANT).isNull()) return false;
@@ -831,10 +836,12 @@ public abstract class AbstractRemoteController {
     }
 
     protected long getRestaurantId(String auth) {
+        String[] authArray = auth.split(" ");
+
         JWTVerifier verifier = JWT.require(ALGORITHM)
                 .withIssuer(ISSUER)
                 .build();
-        DecodedJWT jwt = verifier.verify(auth);
+        DecodedJWT jwt = verifier.verify(authArray[1]);
         return jwt.getClaim(RESTAURANT).asLong();
     }
 
