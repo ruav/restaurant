@@ -6,6 +6,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurant.dto.*;
+import com.restaurant.dto.editable.ClientModel;
 import com.restaurant.entity.*;
 import com.restaurant.service.*;
 import com.restaurant.utils.CustomSseEmitter;
@@ -218,38 +219,35 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/create/client")
-    public long createClient(@RequestBody String body,
+    public long createClient(@RequestBody ClientModel clientModel,
                              HttpServletRequest request
     ) throws JsonProcessingException {
 
         if (checkToken(request.getHeader(AUTHORIZATION))) {
-            JSONObject data = new JSONObject(body);
 
             Client client = new Client();
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-            client.setName(data.getString("name"));
-            client.setPhone(data.getString("phone"));
-            client.setVip(data.getBoolean("vip"));
+            client.setName(clientModel.getName());
+            client.setPhone(clientModel.getPhone());
+            client.setVip(clientModel.isVip());
             client.setLastChange(getTimeStamp());
             client.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
             client.setTags(new HashSet<>());
-            List<Long> tags = new ArrayList<>();
-            if (!data.getJSONArray("tags").isEmpty()) {
-                for (Object tag : data.getJSONArray("tags")) {
+
+            if (clientModel.getTags() != null && !clientModel.getTags().isEmpty()) {
+                for (Long tag : clientModel.getTags()) {
                     if (tag == null) continue;
-                    Optional<Tag> optionalTag = tagService.findById(Long.valueOf((Integer) tag));
-                    if (optionalTag.isPresent()) {
-                        client.getTags().add(optionalTag.get());
-                    };
+                    Optional<Tag> optionalTag = tagService.findById(tag);
+                    optionalTag.ifPresent(value -> client.getTags().add(value));
                 }
             }
             long id = clientService.save(client).getId();
 
-            if (!data.getJSONArray("newtags").isEmpty()) {
-                for (Object newTag : data.getJSONArray("newtags")) {
-                    if (newTag == null || ((String) newTag).isEmpty()) continue;
+            if (clientModel.getNewTags() != null &&  !clientModel.getNewTags().isEmpty()) {
+                for (String newTag : clientModel.getNewTags()) {
+                    if (newTag == null || newTag.isEmpty()) continue;
                     Tag tag1 = new Tag();
-                    tag1.setName((String) newTag);
+                    tag1.setName(newTag);
                     tag1.setRestaurantId(restaurantId);
                     tag1.setClientId(id);
                     tag1.setLastChange(getTimeStamp());
@@ -266,7 +264,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/client")
-    public long updateClient(@RequestBody String body,
+    public long updateClient(@RequestBody ClientModel clientModel,
                              HttpServletRequest request
     ) throws JsonProcessingException {
 
@@ -275,31 +273,29 @@ public abstract class AbstractRemoteController {
         }
 
         long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-        JSONObject data = new JSONObject(body);
-        long id = data.getLong("id");
-        Client client = clientService.findById(id).get();
-        client.setId(id);
-        client.setName(data.getString("name"));
-        client.setPhone(data.getString("phone"));
-        client.setVip(data.getBoolean("vip"));
+        Client client = clientService.findById(clientModel.getId()).get();
+        if (client == null) return -1l;
+        client.setName(clientModel.getName());
+        client.setPhone(clientModel.getPhone());
+        client.setVip(clientModel.isVip());
         client.setLastChange(getTimeStamp());
-        client.setRestaurantId(restaurantId);
-        if (!data.getJSONArray("tags").isEmpty()) {
-            for (Object tag : data.getJSONArray("tags")) {
+        client.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
+        if (client.getTags() == null) client.setTags(new HashSet<>());
+
+        if (clientModel.getTags() != null && !clientModel.getTags().isEmpty()) {
+            for (Long tag : clientModel.getTags()) {
                 if (tag == null) continue;
-                Optional<Tag> optionalTag = tagService.findById(Long.valueOf((Integer) tag));
-                if (optionalTag.isPresent()) {
-                    client.getTags().add(optionalTag.get());
-                };
+                Optional<Tag> optionalTag = tagService.findById(tag);
+                optionalTag.ifPresent(value -> client.getTags().add(value));
             }
         }
-        if (!data.getJSONArray("newtags").isEmpty()) {
-            for (Object newTag : data.getJSONArray("newtags")) {
-                if (newTag == null || ((String) newTag).isEmpty()) continue;
+        if (clientModel.getNewTags() != null && !clientModel.getNewTags().isEmpty()) {
+            for (String newTag : clientModel.getNewTags()) {
+                if (newTag == null || newTag.isEmpty()) continue;
                 Tag tag1 = new Tag();
-                tag1.setName((String) newTag);
+                tag1.setName(newTag);
                 tag1.setRestaurantId(restaurantId);
-                tag1.setClientId(id);
+                tag1.setClientId(client.getId());
                 tag1.setLastChange(getTimeStamp());
                 tag1 = tagService.save(tag1);
                 client.getTags().add(tag1);
@@ -307,8 +303,8 @@ public abstract class AbstractRemoteController {
         }
         clientService.save(client);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
-        return id;
+                mapper.writeValueAsString(getClientDto(clientService.findById(client.getId()).get())));
+        return client.getId();
     }
 
 
@@ -719,7 +715,7 @@ public abstract class AbstractRemoteController {
         if (!newStatusEnum.isPresent()) return -1;
         switch (oldStatus.getStatus()) {
             case ORDER:
-                if (newStatusEnum.equals(StatusEnum.DRAFT)) {
+                if (newStatusEnum.get().equals(StatusEnum.DRAFT)) {
                     newStatus.setStatus(newStatusEnum.get());
                 }
                 else {
@@ -727,11 +723,11 @@ public abstract class AbstractRemoteController {
                 }
                 break;
             case DRAFT:
-                if (newStatusEnum.equals(StatusEnum.DRAFT)
-                        || newStatusEnum.equals(StatusEnum.WAITING)
-                        || newStatusEnum.equals(StatusEnum.BOOKED)
-                        || newStatusEnum.equals(StatusEnum.COME)
-                        || newStatusEnum.equals(StatusEnum.REFUSAL)
+                if (newStatusEnum.get().equals(StatusEnum.DRAFT)
+                        || newStatusEnum.get().equals(StatusEnum.WAITING)
+                        || newStatusEnum.get().equals(StatusEnum.BOOKED)
+                        || newStatusEnum.get().equals(StatusEnum.COME)
+                        || newStatusEnum.get().equals(StatusEnum.REFUSAL)
                 ) {
                     newStatus.setStatus(newStatusEnum.get());
                 }
@@ -740,8 +736,8 @@ public abstract class AbstractRemoteController {
                 }
                 break;
             case WAITING:
-                if (newStatusEnum.equals(StatusEnum.BOOKED)
-                        || newStatusEnum.equals(StatusEnum.REFUSAL)
+                if (newStatusEnum.get().equals(StatusEnum.BOOKED)
+                        || newStatusEnum.get().equals(StatusEnum.REFUSAL)
                 ) {
                     newStatus.setStatus(newStatusEnum.get());
                 }
@@ -750,9 +746,9 @@ public abstract class AbstractRemoteController {
                 }
                 break;
             case BOOKED:
-                if (newStatusEnum.equals(StatusEnum.COME)
-                        || newStatusEnum.equals(StatusEnum.NOT_COME)
-                        || newStatusEnum.equals(StatusEnum.REFUSAL)
+                if (newStatusEnum.get().equals(StatusEnum.COME)
+                        || newStatusEnum.get().equals(StatusEnum.NOT_COME)
+                        || newStatusEnum.get().equals(StatusEnum.REFUSAL)
                 ) {
                     newStatus.setStatus(newStatusEnum.get());
                 }
@@ -761,7 +757,7 @@ public abstract class AbstractRemoteController {
                 }
                 break;
             case COME:
-                if (newStatusEnum.equals(StatusEnum.GET_AWAY)) {
+                if (newStatusEnum.get().equals(StatusEnum.GET_AWAY)) {
                     newStatus.setStatus(newStatusEnum.get());
                 }
                 else {
