@@ -1,10 +1,12 @@
 package com.restaurant.service;
 
-public interface NotificationService<T, N> {
+import com.restaurant.dto.SseMessage;
+
+public interface NotificationService<T> {
 
     void addEmitter(final T emitter);
     void removeEmitter(final T emitter);
     void doNotify();
-    String getElement(long restaurantId);
-    void addElement(long restaurantId, N element);
+    SseMessage getElement(long restaurantId);
+    void addElement(long restaurantId, SseMessage element);
 }

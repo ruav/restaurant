@@ -2,6 +2,7 @@ package com.restaurant.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.restaurant.dto.SseMessage;
 import com.restaurant.entity.Client;
 import com.restaurant.entity.Hostess;
 import com.restaurant.entity.Tag;
@@ -133,7 +134,8 @@ public class SyncEndpoint {
         client.setVip(vip);
         long id = clientService.save(client).getId();
         notificationService.addElement(RESTAURANT,
-                mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
+                new SseMessage("client",
+                mapper.writeValueAsString(getClientDto(clientService.findById(id).get()))));
         return id;
     }
 
@@ -155,7 +157,8 @@ public class SyncEndpoint {
         client.setVip(vip);
         clientService.save(client);
         notificationService.addElement(RESTAURANT,
-                mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
+                new SseMessage("client",
+                mapper.writeValueAsString(getClientDto(clientService.findById(id).get()))));
         return id;
     }
 
@@ -173,7 +176,8 @@ public class SyncEndpoint {
         hostess.setName(name);
         long id = hostessService.save(hostess).getId();
         notificationService.addElement(RESTAURANT,
-                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), "")));
+                new SseMessage("hostess",
+                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), ""))));
         return id;
     }
 
@@ -192,7 +196,8 @@ public class SyncEndpoint {
         hostess.setName(name);
         hostessService.save(hostess);
         notificationService.addElement(RESTAURANT,
-                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), "")));
+                new SseMessage("hostess",
+                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), ""))));
         return id;
     }
 

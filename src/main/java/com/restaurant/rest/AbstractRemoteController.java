@@ -257,7 +257,8 @@ public abstract class AbstractRemoteController {
             }
             clientService.save(client);
             notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                    mapper.writeValueAsString(getClientDto(clientService.findById(id).get())));
+                    new SseMessage("client",
+                    mapper.writeValueAsString(getClientDto(clientService.findById(id).get()))));
             return id;
         }
         return -1;
@@ -303,7 +304,8 @@ public abstract class AbstractRemoteController {
         }
         clientService.save(client);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getClientDto(clientService.findById(client.getId()).get())));
+                new SseMessage("client",
+                mapper.writeValueAsString(getClientDto(clientService.findById(client.getId()).get()))));
         return client.getId();
     }
 
@@ -329,7 +331,8 @@ public abstract class AbstractRemoteController {
         hostess.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = hostessService.save(hostess).getId();
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), url)));
+                new SseMessage("hostess",
+                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), url))));
         return id;
     }
 
@@ -353,7 +356,8 @@ public abstract class AbstractRemoteController {
         hostess.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         hostessService.save(hostess);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), url)));
+                new SseMessage("hostess",
+                mapper.writeValueAsString(getHostessDto(hostessService.findById(id).get(), url))));
         return id;
     }
 
@@ -371,7 +375,8 @@ public abstract class AbstractRemoteController {
         tag.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = tagService.save(tag).getId();
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getTagDto(tagService.findById(id).get())));
+                new SseMessage("tag",
+                mapper.writeValueAsString(getTagDto(tagService.findById(id).get()))));
         return id;
     }
 
@@ -390,7 +395,8 @@ public abstract class AbstractRemoteController {
         tag.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         tagService.save(tag);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getTagDto(tagService.findById(id).get())));
+                new SseMessage("clientTag",
+                mapper.writeValueAsString(getTagDto(tagService.findById(id).get()))));
         return id;
     }
 
@@ -410,7 +416,8 @@ public abstract class AbstractRemoteController {
         hall.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = hallService.save(hall).getId();
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getHallDto(hallService.findById(id).get())));
+                new SseMessage("hall",
+                mapper.writeValueAsString(getHallDto(hallService.findById(id).get()))));
         return id;
     }
 
@@ -431,7 +438,8 @@ public abstract class AbstractRemoteController {
         hall.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         hallService.save(hall);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getHallDto(hallService.findById(id).get())));
+                new SseMessage("hall",
+                mapper.writeValueAsString(getHallDto(hallService.findById(id).get()))));
         return id;
     }
 
@@ -451,7 +459,8 @@ public abstract class AbstractRemoteController {
         desk.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = deskService.save(desk).getId();
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getDeskDto(deskService.findById(id).get())));
+                new SseMessage("desk",
+                mapper.writeValueAsString(getDeskDto(deskService.findById(id).get()))));
         return id;
     }
 
@@ -472,7 +481,8 @@ public abstract class AbstractRemoteController {
         desk.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         deskService.save(desk);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getDeskDto(deskService.findById(id).get())));
+                new SseMessage("desk",
+                mapper.writeValueAsString(getDeskDto(deskService.findById(id).get()))));
         return id;
     }
 
@@ -492,7 +502,8 @@ public abstract class AbstractRemoteController {
         card.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = cardService.save(card).getId();
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getCardDto(cardService.findById(id).get())));
+                new SseMessage("card",
+                mapper.writeValueAsString(getCardDto(cardService.findById(id).get()))));
         return id;
     }
 
@@ -516,7 +527,8 @@ public abstract class AbstractRemoteController {
         card.get().setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         cardService.save(card.get()).getId();
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getCardDto(cardService.findById(id).get())));
+                new SseMessage("card",
+                        mapper.writeValueAsString(getCardDto(cardService.findById(id).get()))));
         return id;
     }
 
@@ -534,7 +546,8 @@ public abstract class AbstractRemoteController {
         tag.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         long id = tagService.save(tag).getId();
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getTagDto(tagService.findById(id).get())));
+                new SseMessage("reservationTag",
+                        mapper.writeValueAsString(getTagDto(tagService.findById(id).get()))));
         return id;
     }
 
@@ -553,7 +566,8 @@ public abstract class AbstractRemoteController {
         tag.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
         tagService.save(tag);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getTagDto(tagService.findById(id).get())));
+                new SseMessage("reservationTag",
+                mapper.writeValueAsString(getTagDto(tagService.findById(id).get()))));
         return id;
     }
 
@@ -624,8 +638,9 @@ public abstract class AbstractRemoteController {
 
         reservationService.save(reservation);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+                new SseMessage("reservation",
                 mapper.writeValueAsString(getReservationEventDto(reservationService.findById(id).get(),
-                        clientService.findById(reservation.getClientId()).get())));
+                        clientService.findById(reservation.getClientId()).get()))));
         return id;
     }
 
@@ -693,8 +708,9 @@ public abstract class AbstractRemoteController {
 
             reservationService.save(reservation.get());
             notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                    mapper.writeValueAsString(getReservationEventDto(reservationService.findById(id).get(),
-                            clientService.findById(reservation.get().getClientId()).get())));
+                    new SseMessage("reservation",
+                            mapper.writeValueAsString(getReservationEventDto(reservationService.findById(id).get(),
+                            clientService.findById(reservation.get().getClientId()).get()))));
             return id;
         }
         return -1l;
@@ -776,7 +792,8 @@ public abstract class AbstractRemoteController {
         reservation.getStatuses().add(0, newStatus);
         reservationService.save(reservation);
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getStatusDto(newStatus)));
+                new SseMessage("status",
+                        mapper.writeValueAsString(getStatusDto(newStatus))));
         return id;
     }
 
@@ -798,7 +815,8 @@ public abstract class AbstractRemoteController {
         replacement = replacementService.save(replacement);
 
         notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                mapper.writeValueAsString(getReplacementDto(replacement)));
+                new SseMessage("replacement",
+                        mapper.writeValueAsString(getReplacementDto(replacement))));
         return id;
     }
 
