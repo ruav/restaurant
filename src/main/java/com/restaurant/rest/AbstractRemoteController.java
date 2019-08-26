@@ -81,27 +81,26 @@ public abstract class AbstractRemoteController {
     protected static ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping("/hostess")
-    public List<HostessDto> hostessList(@PathParam("from") int from,
-                                        @PathParam("to") int to,
+    public List<HostessDto> hostessList(@PathParam("from") long from,
+                                        @PathParam("to") long to,
                                         @PathParam("limit") int limit,
                                         @PathParam("offset") int offset,
                                         HttpServletRequest request) {
-        if (checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return hostessService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(h -> getHostessDto(h, getUrl(request))).collect(Collectors.toList());
         }
         return Collections.emptyList();
-
     }
 
     @GetMapping("/tags")
-    public List<TagDto> tagsList(@PathParam("from") int from,
-                                 @PathParam("to") int to,
+    public List<TagDto> tagsList(@PathParam("from") long from,
+                                 @PathParam("to") long to,
                                  @PathParam("limit") int limit,
                                  @PathParam("offset")int offset,
                                  HttpServletRequest request) {
-        if (checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return tagService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getTagDto).collect(Collectors.toList());
@@ -110,12 +109,12 @@ public abstract class AbstractRemoteController {
     }
 
     @GetMapping("/clients")
-    public List<ClientDto> clientList(@PathParam("from") int from,
-                                      @PathParam("to") int to,
+    public List<ClientDto> clientList(@PathParam("from") long from,
+                                      @PathParam("to") long to,
                                       @PathParam("limit") int limit,
                                       @PathParam("offset")int offset,
                                       HttpServletRequest request) {
-        if (checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return clientService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getClientDto).collect(Collectors.toList());
@@ -124,12 +123,12 @@ public abstract class AbstractRemoteController {
     }
 
     @GetMapping("/halls")
-    public List<HallDto> hallList(@PathParam("from") int from,
-                                  @PathParam("to") int to,
+    public List<HallDto> hallList(@PathParam("from") long from,
+                                  @PathParam("to") long to,
                                   @PathParam("limit") int limit,
                                   @PathParam("offset")int offset,
                                   HttpServletRequest request) {
-        if (checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return hallService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getHallDto).collect(Collectors.toList());
@@ -138,12 +137,12 @@ public abstract class AbstractRemoteController {
     }
 
     @GetMapping("/desks")
-    public List<DeskDto> deskList(@PathParam("from") int from,
-                                  @PathParam("to") int to,
+    public List<DeskDto> deskList(@PathParam("from") long from,
+                                  @PathParam("to") long to,
                                   @PathParam("limit") int limit,
                                   @PathParam("offset")int offset,
                                   HttpServletRequest request) {
-        if (checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return deskService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getDeskDto).collect(Collectors.toList());
@@ -152,12 +151,12 @@ public abstract class AbstractRemoteController {
     }
 
     @GetMapping("/cards")
-    public List<CardDto> cardList(@PathParam("from") int from,
-                                  @PathParam("to") int to,
+    public List<CardDto> cardList(@PathParam("from") long from,
+                                  @PathParam("to") long to,
                                   @PathParam("limit") int limit,
                                   @PathParam("offset")int offset,
                                   HttpServletRequest request) {
-        if (checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return cardService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getCardDto).collect(Collectors.toList());
@@ -166,12 +165,12 @@ public abstract class AbstractRemoteController {
     }
 
     @GetMapping("/reservations")
-    public List<ReservationDto> reservationList(@PathParam("from") int from,
-                                                @PathParam("to") int to,
+    public List<ReservationDto> reservationList(@PathParam("from") long from,
+                                                @PathParam("to") long to,
                                                 @PathParam("limit") int limit,
                                                 @PathParam("offset")int offset,
                                                 HttpServletRequest request) {
-        if (checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return reservationService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getReservationDto).collect(Collectors.toList());
@@ -223,7 +222,7 @@ public abstract class AbstractRemoteController {
                              HttpServletRequest request
     ) throws JsonProcessingException {
 
-        if (checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (checkToken(request.getHeader(AUTHORIZATION))) {
             JSONObject data = new JSONObject(body);
 
             Client client = new Client();
@@ -253,7 +252,7 @@ public abstract class AbstractRemoteController {
                     tag1.setName((String) newTag);
                     tag1.setRestaurantId(restaurantId);
                     tag1.setClientId(id);
-                    tag1.setLastChange(System.currentTimeMillis());
+                    tag1.setLastChange(getTimeStamp());
                     tag1 = tagService.save(tag1);
                     client.getTags().add(tag1);
                 }
@@ -271,7 +270,7 @@ public abstract class AbstractRemoteController {
                              HttpServletRequest request
     ) throws JsonProcessingException {
 
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -301,7 +300,7 @@ public abstract class AbstractRemoteController {
                 tag1.setName((String) newTag);
                 tag1.setRestaurantId(restaurantId);
                 tag1.setClientId(id);
-                tag1.setLastChange(System.currentTimeMillis());
+                tag1.setLastChange(getTimeStamp());
                 tag1 = tagService.save(tag1);
                 client.getTags().add(tag1);
             }
@@ -317,7 +316,7 @@ public abstract class AbstractRemoteController {
     public long createHostess(@RequestParam String name,
                               HttpServletRequest request) throws JsonProcessingException {
 
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -343,7 +342,7 @@ public abstract class AbstractRemoteController {
                              @RequestParam @NotEmpty String name,
                              HttpServletRequest request) throws JsonProcessingException {
 
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         String url;
@@ -366,7 +365,7 @@ public abstract class AbstractRemoteController {
     public long createClientTag(@RequestParam String name,
                                 @RequestParam long clientId,
                                 HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Tag tag = new Tag();
@@ -385,7 +384,7 @@ public abstract class AbstractRemoteController {
                                 @RequestParam String name,
                                 @RequestParam long clientId,
                                 HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Tag tag = new Tag();
@@ -404,7 +403,7 @@ public abstract class AbstractRemoteController {
                            @RequestParam boolean active,
                            @RequestParam boolean online,
                            HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Hall hall = new Hall();
@@ -425,7 +424,7 @@ public abstract class AbstractRemoteController {
                            @RequestParam boolean active,
                            @RequestParam boolean online,
                            HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Hall hall = hallService.findById(id).get();
@@ -445,7 +444,7 @@ public abstract class AbstractRemoteController {
                            @RequestParam int number,
                            @RequestParam int capacity,
                            HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Desk desk = new Desk();
@@ -466,7 +465,7 @@ public abstract class AbstractRemoteController {
                            @RequestParam int number,
                            @RequestParam int capacity,
                            HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Desk desk = deskService.findById(id).get();
@@ -486,7 +485,7 @@ public abstract class AbstractRemoteController {
                            @RequestParam String map,
                            @RequestParam Date relevantFrom,
                            HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Card card = new Card();
@@ -507,7 +506,7 @@ public abstract class AbstractRemoteController {
                            @RequestParam String map,
                            @RequestParam Date relevantFrom,
                            HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Optional<Card> card = cardService.findById(id);
@@ -529,7 +528,7 @@ public abstract class AbstractRemoteController {
     public long createReservationTag(@RequestParam String name,
                                      @RequestParam long reservationId,
                                      HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Tag tag = new Tag();
@@ -548,7 +547,7 @@ public abstract class AbstractRemoteController {
                                      @RequestParam String name,
                                      @RequestParam long reservationId,
                                      HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         Tag tag = new Tag();
@@ -565,7 +564,7 @@ public abstract class AbstractRemoteController {
     @PostMapping("/create/reservation")
     public long createReservation(@RequestBody String body,
                                   HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -609,7 +608,7 @@ public abstract class AbstractRemoteController {
         status.setReservation(id);
         status.setDateTime(new Date());
         status.setHostess(data.getLong("hostess"));
-        status.setLastChange(System.currentTimeMillis());
+        status.setLastChange(getTimeStamp());
         status.setStatus(StatusEnum.WAITING);
         status = statusService.save(status);
         reservation.getStatuses().add(0, status);
@@ -621,7 +620,7 @@ public abstract class AbstractRemoteController {
                 tag1.setName((String) newTag);
                 tag1.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
                 tag1.setClientId(data.getLong("client"));
-                tag1.setLastChange(System.currentTimeMillis()/1_000);
+                tag1.setLastChange(getTimeStamp());
                 tag1 = tagService.save(tag1);
                 reservation.getTags().add(tag1);
             }
@@ -637,7 +636,7 @@ public abstract class AbstractRemoteController {
     @PostMapping("/update/reservation")
     public long updateReservation(@RequestBody String body,
                                   HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
         JSONObject data = new JSONObject(body);
@@ -678,7 +677,7 @@ public abstract class AbstractRemoteController {
             status.setReservation(id);
             status.setDateTime(new Date());
             status.setHostess(data.getLong("hostess"));
-            status.setLastChange(System.currentTimeMillis());
+            status.setLastChange(getTimeStamp());
             status.setStatus(StatusEnum.WAITING);
             status = statusService.save(status);
             reservation.get().getStatuses().add(0, status);
@@ -690,7 +689,7 @@ public abstract class AbstractRemoteController {
                     tag1.setName((String) newTag);
                     tag1.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
                     tag1.setClientId(data.getLong("client"));
-                    tag1.setLastChange(System.currentTimeMillis()/1_000);
+                    tag1.setLastChange(getTimeStamp());
                     tag1 = tagService.save(tag1);
                     reservation.get().getTags().add(tag1);
                 }
@@ -710,7 +709,7 @@ public abstract class AbstractRemoteController {
                              @RequestParam int status,
                              @RequestParam long hostes,
                              HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -791,7 +790,7 @@ public abstract class AbstractRemoteController {
                                   @RequestParam int tableFrom,
                                   @RequestParam int tableTo,
                                   HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -810,7 +809,7 @@ public abstract class AbstractRemoteController {
     @GetMapping("/sync")
     public SseEmitter streamSseMvc(HttpServletRequest request,
                                    HttpServletResponse response) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION), true)) {
+        if (!checkToken(request.getHeader(AUTHORIZATION), true)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }
@@ -822,7 +821,7 @@ public abstract class AbstractRemoteController {
         return emitter;
     }
 
-    protected boolean checkTocken(String auth, boolean checkAccess) {
+    protected boolean checkToken(String auth, boolean checkAccess) {
         if (auth == null) return false;
         if (!auth.startsWith(BEARER)) return false;
         String[] authArray = auth.split(" ");
@@ -852,8 +851,8 @@ public abstract class AbstractRemoteController {
         return false;
     }
 
-    protected boolean checkTocken(String auth) {
-        return checkTocken(auth, false);
+    protected boolean checkToken(String auth) {
+        return checkToken(auth, false);
     }
 
     protected long getRestaurantId(String auth) {
@@ -867,8 +866,7 @@ public abstract class AbstractRemoteController {
     }
 
     protected long getTimeStamp() {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        return calendar.getTimeInMillis()/1000;
+        return System.currentTimeMillis()/1000;
     }
 
     protected String getUrl(HttpServletRequest request) {

@@ -48,7 +48,7 @@ public class WebEndpoint extends AbstractRemoteController {
                                           @PathVariable("id") long id,
                                           HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
 
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return "Unauthorizated";
         }
 
@@ -71,7 +71,7 @@ public class WebEndpoint extends AbstractRemoteController {
                                @RequestParam String name,
                                @RequestParam MultipartFile file,
                                HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -88,7 +88,7 @@ public class WebEndpoint extends AbstractRemoteController {
     @GetMapping("/get/category")
     public String getCategory(@RequestParam long id,
                                HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return "Access denied";
         }
 
@@ -108,7 +108,7 @@ public class WebEndpoint extends AbstractRemoteController {
                                @RequestParam(required = false) MultipartFile file,
                                @RequestParam String name,
                                HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -127,7 +127,7 @@ public class WebEndpoint extends AbstractRemoteController {
     @PostMapping("/delete/category")
     public long deleteCategory(@RequestParam long id,
                                HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -143,7 +143,7 @@ public class WebEndpoint extends AbstractRemoteController {
                                   @RequestParam long categoryId,
                                   @RequestParam(required = false) MultipartFile file,
                                   HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -160,7 +160,7 @@ public class WebEndpoint extends AbstractRemoteController {
     @GetMapping("/get/subcategory")
     public String getSubcategory(@RequestParam long id,
                               HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return "Access denied";
         }
 
@@ -178,7 +178,7 @@ public class WebEndpoint extends AbstractRemoteController {
                                @RequestParam long categoryId,
                                @RequestParam(required = false) MultipartFile file,
                                HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -197,7 +197,7 @@ public class WebEndpoint extends AbstractRemoteController {
     @PostMapping("/delete/subcategory")
     public long deleteSubcategory(@RequestParam long id,
                                HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -229,7 +229,7 @@ public class WebEndpoint extends AbstractRemoteController {
                                   @RequestParam List<Long> allergens,
                                   @RequestParam(required = false) MultipartFile file,
                                   HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -270,7 +270,7 @@ public class WebEndpoint extends AbstractRemoteController {
     @GetMapping("/get/dish")
     public String getDish(@RequestParam long id,
                                  HttpServletRequest request) throws JsonProcessingException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return "Access denied";
         }
 
@@ -302,7 +302,7 @@ public class WebEndpoint extends AbstractRemoteController {
                                   @RequestParam List<Long> allergens,
                                   @RequestParam(required = false) MultipartFile file,
                                   HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -345,7 +345,7 @@ public class WebEndpoint extends AbstractRemoteController {
     @PostMapping("/delete/dish")
     public long deleteDish(@RequestParam long id,
                                   HttpServletRequest request) {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -360,7 +360,7 @@ public class WebEndpoint extends AbstractRemoteController {
                                @RequestParam(required = false) MultipartFile file,
                                @RequestParam(required = false) Long iconId,
                                HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 
@@ -381,7 +381,7 @@ public class WebEndpoint extends AbstractRemoteController {
                                @RequestParam(required = false) MultipartFile file,
                                @RequestParam(required = false) Long iconId,
                                HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
-        if (!checkTocken(request.getHeader(AUTHORIZATION))) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }
 

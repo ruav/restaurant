@@ -20,6 +20,8 @@ services:
       SPRING_PROFILES_ACTIVE: test
     depends_on:
       - db
+    volumes:
+      - img:/img
 volumes:
   data:
   img:
