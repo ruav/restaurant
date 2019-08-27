@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotEmpty;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -822,15 +824,23 @@ public abstract class AbstractRemoteController {
 
     @GetMapping("/sync")
     public SseEmitter streamSseMvc(HttpServletRequest request,
-                                   HttpServletResponse response) {
+                                   HttpServletResponse response) throws IOException {
         if (!checkToken(request.getHeader(AUTHORIZATION), true)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }
-        SseEmitter emitter = new SseEmitter(1_000 * 1_000L);
+        SseEmitter emitter = new SseEmitter(1_000_000L);
         long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
 
-        notificationService.addEmitter(new CustomSseEmitter(emitter, restaurantId, notificationService));
+        CustomSseEmitter customSseEmitter = new CustomSseEmitter(emitter, restaurantId, notificationService);
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("UTC")));
+        SseEmitter.SseEventBuilder event = SseEmitter.event()
+                .data(calendar.getTimeInMillis())
+                .id(String.valueOf(System.currentTimeMillis()))
+                .reconnectTime(3 * 1_000)
+                .name("timestamp");
+        customSseEmitter.send(event);
+        notificationService.addEmitter(customSseEmitter);
 
         return emitter;
     }

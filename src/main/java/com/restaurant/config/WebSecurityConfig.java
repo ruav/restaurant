@@ -43,13 +43,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rest/**").permitAll()
                 .antMatchers("/mobile/**").permitAll()
                 .antMatchers("/web/**").permitAll()
+                .antMatchers("/mango/**").permitAll()
                 .antMatchers("/image/**").permitAll()
                 .antMatchers("/qr", "qr2").permitAll()
                 .antMatchers("/users/**").hasAuthority(Role.ROOT.name())
                 .anyRequest().authenticated();
 
                 http
-                    .csrf().ignoringAntMatchers( "/internal/**", "/rest/**", "/mobile/**", "/web/**");
+                    .csrf().ignoringAntMatchers( "/internal/**", "/rest/**", "/mobile/**", "/web/**", "/mango/**");
         http
                 .formLogin()
                 .loginPage("/login")

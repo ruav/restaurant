@@ -1,6 +1,7 @@
 package com.restaurant.rest;
 
 import com.restaurant.dto.CallDto;
+import com.restaurant.dto.SseMessage;
 import com.restaurant.entity.Restaurant;
 import com.restaurant.service.AllergenService;
 import com.restaurant.service.CategoryService;
@@ -62,28 +63,24 @@ public class MangoEndpoint {
             @RequestParam(name = "vpbx_api_key") String key,
             @RequestParam(name = "sign") String sign,
             @RequestParam(name = "json") String json,
-//            @RequestParam(name = "entry_id") String entryId,
-//                           @RequestParam(name = "call_id") String callId,
-//                           @RequestParam(name = "timestamp") long timestamp,
-//                           @RequestParam(name = "seq") long seq,
-//                           @RequestParam(name = "call_state") String callState,
-//                           @RequestParam(name = "location") String location,
                            HttpServletRequest request) {
 
         JSONObject obj = new JSONObject(json);
         JSONObject from = obj.getJSONObject("from");
         String fromNumber = from.getString("number");
         JSONObject to = obj.getJSONObject("to");
-        String toNumber = from.getString("number");
+        String toNumber = to.getString("number");
 
         if (map.get(fromNumber) == null) {
             map.put(fromNumber, toNumber);
             CallDto callDto = new CallDto();
             callDto.setCall(true);
             callDto.setPhone(fromNumber);
-            Restaurant restaurant = restaurantService.findByPhone(fromNumber);
+            Restaurant restaurant = restaurantService.findByPhone(toNumber);
             if (restaurant != null) {
-                notificationService.addElement(restaurant.getId(), new JSONObject(callDto).toString());
+                notificationService.addElement(restaurant.getId(),
+                        new SseMessage("call",
+                        new JSONObject(callDto).toString()));
             }
         }
 
@@ -162,7 +159,7 @@ public class MangoEndpoint {
         JSONObject from = obj.getJSONObject("from");
         String fromNumber = from.getString("number");
         JSONObject to = obj.getJSONObject("to");
-        String toNumber = from.getString("number");
+        String toNumber = to.getString("number");
 
         if (map.get(fromNumber) != null) {
 
@@ -170,9 +167,11 @@ public class MangoEndpoint {
             CallDto callDto = new CallDto();
             callDto.setCall(true);
             callDto.setPhone(fromNumber);
-            Restaurant restaurant = restaurantService.findByPhone(fromNumber);
+            Restaurant restaurant = restaurantService.findByPhone(toNumber);
             if (restaurant != null) {
-                notificationService.addElement(restaurant.getId(), new JSONObject(callDto).toString());
+                notificationService.addElement(restaurant.getId(),
+                        new SseMessage("summary",
+                        new JSONObject(callDto).toString()));
             }
         }
 

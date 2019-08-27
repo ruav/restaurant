@@ -22,7 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import static com.restaurant.utils.DtoConverter.getClientDto;
 import static com.restaurant.utils.DtoConverter.getHostessDto;
@@ -202,8 +206,18 @@ public class SyncEndpoint {
     }
 
     @GetMapping("/sync")
-    public SseEmitter streamSseMvc() {
+    public SseEmitter streamSseMvc() throws IOException {
         SseEmitter emitter = new SseEmitter(1_000_000L);
+
+        CustomSseEmitter customSseEmitter = new CustomSseEmitter(emitter, RESTAURANT, notificationService);
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("UTC")));
+        SseEmitter.SseEventBuilder event = SseEmitter.event()
+                .data(calendar.getTimeInMillis())
+                .id(String.valueOf(System.currentTimeMillis()))
+                .reconnectTime(3 * 1_000)
+                .name("timestamp");
+        customSseEmitter.send(event);
+        notificationService.addEmitter(customSseEmitter);
 
         notificationService.addEmitter(new CustomSseEmitter(emitter, RESTAURANT, notificationService));
 
