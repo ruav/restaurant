@@ -88,12 +88,14 @@ public abstract class AbstractRemoteController {
                                         @PathParam("to") long to,
                                         @PathParam("limit") int limit,
                                         @PathParam("offset") int offset,
-                                        HttpServletRequest request) {
+                                        HttpServletRequest request,
+                                        HttpServletResponse response) {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return hostessService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(h -> getHostessDto(h, getUrl(request))).collect(Collectors.toList());
         }
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
     }
 
@@ -102,12 +104,14 @@ public abstract class AbstractRemoteController {
                                  @PathParam("to") long to,
                                  @PathParam("limit") int limit,
                                  @PathParam("offset")int offset,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return tagService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getTagDto).collect(Collectors.toList());
         }
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
     }
 
@@ -116,12 +120,14 @@ public abstract class AbstractRemoteController {
                                       @PathParam("to") long to,
                                       @PathParam("limit") int limit,
                                       @PathParam("offset")int offset,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request,
+                                      HttpServletResponse response) {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return clientService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getClientDto).collect(Collectors.toList());
         }
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
     }
 
@@ -130,12 +136,14 @@ public abstract class AbstractRemoteController {
                                   @PathParam("to") long to,
                                   @PathParam("limit") int limit,
                                   @PathParam("offset")int offset,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return hallService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getHallDto).collect(Collectors.toList());
         }
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
     }
 
@@ -144,12 +152,14 @@ public abstract class AbstractRemoteController {
                                   @PathParam("to") long to,
                                   @PathParam("limit") int limit,
                                   @PathParam("offset")int offset,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return deskService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getDeskDto).collect(Collectors.toList());
         }
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
     }
 
@@ -158,12 +168,14 @@ public abstract class AbstractRemoteController {
                                   @PathParam("to") long to,
                                   @PathParam("limit") int limit,
                                   @PathParam("offset")int offset,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return cardService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getCardDto).collect(Collectors.toList());
         }
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
     }
 
@@ -172,19 +184,25 @@ public abstract class AbstractRemoteController {
                                                 @PathParam("to") long to,
                                                 @PathParam("limit") int limit,
                                                 @PathParam("offset")int offset,
-                                                HttpServletRequest request) {
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
             return reservationService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getReservationDto).collect(Collectors.toList());
         }
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
     }
 
     @GetMapping("/menu")
     public RestaurantMenuModel menu(@PathParam("lastChange") long lastchange,
-                                    HttpServletRequest request) {
-
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
+        if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+        }
         String url = getUrl(request);
         long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
 
@@ -222,8 +240,9 @@ public abstract class AbstractRemoteController {
 
     @PostMapping("/create/client")
     public long createClient(@RequestBody ClientModel clientModel,
-                             HttpServletRequest request
-    ) throws JsonProcessingException {
+                             HttpServletRequest request,
+                             HttpServletResponse response
+                            ) throws JsonProcessingException {
 
         if (checkToken(request.getHeader(AUTHORIZATION))) {
 
@@ -263,15 +282,18 @@ public abstract class AbstractRemoteController {
                     mapper.writeValueAsString(getClientDto(clientService.findById(id).get()))));
             return id;
         }
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return -1;
     }
 
     @PostMapping("/update/client")
     public long updateClient(@RequestBody ClientModel clientModel,
-                             HttpServletRequest request
-    ) throws JsonProcessingException {
+                             HttpServletRequest request,
+                             HttpServletResponse response
+                            ) throws JsonProcessingException {
 
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -314,9 +336,11 @@ public abstract class AbstractRemoteController {
 
     @PostMapping("/create/hostess")
     public long createHostess(@RequestParam String name,
-                              HttpServletRequest request) throws JsonProcessingException {
+                              HttpServletRequest request,
+                              HttpServletResponse response) throws JsonProcessingException {
 
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -341,9 +365,10 @@ public abstract class AbstractRemoteController {
     @PostMapping("/update/hostes")
     public long updateHostes(@RequestParam long id,
                              @RequestParam @NotEmpty String name,
-                             HttpServletRequest request) throws JsonProcessingException {
+                             HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         String url;
@@ -366,8 +391,9 @@ public abstract class AbstractRemoteController {
     @PostMapping("/create/clientTag")
     public long createClientTag(@RequestParam String name,
                                 @RequestParam long clientId,
-                                HttpServletRequest request) throws JsonProcessingException {
+                                HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Tag tag = new Tag();
@@ -386,8 +412,10 @@ public abstract class AbstractRemoteController {
     public long updateClientTag(@RequestParam long id,
                                 @RequestParam String name,
                                 @RequestParam long clientId,
-                                HttpServletRequest request) throws JsonProcessingException {
+                                HttpServletRequest request,
+                                HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Tag tag = new Tag();
@@ -406,8 +434,10 @@ public abstract class AbstractRemoteController {
     public long createHall(@RequestParam String name,
                            @RequestParam boolean active,
                            @RequestParam boolean online,
-                           HttpServletRequest request) throws JsonProcessingException {
+                           HttpServletRequest request,
+                           HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Hall hall = new Hall();
@@ -428,8 +458,10 @@ public abstract class AbstractRemoteController {
                            @RequestParam String name,
                            @RequestParam boolean active,
                            @RequestParam boolean online,
-                           HttpServletRequest request) throws JsonProcessingException {
+                           HttpServletRequest request,
+                           HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Hall hall = hallService.findById(id).get();
@@ -449,8 +481,10 @@ public abstract class AbstractRemoteController {
     public long createDesk(@RequestParam long hall,
                            @RequestParam int number,
                            @RequestParam int capacity,
-                           HttpServletRequest request) throws JsonProcessingException {
+                           HttpServletRequest request,
+                           HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Desk desk = new Desk();
@@ -471,8 +505,10 @@ public abstract class AbstractRemoteController {
                            @RequestParam long hall,
                            @RequestParam int number,
                            @RequestParam int capacity,
-                           HttpServletRequest request) throws JsonProcessingException {
+                           HttpServletRequest request,
+                           HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Desk desk = deskService.findById(id).get();
@@ -492,8 +528,10 @@ public abstract class AbstractRemoteController {
     public long createCard(@RequestParam long hall,
                            @RequestParam String map,
                            @RequestParam Date relevantFrom,
-                           HttpServletRequest request) throws JsonProcessingException {
+                           HttpServletRequest request,
+                           HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Card card = new Card();
@@ -514,8 +552,10 @@ public abstract class AbstractRemoteController {
                            @RequestParam long hall,
                            @RequestParam String map,
                            @RequestParam Date relevantFrom,
-                           HttpServletRequest request) throws JsonProcessingException {
+                           HttpServletRequest request,
+                           HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Optional<Card> card = cardService.findById(id);
@@ -537,8 +577,10 @@ public abstract class AbstractRemoteController {
     @PostMapping("/create/reservationTag")
     public long createReservationTag(@RequestParam String name,
                                      @RequestParam long reservationId,
-                                     HttpServletRequest request) throws JsonProcessingException {
+                                     HttpServletRequest request,
+                                     HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Tag tag = new Tag();
@@ -557,8 +599,10 @@ public abstract class AbstractRemoteController {
     public long updateReservationTag(@RequestParam long id,
                                      @RequestParam String name,
                                      @RequestParam long reservationId,
-                                     HttpServletRequest request) throws JsonProcessingException {
+                                     HttpServletRequest request,
+                                     HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         Tag tag = new Tag();
@@ -575,8 +619,10 @@ public abstract class AbstractRemoteController {
 
     @PostMapping("/create/reservation")
     public long createReservation(@RequestBody String body,
-                                  HttpServletRequest request) throws JsonProcessingException {
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -584,10 +630,11 @@ public abstract class AbstractRemoteController {
         JSONObject data = new JSONObject(body);
 
         reservation.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
+
         reservation.setGuests(data.getInt("guests"));
         reservation.setDate(new Date(data.getString("date")));
-        reservation.setTimeFrom(new Date(data.getString("timeFrom")));
-        reservation.setTimeTo(new Date(data.getString("timeTo")));
+        reservation.setTimeFrom(new Date(data.getLong("timeFrom")));
+        reservation.setTimeTo(new Date(data.getLong("timeTo")));
         reservation.setClientId(data.getLong("client"));
 
         reservation.setTables(new HashSet<>());
@@ -648,20 +695,25 @@ public abstract class AbstractRemoteController {
 
     @PostMapping("/update/reservation")
     public long updateReservation(@RequestBody String body,
-                                  HttpServletRequest request) throws JsonProcessingException {
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
         JSONObject data = new JSONObject(body);
         long id = data.getLong("id");
         Optional<Reservation> reservation = reservationService.findById(id);
         if (reservation.isPresent()) {
+// примерная логика записи в UTC
+//            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));;
+//            calendar.setTimeInMillis(System.currentTimeMillis());
 
             reservation.get().setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
             reservation.get().setGuests(data.getInt("guests"));
             reservation.get().setDate(new Date(data.getString("date")));
-            reservation.get().setTimeFrom(new Date(data.getString("timeFrom")));
-            reservation.get().setTimeTo(new Date(data.getString("timeTo")));
+            reservation.get().setTimeFrom(new Date(data.getLong("timeFrom")));
+            reservation.get().setTimeTo(new Date(data.getLong("timeTo")));
             reservation.get().setClientId(data.getLong("client"));
 
             reservation.get().setTables(new HashSet<>());
@@ -722,8 +774,10 @@ public abstract class AbstractRemoteController {
     public long updateStatus(@RequestParam long id,
                              @RequestParam int status,
                              @RequestParam long hostes,
-                             HttpServletRequest request) throws JsonProcessingException {
+                             HttpServletRequest request,
+                             HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -804,7 +858,8 @@ public abstract class AbstractRemoteController {
                                   @RequestParam Date when,
                                   @RequestParam int tableFrom,
                                   @RequestParam int tableTo,
-                                  HttpServletRequest request) throws JsonProcessingException {
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
             return -1;
         }

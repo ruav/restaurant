@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
@@ -46,9 +47,11 @@ public class WebEndpoint extends AbstractRemoteController {
     @PostMapping(value = "/upload/hostes")
     public String uploadRestaurantHandler(@RequestParam("file") MultipartFile file,
                                           @PathVariable("id") long id,
-                                          HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+                                          HttpServletRequest request,
+                                          HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
 
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return "Unauthorizated";
         }
 
@@ -70,8 +73,10 @@ public class WebEndpoint extends AbstractRemoteController {
     public long createCategory(@RequestParam boolean active,
                                @RequestParam String name,
                                @RequestParam MultipartFile file,
-                               HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -87,8 +92,10 @@ public class WebEndpoint extends AbstractRemoteController {
 
     @GetMapping("/get/category")
     public String getCategory(@RequestParam long id,
-                               HttpServletRequest request) throws JsonProcessingException {
+                               HttpServletRequest request,
+                              HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return "Access denied";
         }
 
@@ -107,8 +114,10 @@ public class WebEndpoint extends AbstractRemoteController {
                                @RequestParam boolean active,
                                @RequestParam(required = false) MultipartFile file,
                                @RequestParam String name,
-                               HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -126,8 +135,10 @@ public class WebEndpoint extends AbstractRemoteController {
 
     @PostMapping("/delete/category")
     public long deleteCategory(@RequestParam long id,
-                               HttpServletRequest request) {
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -142,8 +153,10 @@ public class WebEndpoint extends AbstractRemoteController {
                                   @RequestParam String name,
                                   @RequestParam long categoryId,
                                   @RequestParam(required = false) MultipartFile file,
-                                  HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -159,8 +172,10 @@ public class WebEndpoint extends AbstractRemoteController {
 
     @GetMapping("/get/subcategory")
     public String getSubcategory(@RequestParam long id,
-                              HttpServletRequest request) throws JsonProcessingException {
+                              HttpServletRequest request,
+                                 HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return "Access denied";
         }
 
@@ -177,8 +192,10 @@ public class WebEndpoint extends AbstractRemoteController {
                                @RequestParam String name,
                                @RequestParam long categoryId,
                                @RequestParam(required = false) MultipartFile file,
-                               HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+                               HttpServletRequest request,
+                                  HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -196,8 +213,10 @@ public class WebEndpoint extends AbstractRemoteController {
 
     @PostMapping("/delete/subcategory")
     public long deleteSubcategory(@RequestParam long id,
-                               HttpServletRequest request) {
+                               HttpServletRequest request,
+                                  HttpServletResponse response) {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -228,8 +247,10 @@ public class WebEndpoint extends AbstractRemoteController {
                                   @RequestParam List<Long> ingredients,
                                   @RequestParam List<Long> allergens,
                                   @RequestParam(required = false) MultipartFile file,
-                                  HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -269,8 +290,10 @@ public class WebEndpoint extends AbstractRemoteController {
 
     @GetMapping("/get/dish")
     public String getDish(@RequestParam long id,
-                                 HttpServletRequest request) throws JsonProcessingException {
+                                 HttpServletRequest request,
+                                HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return "Access denied";
         }
 
@@ -301,8 +324,10 @@ public class WebEndpoint extends AbstractRemoteController {
                                   @RequestParam List<Long> ingredients,
                                   @RequestParam List<Long> allergens,
                                   @RequestParam(required = false) MultipartFile file,
-                                  HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+                                  HttpServletRequest request,
+                           HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -344,8 +369,10 @@ public class WebEndpoint extends AbstractRemoteController {
 
     @PostMapping("/delete/dish")
     public long deleteDish(@RequestParam long id,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request,
+                           HttpServletResponse response) {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -359,8 +386,10 @@ public class WebEndpoint extends AbstractRemoteController {
     public long createIngredient(@RequestParam String name,
                                @RequestParam(required = false) MultipartFile file,
                                @RequestParam(required = false) Long iconId,
-                               HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+                               HttpServletRequest request,
+                                 HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
@@ -380,8 +409,10 @@ public class WebEndpoint extends AbstractRemoteController {
                                @RequestParam String name,
                                @RequestParam(required = false) MultipartFile file,
                                @RequestParam(required = false) Long iconId,
-                               HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
