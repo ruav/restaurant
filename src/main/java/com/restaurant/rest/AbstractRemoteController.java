@@ -853,8 +853,12 @@ public abstract class AbstractRemoteController {
         JWTVerifier verifier = JWT.require(ALGORITHM)
                 .withIssuer(ISSUER)
                 .build();
-        DecodedJWT jwt = verifier.verify(authArray[1]);
-
+        DecodedJWT jwt;
+        try {
+         jwt = verifier.verify(authArray[1]);
+        } catch (Exception e) {
+            return false;
+        }
         if (jwt.getClaim("id").isNull()) return false;
         if (jwt.getClaim(RESTAURANT).isNull()) return false;
 
