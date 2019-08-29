@@ -618,17 +618,25 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/create/reservation")
-    public long createReservation(@RequestBody String body,
+    public String createReservation(@RequestBody String body,
                                   HttpServletRequest request,
                                   HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            return -1;
+            return "Access denied";
         }
 
         Reservation reservation = new Reservation();
         JSONObject data = new JSONObject(body);
-
+        Long hostessId = data.getLong("hostess");
+        if (hostessId == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return "Hostess is empty";
+        }
+        if (!hostessService.findById(hostessId).isPresent()) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return "Hostess is wrong";
+        }
         reservation.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
 
         reservation.setGuests(data.getInt("guests"));
@@ -666,7 +674,7 @@ public abstract class AbstractRemoteController {
         Status status = new Status();
         status.setReservation(id);
         status.setDateTime(new Date());
-        status.setHostess(data.getLong("hostess"));
+        status.setHostess(hostessId);
         status.setLastChange(getTimeStamp());
         status.setStatus(StatusEnum.WAITING);
         status = statusService.save(status);
@@ -690,20 +698,29 @@ public abstract class AbstractRemoteController {
                 new SseMessage("reservation",
                 mapper.writeValueAsString(getReservationEventDto(reservationService.findById(id).get(),
                         clientService.findById(reservation.getClientId()).get()))));
-        return id;
+        return String.valueOf(id);
     }
 
     @PostMapping("/update/reservation")
-    public long updateReservation(@RequestBody String body,
+    public String updateReservation(@RequestBody String body,
                                   HttpServletRequest request,
                                   HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            return -1;
+            return "Access denied";
         }
         JSONObject data = new JSONObject(body);
         long id = data.getLong("id");
         Optional<Reservation> reservation = reservationService.findById(id);
+        Long hostessId = data.getLong("hostess");
+        if (hostessId == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return "Hostess is empty";
+        }
+        if (!hostessService.findById(hostessId).isPresent()) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return "Hostess is wrong";
+        }
         if (reservation.isPresent()) {
 // примерная логика записи в UTC
 //            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));;
@@ -741,7 +758,7 @@ public abstract class AbstractRemoteController {
             Status status = new Status();
             status.setReservation(id);
             status.setDateTime(new Date());
-            status.setHostess(data.getLong("hostess"));
+            status.setHostess(hostessId);
             status.setLastChange(getTimeStamp());
             status.setStatus(StatusEnum.WAITING);
             status = statusService.save(status);
@@ -765,9 +782,9 @@ public abstract class AbstractRemoteController {
                     new SseMessage("reservation",
                             mapper.writeValueAsString(getReservationEventDto(reservationService.findById(id).get(),
                             clientService.findById(reservation.get().getClientId()).get()))));
-            return id;
+            return String.valueOf(id);
         }
-        return -1l;
+        return "-1";
     }
 
     @PostMapping("/update/status")
