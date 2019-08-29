@@ -13,8 +13,6 @@ public class ReservationEventDto {
     @ApiModelProperty
     private long id;
     @ApiModelProperty
-    private String date;
-    @ApiModelProperty
     private String timeFrom;
     @ApiModelProperty
     private String timeTo;
@@ -35,14 +33,6 @@ public class ReservationEventDto {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getTimeFrom() {
@@ -105,7 +95,6 @@ public class ReservationEventDto {
     public String toString() {
         return "ReservationDto{" +
                 "id=" + id +
-                ", date='" + date + '\'' +
                 ", timeFrom='" + timeFrom + '\'' +
                 ", timeTo='" + timeTo + '\'' +
                 ", guests=" + guests +

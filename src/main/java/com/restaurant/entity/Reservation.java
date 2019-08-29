@@ -17,9 +17,6 @@ public class Reservation implements Data {
     private long id;
 
     @Column
-    private Date date;
-
-    @Column
     private Date timeFrom;
 
     @Column
@@ -77,14 +74,6 @@ public class Reservation implements Data {
     @Override
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public Date getTimeFrom() {
@@ -171,7 +160,6 @@ public class Reservation implements Data {
     public String toString() {
         return "Reservation{" +
                 "id=" + id +
-                ", date=" + date +
                 ", timeFrom=" + timeFrom +
                 ", timeTo=" + timeTo +
                 ", restaurantId=" + restaurantId +

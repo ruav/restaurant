@@ -299,7 +299,7 @@ public abstract class AbstractRemoteController {
 
         long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
         Client client = clientService.findById(clientModel.getId()).get();
-        if (client == null) return -1l;
+        if (client == null) return -1;
         client.setName(clientModel.getName());
         client.setPhone(clientModel.getPhone());
         client.setVip(clientModel.isVip());
@@ -632,7 +632,6 @@ public abstract class AbstractRemoteController {
         reservation.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
 
         reservation.setGuests(data.getInt("guests"));
-        reservation.setDate(new Date(data.getString("date")));
         reservation.setTimeFrom(new Date(data.getLong("timeFrom")));
         reservation.setTimeTo(new Date(data.getLong("timeTo")));
         reservation.setClientId(data.getLong("client"));
@@ -711,7 +710,6 @@ public abstract class AbstractRemoteController {
 
             reservation.get().setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
             reservation.get().setGuests(data.getInt("guests"));
-            reservation.get().setDate(new Date(data.getString("date")));
             reservation.get().setTimeFrom(new Date(data.getLong("timeFrom")));
             reservation.get().setTimeTo(new Date(data.getLong("timeTo")));
             reservation.get().setClientId(data.getLong("client"));
@@ -722,18 +720,14 @@ public abstract class AbstractRemoteController {
                 for (Object table : data.getJSONArray("tables")) {
                     if (table == null) continue;
                     Optional<Desk> optionalDesk = deskService.findById(Long.valueOf((Integer) table));
-                    if (optionalDesk.isPresent()) {
-                        reservation.get().getTables().add(optionalDesk.get());
-                    }
+                    optionalDesk.ifPresent(desk -> reservation.get().getTables().add(desk));
                 }
             }
             if (!data.getJSONArray("tags").isEmpty()) {
                 for (Object tag : data.getJSONArray("tags")) {
                     if (tag == null) continue;
                     Optional<Tag> optionalTag = tagService.findById(Long.valueOf((Integer) tag));
-                    if (optionalTag.isPresent()) {
-                        reservation.get().getTags().add(optionalTag.get());
-                    }
+                    optionalTag.ifPresent(value -> reservation.get().getTags().add(value));
                 }
             }
 
@@ -767,7 +761,7 @@ public abstract class AbstractRemoteController {
                             clientService.findById(reservation.get().getClientId()).get()))));
             return id;
         }
-        return -1l;
+        return -1;
     }
 
     @PostMapping("/update/status")
