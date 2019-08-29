@@ -299,7 +299,7 @@ public abstract class AbstractRemoteController {
 
         long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
         Client client = clientService.findById(clientModel.getId()).get();
-        if (client == null) return -1l;
+        if (client == null) return -1;
         client.setName(clientModel.getName());
         client.setPhone(clientModel.getPhone());
         client.setVip(clientModel.isVip());
@@ -640,10 +640,10 @@ public abstract class AbstractRemoteController {
         reservation.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
 
         reservation.setGuests(data.getInt("guests"));
-        reservation.setDate(new Date(data.getString("date")));
         reservation.setTimeFrom(new Date(data.getLong("timeFrom")));
         reservation.setTimeTo(new Date(data.getLong("timeTo")));
         reservation.setClientId(data.getLong("client"));
+        reservation.setLastChange(getTimeStamp());
 
         reservation.setTables(new HashSet<>());
         reservation.setTags(new HashSet<>());
@@ -728,7 +728,6 @@ public abstract class AbstractRemoteController {
 
             reservation.get().setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
             reservation.get().setGuests(data.getInt("guests"));
-            reservation.get().setDate(new Date(data.getString("date")));
             reservation.get().setTimeFrom(new Date(data.getLong("timeFrom")));
             reservation.get().setTimeTo(new Date(data.getLong("timeTo")));
             reservation.get().setClientId(data.getLong("client"));
@@ -739,18 +738,14 @@ public abstract class AbstractRemoteController {
                 for (Object table : data.getJSONArray("tables")) {
                     if (table == null) continue;
                     Optional<Desk> optionalDesk = deskService.findById(Long.valueOf((Integer) table));
-                    if (optionalDesk.isPresent()) {
-                        reservation.get().getTables().add(optionalDesk.get());
-                    }
+                    optionalDesk.ifPresent(desk -> reservation.get().getTables().add(desk));
                 }
             }
             if (!data.getJSONArray("tags").isEmpty()) {
                 for (Object tag : data.getJSONArray("tags")) {
                     if (tag == null) continue;
                     Optional<Tag> optionalTag = tagService.findById(Long.valueOf((Integer) tag));
-                    if (optionalTag.isPresent()) {
-                        reservation.get().getTags().add(optionalTag.get());
-                    }
+                    optionalTag.ifPresent(value -> reservation.get().getTags().add(value));
                 }
             }
 
@@ -790,7 +785,7 @@ public abstract class AbstractRemoteController {
     @PostMapping("/update/status")
     public long updateStatus(@RequestParam long id,
                              @RequestParam int status,
-                             @RequestParam long hostes,
+                             @RequestParam long hostess,
                              HttpServletRequest request,
                              HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
@@ -857,7 +852,7 @@ public abstract class AbstractRemoteController {
         newStatus.setReservation(id);
         newStatus.setDateTime(new Date());
         newStatus.setLastChange(newStatus.getDateTime().getTime());
-        newStatus.setHostess(hostes);
+        newStatus.setHostess(hostess);
 
 
         newStatus = statusService.save(newStatus);
@@ -966,7 +961,7 @@ public abstract class AbstractRemoteController {
     }
 
     protected long getTimeStamp() {
-        return System.currentTimeMillis()/1000;
+        return System.currentTimeMillis();
     }
 
     protected String getUrl(HttpServletRequest request) {
@@ -978,7 +973,5 @@ public abstract class AbstractRemoteController {
         }
         return url;
     }
-
-
 
 }

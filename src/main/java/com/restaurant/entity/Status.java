@@ -21,7 +21,7 @@ public class Status implements Data {
     @Column
     private long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private StatusEnum status;
 

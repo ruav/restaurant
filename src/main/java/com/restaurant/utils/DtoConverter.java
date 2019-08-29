@@ -174,15 +174,16 @@ public class DtoConverter {
 
     public static ReservationDto getReservationDto(Reservation reservation) {
         ReservationDto dto = new ReservationDto();
-        dto.setDate(getDate(reservation.getDate()));
         dto.setId(reservation.getId());
         dto.setClient(reservation.getClientId());
         dto.setGuests(reservation.getGuests());
         dto.setLastchange(reservation.getLastChange());
-        dto.setTags(reservation.getTags().stream().map(DtoConverter::getTagDto).collect(Collectors.toList()));
-        dto.setTables(reservation.getTables().stream().map(DtoConverter::getDeskDto).collect(Collectors.toList()));
-        dto.setTimeFrom(getTime(reservation.getTimeFrom()));
-        dto.setTimeTo(getTime(reservation.getTimeTo()));
+        dto.setReplacements(reservation.getReplacements().stream().map(DtoConverter::getReplacementDto).collect(Collectors.toList()));
+        dto.setStatuses(reservation.getStatuses().stream().map(DtoConverter::getStatusDto).collect(Collectors.toList()));
+        dto.setTags(reservation.getTags().stream().map(Tag::getId).collect(Collectors.toList()));
+        dto.setTables(reservation.getTables().stream().map(Desk::getId).collect(Collectors.toList()));
+        dto.setTimeFrom(reservation.getTimeFrom().getTime());
+        dto.setTimeTo(reservation.getTimeTo().getTime());
         return dto;
     }
 
@@ -191,14 +192,13 @@ public class DtoConverter {
         dto.setId(reservation.getId());
         dto.setLastchange(reservation.getLastChange());
         if (client != null) {
-            dto.setClient(getClientDto(client));
+            dto.setClient(client.getId());
         }
-        dto.setDate(getDate(reservation.getDate()));
-        dto.setTimeFrom(getTime(reservation.getTimeFrom()));
-        dto.setTimeTo(getTime(reservation.getTimeTo()));
+        dto.setTimeFrom(reservation.getTimeFrom().getTime());
+        dto.setTimeTo(reservation.getTimeTo().getTime());
         dto.setGuests(reservation.getGuests());
-        dto.setTables(reservation.getTables().stream().map(DtoConverter::getDeskDto).collect(Collectors.toList()));
-        dto.setTags(reservation.getTags().stream().map(DtoConverter::getTagDto).collect(Collectors.toList()));
+        dto.setTables(reservation.getTables().stream().map(Desk::getId).collect(Collectors.toList()));
+        dto.setTags(reservation.getTags().stream().map(Tag::getId).collect(Collectors.toList()));
         return dto;
     }
 

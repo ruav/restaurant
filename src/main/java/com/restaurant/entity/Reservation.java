@@ -2,15 +2,7 @@ package com.restaurant.entity;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -25,9 +17,6 @@ public class Reservation implements Data {
     private long id;
 
     @Column
-    private Date date;
-
-    @Column
     private Date timeFrom;
 
     @Column
@@ -40,7 +29,7 @@ public class Reservation implements Data {
     @Column
     private int guests;
 
-    @OneToMany()
+    @ManyToMany()
     @JoinTable(
             name="reservation_tables",
             joinColumns = @JoinColumn(name = "reservation_id"),
@@ -85,14 +74,6 @@ public class Reservation implements Data {
     @Override
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public Date getTimeFrom() {
@@ -179,7 +160,6 @@ public class Reservation implements Data {
     public String toString() {
         return "Reservation{" +
                 "id=" + id +
-                ", date=" + date +
                 ", timeFrom=" + timeFrom +
                 ", timeTo=" + timeTo +
                 ", restaurantId=" + restaurantId +
