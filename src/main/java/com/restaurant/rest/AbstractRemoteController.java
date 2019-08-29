@@ -773,7 +773,7 @@ public abstract class AbstractRemoteController {
     @PostMapping("/update/status")
     public long updateStatus(@RequestParam long id,
                              @RequestParam int status,
-                             @RequestParam long hostes,
+                             @RequestParam long hostess,
                              HttpServletRequest request,
                              HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
@@ -840,7 +840,7 @@ public abstract class AbstractRemoteController {
         newStatus.setReservation(id);
         newStatus.setDateTime(new Date());
         newStatus.setLastChange(newStatus.getDateTime().getTime());
-        newStatus.setHostess(hostes);
+        newStatus.setHostess(hostess);
 
 
         newStatus = statusService.save(newStatus);
