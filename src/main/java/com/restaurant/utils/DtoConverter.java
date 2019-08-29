@@ -204,7 +204,6 @@ public class DtoConverter {
 
     public static StatusDto getStatusDto(Status status) {
         StatusDto dto = new StatusDto();
-        dto.setDatetime(status.getDateTime().toString());
         dto.setHostess(status.getHostess());
         dto.setStatus(status.getStatus().getNum());
         return dto;

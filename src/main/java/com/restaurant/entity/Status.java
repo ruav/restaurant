@@ -28,9 +28,6 @@ public class Status implements Data {
     @Column
     private long hostess;
 
-    @Column(name = "date_time")
-    private Date dateTime;
-
     @Column
     private long reservation;
 
@@ -62,14 +59,6 @@ public class Status implements Data {
         this.hostess = hostess;
     }
 
-    public Date getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
-    }
-
     public long getLastChange() {
         return lastChange;
     }
@@ -92,7 +81,6 @@ public class Status implements Data {
                 "id=" + id +
                 ", status=" + status +
                 ", hostess=" + hostess +
-                ", dateTime=" + dateTime +
                 ", reservation=" + reservation +
                 ", lastChange=" + lastChange +
                 '}';

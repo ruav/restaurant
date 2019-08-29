@@ -673,7 +673,6 @@ public abstract class AbstractRemoteController {
         reservation.setStatuses(new ArrayList<>());
         Status status = new Status();
         status.setReservation(id);
-        status.setDateTime(new Date());
         status.setHostess(hostessId);
         status.setLastChange(getTimeStamp());
         status.setStatus(StatusEnum.WAITING);
@@ -752,7 +751,6 @@ public abstract class AbstractRemoteController {
             reservation.get().setStatuses(new ArrayList<>());
             Status status = new Status();
             status.setReservation(id);
-            status.setDateTime(new Date());
             status.setHostess(hostessId);
             status.setLastChange(getTimeStamp());
             status.setStatus(StatusEnum.WAITING);
@@ -850,8 +848,7 @@ public abstract class AbstractRemoteController {
                 break;
         }
         newStatus.setReservation(id);
-        newStatus.setDateTime(new Date());
-        newStatus.setLastChange(newStatus.getDateTime().getTime());
+        newStatus.setLastChange(new Date().getTime());
         newStatus.setHostess(hostess);
 
 
