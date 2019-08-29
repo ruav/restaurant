@@ -9,21 +9,21 @@ public class ReservationDto {
     @ApiModelProperty
     private long id;
     @ApiModelProperty
-    private String timeFrom;
+    private Long timeFrom;
     @ApiModelProperty
-    private String timeTo;
+    private Long timeTo;
     @ApiModelProperty
     private int guests;
     @ApiModelProperty
-    private List<DeskDto> tables;
+    private List<Long> tables;
     @ApiModelProperty
     private List<ReplacementDto> replacements;
     @ApiModelProperty
-    private List<TagDto> tags;
+    private List<Long> tags;
     @ApiModelProperty
     private long client;
     @ApiModelProperty
-    private List<StatusDto> status;
+    private List<StatusDto> statuses;
     @ApiModelProperty
     private long lastchange;
 
@@ -35,19 +35,19 @@ public class ReservationDto {
         this.id = id;
     }
 
-    public String getTimeFrom() {
+    public Long getTimeFrom() {
         return timeFrom;
     }
 
-    public void setTimeFrom(String timeFrom) {
+    public void setTimeFrom(Long timeFrom) {
         this.timeFrom = timeFrom;
     }
 
-    public String getTimeTo() {
+    public Long getTimeTo() {
         return timeTo;
     }
 
-    public void setTimeTo(String timeTo) {
+    public void setTimeTo(Long timeTo) {
         this.timeTo = timeTo;
     }
 
@@ -59,19 +59,19 @@ public class ReservationDto {
         this.guests = guests;
     }
 
-    public List<DeskDto> getTables() {
+    public List<Long> getTables() {
         return tables;
     }
 
-    public void setTables(List<DeskDto> tables) {
+    public void setTables(List<Long> tables) {
         this.tables = tables;
     }
 
-    public List<TagDto> getTags() {
+    public List<Long> getTags() {
         return tags;
     }
 
-    public void setTags(List<TagDto> tags) {
+    public void setTags(List<Long> tags) {
         this.tags = tags;
     }
 
@@ -90,6 +90,24 @@ public class ReservationDto {
     public void setLastchange(long lastchange) {
         this.lastchange = lastchange;
     }
+
+
+    public List<ReplacementDto> getReplacements() {
+        return replacements;
+    }
+
+    public void setReplacements(List<ReplacementDto> replacements) {
+        this.replacements = replacements;
+    }
+
+    public List<StatusDto> getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(List<StatusDto> statuses) {
+        this.statuses = statuses;
+    }
+
 
     @Override
     public String toString() {

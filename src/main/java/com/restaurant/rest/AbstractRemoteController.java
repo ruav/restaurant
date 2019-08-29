@@ -635,6 +635,7 @@ public abstract class AbstractRemoteController {
         reservation.setTimeFrom(new Date(data.getLong("timeFrom")));
         reservation.setTimeTo(new Date(data.getLong("timeTo")));
         reservation.setClientId(data.getLong("client"));
+        reservation.setLastChange(getTimeStamp());
 
         reservation.setTables(new HashSet<>());
         reservation.setTags(new HashSet<>());
@@ -943,7 +944,7 @@ public abstract class AbstractRemoteController {
     }
 
     protected long getTimeStamp() {
-        return System.currentTimeMillis()/1000;
+        return System.currentTimeMillis();
     }
 
     protected String getUrl(HttpServletRequest request) {
@@ -955,7 +956,5 @@ public abstract class AbstractRemoteController {
         }
         return url;
     }
-
-
 
 }
