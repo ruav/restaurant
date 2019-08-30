@@ -672,11 +672,11 @@ public abstract class AbstractRemoteController {
         JSONObject data = new JSONObject(body);
         Long hostessId = data.getLong("hostess");
         if (hostessId == null) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return "Hostess is empty";
         }
         if (!hostessService.findById(hostessId).isPresent()) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return "Hostess is wrong";
         }
         reservation.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));

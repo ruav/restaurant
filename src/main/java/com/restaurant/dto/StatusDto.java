@@ -5,18 +5,18 @@ import io.swagger.annotations.ApiModelProperty;
 public class StatusDto {
 
     @ApiModelProperty
-    private String datetime;
+    private long lastchange;
     @ApiModelProperty
     private Integer status;
     @ApiModelProperty
     private Long hostess;
 
-    public String getDatetime() {
-        return datetime;
+    public long getDatetime() {
+        return lastchange;
     }
 
-    public void setDatetime(String datetime) {
-        this.datetime = datetime;
+    public void setDatetime(long datetime) {
+        this.lastchange = datetime;
     }
 
     public Integer getStatus() {
@@ -38,7 +38,7 @@ public class StatusDto {
     @Override
     public String toString() {
         return "StatusDto{" +
-                "datetime='" + datetime + '\'' +
+                "datetime='" + lastchange + '\'' +
                 ", status=" + status +
                 ", hostess=" + hostess +
                 '}';
