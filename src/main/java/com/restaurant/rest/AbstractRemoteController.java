@@ -89,11 +89,17 @@ public abstract class AbstractRemoteController {
                                         @PathParam("limit") int limit,
                                         @PathParam("offset") int offset,
                                         HttpServletRequest request,
-                                        HttpServletResponse response) {
+                                        HttpServletResponse response) throws IOException {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-            return hostessService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
-                    .stream().map(h -> getHostessDto(h, getUrl(request))).collect(Collectors.toList());
+            try {
+                return hostessService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(restaurantId, from, to, limit, offset)
+                        .stream().map(h -> getHostessDto(h, getUrl(request))).collect(Collectors.toList());
+            } catch (Exception e) {
+                response.getOutputStream().println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return null;
+            }
         }
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
@@ -105,11 +111,17 @@ public abstract class AbstractRemoteController {
                                  @PathParam("limit") int limit,
                                  @PathParam("offset")int offset,
                                  HttpServletRequest request,
-                                 HttpServletResponse response) {
+                                 HttpServletResponse response) throws IOException {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-            return tagService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
-                    .stream().map(DtoConverter::getTagDto).collect(Collectors.toList());
+            try {
+                return tagService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+                        .stream().map(DtoConverter::getTagDto).collect(Collectors.toList());
+            } catch (Exception e) {
+                response.getOutputStream().println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return null;
+            }
         }
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
@@ -121,11 +133,17 @@ public abstract class AbstractRemoteController {
                                       @PathParam("limit") int limit,
                                       @PathParam("offset")int offset,
                                       HttpServletRequest request,
-                                      HttpServletResponse response) {
+                                      HttpServletResponse response) throws IOException {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-            return clientService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
-                    .stream().map(DtoConverter::getClientDto).collect(Collectors.toList());
+            try {
+                return clientService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+                        .stream().map(DtoConverter::getClientDto).collect(Collectors.toList());
+            } catch (Exception e) {
+                response.getOutputStream().println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return null;
+            }
         }
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
@@ -137,11 +155,17 @@ public abstract class AbstractRemoteController {
                                   @PathParam("limit") int limit,
                                   @PathParam("offset")int offset,
                                   HttpServletRequest request,
-                                  HttpServletResponse response) {
+                                  HttpServletResponse response) throws IOException {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-            return hallService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+            try {
+            return hallService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getHallDto).collect(Collectors.toList());
+            } catch (Exception e) {
+                response.getOutputStream().println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return null;
+            }
         }
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
@@ -153,11 +177,17 @@ public abstract class AbstractRemoteController {
                                   @PathParam("limit") int limit,
                                   @PathParam("offset")int offset,
                                   HttpServletRequest request,
-                                  HttpServletResponse response) {
+                                  HttpServletResponse response) throws IOException {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-            return deskService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+            try {
+            return deskService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getDeskDto).collect(Collectors.toList());
+            } catch (Exception e) {
+                response.getOutputStream().println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return null;
+            }
         }
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
@@ -169,11 +199,17 @@ public abstract class AbstractRemoteController {
                                   @PathParam("limit") int limit,
                                   @PathParam("offset")int offset,
                                   HttpServletRequest request,
-                                  HttpServletResponse response) {
+                                  HttpServletResponse response) throws IOException {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-            return cardService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+            try {
+            return cardService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getCardDto).collect(Collectors.toList());
+            } catch (Exception e) {
+                response.getOutputStream().println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return null;
+            }
         }
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();
@@ -185,11 +221,17 @@ public abstract class AbstractRemoteController {
                                                 @PathParam("limit") int limit,
                                                 @PathParam("offset")int offset,
                                                 HttpServletRequest request,
-                                                HttpServletResponse response) {
+                                                HttpServletResponse response) throws IOException {
         if (checkToken(request.getHeader(AUTHORIZATION))) {
             long restaurantId = getRestaurantId(request.getHeader(AUTHORIZATION));
-            return reservationService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
+            try {
+            return reservationService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset)
                     .stream().map(DtoConverter::getReservationDto).collect(Collectors.toList());
+            } catch (Exception e) {
+                response.getOutputStream().println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return null;
+            }
         }
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return Collections.emptyList();

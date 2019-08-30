@@ -88,7 +88,7 @@ public class SyncEndpoint {
 //        if (!checkAuth(request.getCookies(), restaurantId)) {
 //            return Collections.EMPTY_LIST;
 //        }
-        return hostessService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+        return hostessService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(restaurantId, from, to, limit, offset);
     }
 
     @GetMapping("/tags")
@@ -103,7 +103,7 @@ public class SyncEndpoint {
 //        if (!checkAuth(request.getCookies(), restaurantId)) {
 //            return Collections.EMPTY_LIST;
 //        }
-        return tagService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+        return tagService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
     }
 
     @GetMapping("/clients")
@@ -118,7 +118,7 @@ public class SyncEndpoint {
 //        if (!checkAuth(request.getCookies(), restaurantId)) {
 //            return Collections.EMPTY_LIST;
 //        }
-        return clientService.findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
+        return clientService.findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, limit, offset);
     }
 
     @PostMapping("/create/client")

@@ -37,7 +37,7 @@ public class Hostess implements Data {
     @Column
     private boolean work;
 
-    @Column
+    @Column(name="last_change")
     private long lastChange;
 
     public long getId() {

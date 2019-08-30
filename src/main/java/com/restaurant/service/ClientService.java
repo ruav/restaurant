@@ -3,6 +3,7 @@ package com.restaurant.service;
 import com.restaurant.entity.Client;
 import com.restaurant.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +19,9 @@ public class ClientService extends AbstractService<ClientRepository, Client> {
         return clientRepository;
     }
 
-    public List<Client> findAllByLastChangeBetweenOrderByLastChangeAsc(long from, long to, long restaurantId, int limit, int offset) {
-        return repository().findAllByLastChangeBetweenOrderByLastChangeAsc(from, to, restaurantId, offset, limit);
+    public List<Client> findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(long from, long to, long restaurantId, int limit, int offset) {
+        if (offset%limit != 0) throw new IllegalArgumentException("Offset must be a multiple of limit");
+        return repository().findAllByRestaurantIdAndLastChangeBetweenOrderByLastChangeAsc(restaurantId, from, to, PageRequest.of(offset/limit, limit));
     }
 
 

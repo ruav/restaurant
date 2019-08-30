@@ -6,9 +6,11 @@ import com.restaurant.entity.*;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Component
@@ -206,6 +208,9 @@ public class DtoConverter {
         StatusDto dto = new StatusDto();
         dto.setHostess(status.getHostess());
         dto.setStatus(status.getStatus().getNum());
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTimeInMillis(status.getLastChange());
+        dto.setDatetime(getDate(calendar.getTime()) + " " + getTime(calendar.getTime()));
         return dto;
     }
 
