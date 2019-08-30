@@ -45,7 +45,7 @@ public class Reservation implements Data {
     )
     private Set<Replacement> replacements;
 
-    @OneToMany()
+    @ManyToMany()
     @JoinTable(
             name="reservation_tags",
             joinColumns = @JoinColumn(name = "reservation_id"),
