@@ -217,6 +217,7 @@ public class DtoConverter {
         dto.setTableFrom(replacement.getDeskFrom());
         dto.setTableTo(replacement.getDeskTo());
         dto.setWhen(replacement.getTime());
+        dto.setReservationId(replacement.getReservation());
         return dto;
     }
 

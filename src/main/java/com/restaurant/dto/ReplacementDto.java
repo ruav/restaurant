@@ -12,6 +12,8 @@ public class ReplacementDto {
     private int tableFrom;
     @ApiModelProperty
     private int tableTo;
+    @ApiModelProperty
+    private long reservationId;
 
     public Date getWhen() {
         return when;
@@ -37,12 +39,21 @@ public class ReplacementDto {
         this.tableTo = tableTo;
     }
 
+    public long getReservationId() {
+        return reservationId;
+    }
+
+    public void setReservationId(long reservationId) {
+        this.reservationId = reservationId;
+    }
+
     @Override
     public String toString() {
         return "ReplacementDto{" +
                 "when=" + when +
                 ", tableFrom=" + tableFrom +
                 ", tableTo=" + tableTo +
+                ", reservationId=" + reservationId +
                 '}';
     }
 }
