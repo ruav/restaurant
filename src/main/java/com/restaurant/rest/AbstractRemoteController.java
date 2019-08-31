@@ -912,20 +912,26 @@ public abstract class AbstractRemoteController {
                                   HttpServletRequest request,
                                   HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return -1;
         }
 
-        Replacement replacement = new Replacement();
-        replacement.setReservation(id);
-        replacement.setTime(when);
-        replacement.setDeskFrom(tableFrom);
-        replacement.setDeskTo(tableTo);
-        replacement = replacementService.save(replacement);
+        Optional<Reservation> reservation = reservationService.findById(id);
+        if (reservation.isPresent()) {
 
-        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
-                new SseMessage("replacement",
-                        mapper.writeValueAsString(getReplacementDto(replacement))));
-        return id;
+            Replacement replacement = new Replacement();
+            replacement.setReservation(id);
+            replacement.setTime(when);
+            replacement.setDeskFrom(tableFrom);
+            replacement.setDeskTo(tableTo);
+            replacement = replacementService.save(replacement);
+            reservation.get().getReplacements().add(replacement);
+            notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+                    new SseMessage("replacement",
+                            mapper.writeValueAsString(getReplacementDto(replacement))));
+            return id;
+        }
+        return -1;
     }
 
     @GetMapping("/sync")
