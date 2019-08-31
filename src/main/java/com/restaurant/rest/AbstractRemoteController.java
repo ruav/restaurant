@@ -404,8 +404,8 @@ public abstract class AbstractRemoteController {
         return id;
     }
 
-    @PostMapping("/update/hostes")
-    public long updateHostes(@RequestParam long id,
+    @PostMapping("/update/hostess")
+    public long updateHostess(@RequestParam long id,
                              @RequestParam @NotEmpty String name,
                              HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 
@@ -672,11 +672,11 @@ public abstract class AbstractRemoteController {
         JSONObject data = new JSONObject(body);
         Long hostessId = data.getLong("hostess");
         if (hostessId == null) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return "Hostess is empty";
         }
         if (!hostessService.findById(hostessId).isPresent()) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return "Hostess is wrong";
         }
         reservation.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
@@ -717,7 +717,7 @@ public abstract class AbstractRemoteController {
         status.setReservation(id);
         status.setHostess(hostessId);
         status.setLastChange(getTimeStamp());
-        status.setStatus(StatusEnum.WAITING);
+        status.setStatus(StatusEnum.DRAFT);
         status = statusService.save(status);
         reservation.getStatuses().add(0, status);
 

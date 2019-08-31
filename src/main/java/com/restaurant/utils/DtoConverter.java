@@ -208,9 +208,7 @@ public class DtoConverter {
         StatusDto dto = new StatusDto();
         dto.setHostess(status.getHostess());
         dto.setStatus(status.getStatus().getNum());
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        calendar.setTimeInMillis(status.getLastChange());
-        dto.setDatetime(getDate(calendar.getTime()) + " " + getTime(calendar.getTime()));
+        dto.setDatetime(status.getLastChange());
         return dto;
     }
 
