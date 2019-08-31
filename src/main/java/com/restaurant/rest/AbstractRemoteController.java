@@ -14,6 +14,7 @@ import com.restaurant.utils.DtoConverter;
 import com.restaurant.vo.StatusEnum;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -281,6 +282,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/create/client")
+    @Transactional
     public long createClient(@RequestBody ClientModel clientModel,
                              HttpServletRequest request,
                              HttpServletResponse response
@@ -329,6 +331,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/client")
+    @Transactional
     public long updateClient(@RequestBody ClientModel clientModel,
                              HttpServletRequest request,
                              HttpServletResponse response
@@ -377,6 +380,7 @@ public abstract class AbstractRemoteController {
 
 
     @PostMapping("/create/hostess")
+    @Transactional
     public long createHostess(@RequestParam String name,
                               HttpServletRequest request,
                               HttpServletResponse response) throws JsonProcessingException {
@@ -405,6 +409,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/hostess")
+    @Transactional
     public long updateHostess(@RequestParam long id,
                              @RequestParam @NotEmpty String name,
                              HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
@@ -431,6 +436,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/create/clientTag")
+    @Transactional
     public long createClientTag(@RequestParam String name,
                                 @RequestParam long clientId,
                                 HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
@@ -451,6 +457,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/clientTag")
+    @Transactional
     public long updateClientTag(@RequestParam long id,
                                 @RequestParam String name,
                                 @RequestParam long clientId,
@@ -473,6 +480,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/create/hall")
+    @Transactional
     public long createHall(@RequestParam String name,
                            @RequestParam boolean active,
                            @RequestParam boolean online,
@@ -496,6 +504,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/hall")
+    @Transactional
     public long updateHall(@RequestParam long id,
                            @RequestParam String name,
                            @RequestParam boolean active,
@@ -520,6 +529,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/create/desk")
+    @Transactional
     public long createDesk(@RequestParam long hall,
                            @RequestParam int number,
                            @RequestParam int capacity,
@@ -543,6 +553,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/desk")
+    @Transactional
     public long updateDesk(@RequestParam long id,
                            @RequestParam long hall,
                            @RequestParam int number,
@@ -567,6 +578,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/create/card")
+    @Transactional
     public long createCard(@RequestParam long hall,
                            @RequestParam String map,
                            @RequestParam Date relevantFrom,
@@ -590,6 +602,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/card")
+    @Transactional
     public long updateCard(@RequestParam long id,
                            @RequestParam long hall,
                            @RequestParam String map,
@@ -617,6 +630,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/create/reservationTag")
+    @Transactional
     public long createReservationTag(@RequestParam String name,
                                      @RequestParam long reservationId,
                                      HttpServletRequest request,
@@ -638,6 +652,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/reservationTag")
+    @Transactional
     public long updateReservationTag(@RequestParam long id,
                                      @RequestParam String name,
                                      @RequestParam long reservationId,
@@ -660,6 +675,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/create/reservation")
+    @Transactional
     public String createReservation(@RequestBody String body,
                                   HttpServletRequest request,
                                   HttpServletResponse response) throws JsonProcessingException {
@@ -671,6 +687,7 @@ public abstract class AbstractRemoteController {
         Reservation reservation = new Reservation();
         JSONObject data = new JSONObject(body);
         Long hostessId = data.getLong("hostess");
+        Long clientId = data.getLong("client");
         if (hostessId == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return "Hostess is empty";
@@ -679,12 +696,20 @@ public abstract class AbstractRemoteController {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return "Hostess is wrong";
         }
+        if (clientId == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return "Client is empty";
+        }
+        if (!clientService.findById(clientId).isPresent()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return "Client is wrong";
+        }
         reservation.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
 
         reservation.setGuests(data.getInt("guests"));
         reservation.setTimeFrom(new Date(data.getLong("timeFrom")));
         reservation.setTimeTo(new Date(data.getLong("timeTo")));
-        reservation.setClientId(data.getLong("client"));
+        reservation.setClientId(clientId);
         reservation.setLastChange(getTimeStamp());
 
         reservation.setTables(new HashSet<>());
@@ -743,6 +768,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/reservation")
+    @Transactional
     public String updateReservation(@RequestBody String body,
                                   HttpServletRequest request,
                                   HttpServletResponse response) throws JsonProcessingException {
@@ -753,6 +779,7 @@ public abstract class AbstractRemoteController {
         JSONObject data = new JSONObject(body);
         long id = data.getLong("id");
         Optional<Reservation> reservation = reservationService.findById(id);
+        Long clientId = data.getLong("client");
         Long hostessId = data.getLong("hostess");
         if (hostessId == null) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -761,6 +788,14 @@ public abstract class AbstractRemoteController {
         if (!hostessService.findById(hostessId).isPresent()) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return "Hostess is wrong";
+        }
+        if (clientId == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return "Client is empty";
+        }
+        if (!clientService.findById(clientId).isPresent()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return "Client is wrong";
         }
         if (reservation.isPresent()) {
 // примерная логика записи в UTC
@@ -771,7 +806,7 @@ public abstract class AbstractRemoteController {
             reservation.get().setGuests(data.getInt("guests"));
             reservation.get().setTimeFrom(new Date(data.getLong("timeFrom")));
             reservation.get().setTimeTo(new Date(data.getLong("timeTo")));
-            reservation.get().setClientId(data.getLong("client"));
+            reservation.get().setClientId(clientId);
 
             reservation.get().setTables(new HashSet<>());
             reservation.get().setTags(new HashSet<>());
@@ -823,6 +858,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/status")
+    @Transactional
     public long updateStatus(@RequestParam long id,
                              @RequestParam int status,
                              @RequestParam long hostess,
@@ -905,6 +941,7 @@ public abstract class AbstractRemoteController {
     }
 
     @PostMapping("/update/replacement")
+    @Transactional
     public long updateReplacement(@RequestParam long id,
                                   @RequestParam Date when,
                                   @RequestParam int tableFrom,
