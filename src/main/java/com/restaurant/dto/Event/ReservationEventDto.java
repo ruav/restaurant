@@ -1,8 +1,5 @@
 package com.restaurant.dto.Event;
 
-import com.restaurant.dto.ClientDto;
-import com.restaurant.dto.DeskDto;
-import com.restaurant.dto.TagDto;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;

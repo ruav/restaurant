@@ -10,13 +10,15 @@ public class StatusDto {
     private Integer status;
     @ApiModelProperty
     private Long hostess;
+    @ApiModelProperty
+    private Long id;
 
-    public long getDatetime() {
+    public long getLastchange() {
         return lastchange;
     }
 
-    public void setDatetime(long datetime) {
-        this.lastchange = datetime;
+    public void setLastchange(long lastchange) {
+        this.lastchange = lastchange;
     }
 
     public Integer getStatus() {
@@ -35,12 +37,21 @@ public class StatusDto {
         this.hostess = hostess;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "StatusDto{" +
-                "datetime='" + lastchange + '\'' +
+                "lastchange=" + lastchange +
                 ", status=" + status +
                 ", hostess=" + hostess +
+                ", id=" + id +
                 '}';
     }
 }

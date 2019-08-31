@@ -206,9 +206,11 @@ public class DtoConverter {
 
     public static StatusDto getStatusDto(Status status) {
         StatusDto dto = new StatusDto();
+
+        dto.setId(status.getReservation());
         dto.setHostess(status.getHostess());
         dto.setStatus(status.getStatus().getNum());
-        dto.setDatetime(status.getLastChange());
+        dto.setLastchange(status.getLastChange());
         return dto;
     }
 
