@@ -714,6 +714,8 @@ public abstract class AbstractRemoteController {
 
         reservation.setTables(new HashSet<>());
         reservation.setTags(new HashSet<>());
+        long id = reservationService.save(reservation).getId();
+
         if (!data.getJSONArray("tables").isEmpty()) {
             for (Object table : data.getJSONArray("tables")) {
                 if (table == null) continue;
@@ -728,12 +730,15 @@ public abstract class AbstractRemoteController {
                 if (tag == null) continue;
                 Optional<Tag> optionalTag = tagService.findById(Long.valueOf((Integer) tag));
                 if (optionalTag.isPresent()) {
+                    optionalTag.get().setReservationId(reservation.getId());
+                    tagService.save(optionalTag.get());
                     reservation.getTags().add(optionalTag.get());
+                    notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+                            new SseMessage("reservationTag",
+                                    mapper.writeValueAsString(getTagDto(optionalTag.get()))));
                 }
             }
         }
-
-        long id = reservationService.save(reservation).getId();
 
         reservation = reservationService.findById(id).get();
 
@@ -745,6 +750,9 @@ public abstract class AbstractRemoteController {
         status.setStatus(StatusEnum.DRAFT);
         status = statusService.save(status);
         reservation.getStatuses().add(0, status);
+        notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+                new SseMessage("status",
+                        mapper.writeValueAsString(getStatusDto(status))));
 
         if (!data.getJSONArray("newtags").isEmpty()) {
             for (Object newTag : data.getJSONArray("newtags")) {
@@ -756,6 +764,9 @@ public abstract class AbstractRemoteController {
                 tag1.setLastChange(getTimeStamp());
                 tag1 = tagService.save(tag1);
                 reservation.getTags().add(tag1);
+                notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+                        new SseMessage("reservationTag",
+                                mapper.writeValueAsString(getTagDto(tag1))));
             }
         }
 
@@ -833,6 +844,9 @@ public abstract class AbstractRemoteController {
             status.setStatus(StatusEnum.WAITING);
             status = statusService.save(status);
             reservation.get().getStatuses().add(0, status);
+            notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+                    new SseMessage("status",
+                            mapper.writeValueAsString(getStatusDto(status))));
 
             if (!data.getJSONArray("newtags").isEmpty()) {
                 for (Object newTag : data.getJSONArray("newtags")) {
@@ -844,6 +858,9 @@ public abstract class AbstractRemoteController {
                     tag1.setLastChange(getTimeStamp());
                     tag1 = tagService.save(tag1);
                     reservation.get().getTags().add(tag1);
+                    notificationService.addElement(getRestaurantId(request.getHeader(AUTHORIZATION)),
+                            new SseMessage("reservationTag",
+                                    mapper.writeValueAsString(getTagDto(tag1))));
                 }
             }
 
