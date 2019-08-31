@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurant.dto.*;
 import com.restaurant.dto.editable.ClientModel;
+import com.restaurant.dto.editable.ReservationModel;
 import com.restaurant.entity.*;
 import com.restaurant.service.*;
 import com.restaurant.utils.CustomSseEmitter;
@@ -676,7 +677,7 @@ public abstract class AbstractRemoteController {
 
     @PostMapping("/create/reservation")
     @Transactional
-    public String createReservation(@RequestBody String body,
+    public String createReservation(@RequestBody ReservationModel model,
                                   HttpServletRequest request,
                                   HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
@@ -685,9 +686,8 @@ public abstract class AbstractRemoteController {
         }
 
         Reservation reservation = new Reservation();
-        JSONObject data = new JSONObject(body);
-        Long hostessId = data.getLong("hostess");
-        Long clientId = data.getLong("client");
+        Long hostessId = model.getHostess();
+        Long clientId = model.getClient();
         if (hostessId == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return "Hostess is empty";
@@ -706,9 +706,9 @@ public abstract class AbstractRemoteController {
         }
         reservation.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
 
-        reservation.setGuests(data.getInt("guests"));
-        reservation.setTimeFrom(new Date(data.getLong("timeFrom")));
-        reservation.setTimeTo(new Date(data.getLong("timeTo")));
+        reservation.setGuests(model.getGuests());
+        reservation.setTimeFrom(new Date(model.getTimeFrom()));
+        reservation.setTimeTo(new Date(model.getTimeTo()));
         reservation.setClientId(clientId);
         reservation.setLastChange(getTimeStamp());
 
@@ -716,19 +716,19 @@ public abstract class AbstractRemoteController {
         reservation.setTags(new HashSet<>());
         long id = reservationService.save(reservation).getId();
 
-        if (!data.getJSONArray("tables").isEmpty()) {
-            for (Object table : data.getJSONArray("tables")) {
+        if (!model.getTables().isEmpty()) {
+            for (Long table : model.getTables()) {
                 if (table == null) continue;
-                Optional<Desk> optionalDesk = deskService.findById(Long.valueOf((Integer) table));
+                Optional<Desk> optionalDesk = deskService.findById(table);
                 if (optionalDesk.isPresent()) {
                     reservation.getTables().add(optionalDesk.get());
                 }
             }
         }
-        if (!data.getJSONArray("tags").isEmpty()) {
-            for (Object tag : data.getJSONArray("tags")) {
+        if (!model.getTags().isEmpty()) {
+            for (Long tag : model.getTags()) {
                 if (tag == null) continue;
-                Optional<Tag> optionalTag = tagService.findById(Long.valueOf((Integer) tag));
+                Optional<Tag> optionalTag = tagService.findById(tag);
                 if (optionalTag.isPresent()) {
                     optionalTag.get().setReservationId(reservation.getId());
                     tagService.save(optionalTag.get());
@@ -754,13 +754,13 @@ public abstract class AbstractRemoteController {
                 new SseMessage("status",
                         mapper.writeValueAsString(getStatusDto(status))));
 
-        if (!data.getJSONArray("newtags").isEmpty()) {
-            for (Object newTag : data.getJSONArray("newtags")) {
-                if (newTag == null || ((String) newTag).isEmpty()) continue;
+        if (!model.getNewTags().isEmpty()) {
+            for (String newTag : model.getNewTags()) {
+                if (newTag == null || newTag.isEmpty()) continue;
                 Tag tag1 = new Tag();
-                tag1.setName((String) newTag);
+                tag1.setName(newTag);
                 tag1.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
-                tag1.setClientId(data.getLong("client"));
+                tag1.setClientId(clientId);
                 tag1.setLastChange(getTimeStamp());
                 tag1 = tagService.save(tag1);
                 reservation.getTags().add(tag1);
@@ -780,18 +780,17 @@ public abstract class AbstractRemoteController {
 
     @PostMapping("/update/reservation")
     @Transactional
-    public String updateReservation(@RequestBody String body,
+    public String updateReservation(@RequestBody ReservationModel model,
                                   HttpServletRequest request,
                                   HttpServletResponse response) throws JsonProcessingException {
         if (!checkToken(request.getHeader(AUTHORIZATION))) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return "Access denied";
         }
-        JSONObject data = new JSONObject(body);
-        long id = data.getLong("id");
+        long id = model.getId();
         Optional<Reservation> reservation = reservationService.findById(id);
-        Long clientId = data.getLong("client");
-        Long hostessId = data.getLong("hostess");
+        Long clientId = model.getClient();
+        Long hostessId = model.getHostess();
         if (hostessId == null) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return "Hostess is empty";
@@ -814,24 +813,24 @@ public abstract class AbstractRemoteController {
 //            calendar.setTimeInMillis(System.currentTimeMillis());
 
             reservation.get().setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
-            reservation.get().setGuests(data.getInt("guests"));
-            reservation.get().setTimeFrom(new Date(data.getLong("timeFrom")));
-            reservation.get().setTimeTo(new Date(data.getLong("timeTo")));
+            reservation.get().setGuests(model.getGuests());
+            reservation.get().setTimeFrom(new Date(model.getTimeFrom()));
+            reservation.get().setTimeTo(new Date(model.getTimeTo()));
             reservation.get().setClientId(clientId);
 
             reservation.get().setTables(new HashSet<>());
             reservation.get().setTags(new HashSet<>());
-            if (!data.getJSONArray("tables").isEmpty()) {
-                for (Object table : data.getJSONArray("tables")) {
+            if (!model.getTables().isEmpty()) {
+                for (Long table : model.getTables()) {
                     if (table == null) continue;
-                    Optional<Desk> optionalDesk = deskService.findById(Long.valueOf((Integer) table));
+                    Optional<Desk> optionalDesk = deskService.findById(table);
                     optionalDesk.ifPresent(desk -> reservation.get().getTables().add(desk));
                 }
             }
-            if (!data.getJSONArray("tags").isEmpty()) {
-                for (Object tag : data.getJSONArray("tags")) {
+            if (!model.getTags().isEmpty()) {
+                for (Long tag : model.getTags()) {
                     if (tag == null) continue;
-                    Optional<Tag> optionalTag = tagService.findById(Long.valueOf((Integer) tag));
+                    Optional<Tag> optionalTag = tagService.findById(tag);
                     optionalTag.ifPresent(value -> reservation.get().getTags().add(value));
                 }
             }
@@ -848,13 +847,13 @@ public abstract class AbstractRemoteController {
                     new SseMessage("status",
                             mapper.writeValueAsString(getStatusDto(status))));
 
-            if (!data.getJSONArray("newtags").isEmpty()) {
-                for (Object newTag : data.getJSONArray("newtags")) {
-                    if (newTag == null || ((String) newTag).isEmpty()) continue;
+            if (!model.getNewTags().isEmpty()) {
+                for (String newTag : model.getNewTags()) {
+                    if (newTag == null || newTag.isEmpty()) continue;
                     Tag tag1 = new Tag();
-                    tag1.setName((String) newTag);
+                    tag1.setName(newTag);
                     tag1.setRestaurantId(getRestaurantId(request.getHeader(AUTHORIZATION)));
-                    tag1.setClientId(data.getLong("client"));
+                    tag1.setClientId(clientId);
                     tag1.setLastChange(getTimeStamp());
                     tag1 = tagService.save(tag1);
                     reservation.get().getTags().add(tag1);
